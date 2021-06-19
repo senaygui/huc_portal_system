@@ -32,7 +32,14 @@ gem 'jbuilder', '~> 2.5'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
-
+gem 'jquery-rails'
+# Use ActiveStorage variant
+# gem 'mini_magick', '~> 4.8'
+gem 'devise', '~> 4.8'
+gem 'activeadmin', '~> 2.9'
+gem 'inherited_resources', github: 'activeadmin/inherited_resources'
+gem 'activeadmin_addons', '~> 1.7', '>= 1.7.1'
+gem 'active_admin_theme', '~> 1.1', '>= 1.1.4'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
