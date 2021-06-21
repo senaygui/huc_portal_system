@@ -10,7 +10,13 @@ module PortalSystem
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
+    config.assets.initialize_on_precompile = false
 
+    # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
+    config.assets.precompile += %w(active_admin.css active_admin/print.css active_admin.js )
+
+    config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')
+    config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
