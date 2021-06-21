@@ -10,7 +10,8 @@ class Ability
     case user.role
     when "admin"
         can :manage, AdminUser
-        can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"    
+        can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
+        can :manage, Program    
     when "General Manager"
         can :manage, ActiveAdmin
         can :manage, AdminUser
