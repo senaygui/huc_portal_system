@@ -18,6 +18,7 @@ class Ability
         cannot :destroy, Collage, id: 1
 
         can :manage, Department
+        can :manage, CourseModule
     when "General Manager"
         can :manage, ActiveAdmin
         can :manage, AdminUser
