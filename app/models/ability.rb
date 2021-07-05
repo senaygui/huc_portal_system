@@ -1,3 +1,4 @@
+
 # frozen_string_literal: true
 
 class Ability
@@ -11,7 +12,10 @@ class Ability
     when "admin"
         can :manage, AdminUser
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
-        can :manage, Program    
+        can :manage, Program
+        can :manage, Collage
+        #TODO: after one collage created disable new action   
+        cannot :destroy, Collage, id: 1
     when "General Manager"
         can :manage, ActiveAdmin
         can :manage, AdminUser

@@ -42,6 +42,7 @@ gem 'activeadmin_addons', '~> 1.7', '>= 1.7.1'
 gem 'active_admin_theme', '~> 1.1', '>= 1.1.4'
 gem 'name_of_person', '~> 1.1', '>= 1.1.1'
 gem 'cancancan', '~> 3.2', '>= 3.2.2'
+gem 'country_select', '~> 3.1', '>= 3.1.1'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 

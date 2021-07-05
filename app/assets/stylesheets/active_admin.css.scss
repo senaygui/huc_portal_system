@@ -20,3 +20,8 @@ $skinMainFirstColor: #024d71!default;
 $skinMainSecondColor: #ffc107!default;
 $menu-arrow-dark-icon-url: 'active_admin/nested_menu_arrow_dark.gif' !default;
 @import "wigu/active_admin_theme";
+
+.video-responsive iframe{
+  width: 500px;
+  height: 300px !important;
+}
