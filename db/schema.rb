@@ -102,12 +102,18 @@ ActiveRecord::Schema.define(version: 2021_07_05_082254) do
   end
 
   create_table "programs", force: :cascade do |t|
+    t.bigint "department_id"
     t.string "program_name", null: false
-    t.string "description"
+    t.string "study_level", null: false
+    t.string "admission_type", null: false
+    t.text "overview"
+    t.text "program_description"
+    t.string "program_duration"
     t.string "created_by"
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["department_id"], name: "index_programs_on_department_id"
   end
 
   add_foreign_key "departments", "collages"
