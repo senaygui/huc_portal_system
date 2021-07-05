@@ -16,6 +16,8 @@ class Ability
         can :manage, Collage
         #TODO: after one collage created disable new action   
         cannot :destroy, Collage, id: 1
+
+        can :manage, Department
     when "General Manager"
         can :manage, ActiveAdmin
         can :manage, AdminUser

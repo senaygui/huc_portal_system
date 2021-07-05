@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_03_083709) do
+ActiveRecord::Schema.define(version: 2021_07_05_082254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,28 @@ ActiveRecord::Schema.define(version: 2021_07_03_083709) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "departments", force: :cascade do |t|
+    t.bigint "collage_id"
+    t.string "department_name"
+    t.text "overview"
+    t.text "background"
+    t.text "facility"
+    t.string "location"
+    t.string "phone_number"
+    t.string "alternative_phone_number"
+    t.string "email"
+    t.string "facebook_handle"
+    t.string "twitter_handle"
+    t.string "telegram_handle"
+    t.string "instagram_handle"
+    t.string "map_embed"
+    t.string "created_by"
+    t.string "last_updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collage_id"], name: "index_departments_on_collage_id"
+  end
+
   create_table "programs", force: :cascade do |t|
     t.string "program_name", null: false
     t.string "description"
@@ -88,4 +110,5 @@ ActiveRecord::Schema.define(version: 2021_07_03_083709) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "departments", "collages"
 end
