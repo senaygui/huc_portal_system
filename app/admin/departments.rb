@@ -62,7 +62,7 @@ ActiveAdmin.register Department do
       attributes_table_for department do
         row :department_name
         row "collage" do |c|
-          c.collage.collage_name
+          link_to c.collage.collage_name, [:admin, c.collage]
         end
         row :overview
         row :background
@@ -86,6 +86,7 @@ ActiveAdmin.register Department do
     end
   end
   #TODO: add lists of programs
+  #TODO: add lists of modules in tab
   sidebar "Programs", :only => :show do
     # table_for catagory.products do
 

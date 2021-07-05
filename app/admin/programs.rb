@@ -6,7 +6,7 @@ ActiveAdmin.register Program do
     selectable_column
     column :program_name
     column "Department", sortable: true do |d|
-      d.department.department_name
+      link_to d.department.department_name, [:admin, d.department]
     end
     ## TODO: color label admission_type and study_level
     ## TODO: display number of currently admitted students in this program
@@ -68,7 +68,7 @@ ActiveAdmin.register Program do
         row :overview
         row :program_description
         row "Department", sortable: true do |d|
-          d.department.department_name
+          link_to d.department.department_name, [:admin, d.department] 
         end
         ## TODO: add total cost of the program
         ## TODO: display number of currently admitted students in this program
