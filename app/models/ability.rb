@@ -19,6 +19,7 @@ class Ability
 
         can :manage, Department
         can :manage, CourseModule
+        can :manage, Course
     when "General Manager"
         can :manage, ActiveAdmin
         can :manage, AdminUser
