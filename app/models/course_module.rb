@@ -5,6 +5,7 @@ class CourseModule < ApplicationRecord
 
   ##associations
   	belongs_to :department
+  	has_many :courses
   ##scope
   	scope :recently_added, lambda { where('created_at >= ?', 1.week.ago)}
 end
