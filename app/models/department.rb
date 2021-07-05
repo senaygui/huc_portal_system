@@ -4,4 +4,5 @@ class Department < ApplicationRecord
   ##associations
   belongs_to :collage
   has_many :programs
+  has_many :course_modules
 end
