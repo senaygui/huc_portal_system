@@ -61,5 +61,13 @@ permit_params :course_module_id,:course_title,:course_code,:course_description,:
         row :updated_at
       end
     end
-  end  
+  end 
+  sidebar "program belongs to", :only => :show do
+    table_for course.curriculums do
+
+      column "program" do |c|
+        link_to c.program.program_name, admin_program_path(c.program.id)
+      end
+    end
+  end 
 end

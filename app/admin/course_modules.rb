@@ -7,7 +7,9 @@ permit_params :department_id,:module_title,:module_code,:overview,:description,:
     column "Department", sortable: true do |d|
      link_to d.department.department_name, [:admin, d.department]
     end
-    ## TODO: total number of courses
+    column "courses", sortable: true do |c|
+      c.courses.count
+    end
     column :module_code
     column :created_by
     column "Created At", sortable: true do |c|
@@ -52,13 +54,16 @@ permit_params :department_id,:module_title,:module_code,:overview,:description,:
       attributes_table_for course_module do
         row :module_title
         row :module_code
-        row "Department", sortable: true do |d|
+        row "Department" do |d|
           link_to d.department.department_name, admin_department_path(d.department.id)
         end
         row :overview
         row :description
         
         ## TODO: total number of course belongs to this module
+        row "courses" do |c|
+          c.courses.count
+        end
         row :created_by
         row :last_updated_by
         row :created_at
@@ -68,11 +73,11 @@ permit_params :department_id,:module_title,:module_code,:overview,:description,:
   end
   ## TODO: add lists of courses with there links
   sidebar "courses", :only => :show do
-    # table_for catagory.products do
+    table_for course_module.courses do
 
-    #   column "Product name" do |product|
-    #     link_to product.product_name, admin_product_path(product.id)
-    #   end
-    # end
+      column "courses" do |course|
+        link_to course.course_title, admin_course_path(course.id)
+      end
+    end
   end  
 end

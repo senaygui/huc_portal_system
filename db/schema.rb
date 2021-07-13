@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_05_113429) do
+ActiveRecord::Schema.define(version: 2021_07_06_060027) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,25 @@ ActiveRecord::Schema.define(version: 2021_07_05_113429) do
     t.index ["course_module_id"], name: "index_courses_on_course_module_id"
   end
 
+  create_table "curriculums", force: :cascade do |t|
+    t.bigint "program_id"
+    t.bigint "course_id"
+    t.integer "semester", default: 1, null: false
+    t.datetime "course_starting_date"
+    t.datetime "course_ending_date"
+    t.integer "year", default: 1, null: false
+    t.integer "credit_hour", null: false
+    t.integer "ects"
+    t.decimal "full_course_price", default: "0.0"
+    t.decimal "monthly_course_price", default: "0.0"
+    t.string "created_by"
+    t.string "last_updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_curriculums_on_course_id"
+    t.index ["program_id"], name: "index_curriculums_on_program_id"
+  end
+
   create_table "departments", force: :cascade do |t|
     t.bigint "collage_id"
     t.string "department_name"
@@ -133,7 +152,8 @@ ActiveRecord::Schema.define(version: 2021_07_05_113429) do
     t.string "admission_type", null: false
     t.text "overview"
     t.text "program_description"
-    t.string "program_duration"
+    t.integer "program_duration"
+    t.decimal "total_tuition", default: "0.0"
     t.string "created_by"
     t.string "last_updated_by"
     t.datetime "created_at", null: false

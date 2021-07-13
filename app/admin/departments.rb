@@ -4,9 +4,8 @@ ActiveAdmin.register Department do
   index do
     selectable_column
     column :department_name
-    #TODO: add a count of departments and programs and color label them
     column "Programs", sortable: true do |c|
-      status_tag "#", class: "total_sale"
+      c.programs.count
     end
     column :overview, sortable: true do |o|
       truncate o.overview, length: 140
@@ -67,9 +66,8 @@ ActiveAdmin.register Department do
         row :overview
         row :background
         row :facility
-        #TODO: add a count of programs and color label them
         row "Programs", sortable: true do |c|
-          status_tag "#", class: "total_sale"
+          department.programs.count
         end
         row :location
         row :phone_number
@@ -85,15 +83,22 @@ ActiveAdmin.register Department do
       end
     end
   end
-  #TODO: add lists of programs
-  #TODO: add lists of modules in tab
+  
   sidebar "Programs", :only => :show do
-    # table_for catagory.products do
+    table_for department.programs do
 
-    #   column "Product name" do |product|
-    #     link_to product.product_name, admin_product_path(product.id)
-    #   end
-    # end
+      column "Program name" do |program|
+        link_to program.program_name, admin_program_path(program.id)
+      end
+    end
+  end
+  sidebar "modules", :only => :show do
+    table_for department.course_modules do
+
+      column "Course Modules" do |course_module|
+        link_to course_module.module_title, admin_course_module_path(course_module.id)
+      end
+    end
   end
   
 end

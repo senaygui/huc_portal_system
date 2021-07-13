@@ -4,14 +4,10 @@ ActiveAdmin.register Collage do
   index do
     selectable_column
     column :collage_name
-    #TODO: add a count of departments and programs and color label them
-    column "Departments", sortable: true do |c|
-      status_tag "#", class: "total_sale"
+    column "Departments" do |c|
+      c.departments.count
     end
-    column "Programs", sortable: true do |c|
-      status_tag "#", class: "total_sale"
-    end
-    column :overview
+    column :headquarter
     column :created_by
     column :last_updated_by
     column "Created At", sortable: true do |c|
@@ -74,12 +70,8 @@ ActiveAdmin.register Collage do
         row :background
         row :mission
         row :vision 
-        #TODO: add a count of departments and programs and color label them
-        row "Departments", sortable: true do |c|
-          status_tag "#", class: "total_sale"
-        end
-        row "Programs", sortable: true do |c|
-          status_tag "#", class: "total_sale"
+        row "Departments" do |c|
+          c.departments.count
         end
         row :headquarter
         row :country
@@ -105,22 +97,13 @@ ActiveAdmin.register Collage do
       end
     end
   end
-  #TODO: add lists of departments and programs
-  sidebar "Departments", :only => :show do
-    # table_for catagory.products do
-
-    #   column "Product name" do |product|
-    #     link_to product.product_name, admin_product_path(product.id)
-    #   end
-    # end
-  end
-  sidebar "Programs", :only => :show do
-    # table_for catagory.products do
-
-    #   column "Product name" do |product|
-    #     link_to product.product_name, admin_product_path(product.id)
-    #   end
-    # end
-  end
   
+  sidebar "Departments", :only => :show do
+    table_for collage.departments do
+
+      column "department name" do |department|
+        link_to department.department_name, admin_department_path(department.id)
+      end
+    end
+  end
 end

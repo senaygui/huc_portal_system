@@ -7,7 +7,8 @@ class CreatePrograms < ActiveRecord::Migration[5.2]
     	t.string :admission_type, null: false
     	t.text :overview
     	t.text :program_description
-    	t.string :program_duration
+    	t.integer :program_duration
+      t.decimal :total_tuition, default: 0.0
     	t.string :created_by
     	t.string :last_updated_by
       t.timestamps

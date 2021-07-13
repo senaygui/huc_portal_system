@@ -1,4 +1,7 @@
 class Program < ApplicationRecord
+  before_save :update_subtotal
+  
+
 	##validations
     validates :program_name , :presence => true,:length => { :within => 2..50 }
     validates :study_level , :presence => true
@@ -13,5 +16,17 @@ class Program < ApplicationRecord
   	scope :extention, lambda { where(admission_type: "extention")}
   	scope :distance, lambda { where(admission_type: "distance")}
   ##associations
-  belongs_to :department
+    belongs_to :department
+    has_many :curriculums
+    has_many :courses, through: :curriculums, dependent: :destroy
+    accepts_nested_attributes_for :curriculums, reject_if: :all_blank, allow_destroy: true
+  
+  def total_tuition
+    curriculums.collect { |oi| oi.valid? ? (oi.full_course_price) : 0 }.sum
+  end
+  private
+
+  def update_subtotal
+    self[:total_tuition] = total_tuition
+  end
 end
