@@ -3,5 +3,5 @@ class Collage < ApplicationRecord
     validates :collage_name , :presence => true,:length => { :within => 2..100 }
 
   ##associations
-  has_many :departments
+  has_many :departments, dependent: :destroy
 end

@@ -7,6 +7,7 @@ class Program < ApplicationRecord
     validates :study_level , :presence => true
     validates :admission_type , :presence => true
     validates :program_duration , :presence => true
+    validates :program_code, :presence => true
   ##scope
   	scope :recently_added, lambda { where('created_at >= ?', 1.week.ago)}
   	scope :undergraduate, lambda { where(study_level: "undergraduate")}
@@ -17,6 +18,7 @@ class Program < ApplicationRecord
   	scope :distance, lambda { where(admission_type: "distance")}
   ##associations
     belongs_to :department
+    has_many :students
     has_many :curriculums
     has_many :courses, through: :curriculums, dependent: :destroy
     accepts_nested_attributes_for :curriculums, reject_if: :all_blank, allow_destroy: true

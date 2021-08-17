@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_06_060027) do
+ActiveRecord::Schema.define(version: 2021_07_14_085800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,27 @@ ActiveRecord::Schema.define(version: 2021_07_06_060027) do
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
     t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
+  end
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
   create_table "admin_users", force: :cascade do |t|
@@ -145,9 +166,28 @@ ActiveRecord::Schema.define(version: 2021_07_06_060027) do
     t.index ["collage_id"], name: "index_departments_on_collage_id"
   end
 
+  create_table "emergency_contacts", force: :cascade do |t|
+    t.bigint "student_id"
+    t.string "full_name", null: false
+    t.string "relationship"
+    t.string "cell_phone", null: false
+    t.string "email"
+    t.string "current_occupation"
+    t.string "name_of_current_employer"
+    t.string "pobox"
+    t.string "email_of_employer"
+    t.string "office_phone_number"
+    t.string "created_by", default: "self"
+    t.string "last_updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_id"], name: "index_emergency_contacts_on_student_id"
+  end
+
   create_table "programs", force: :cascade do |t|
     t.bigint "department_id"
     t.string "program_name", null: false
+    t.string "program_code", null: false
     t.string "study_level", null: false
     t.string "admission_type", null: false
     t.text "overview"
@@ -161,5 +201,62 @@ ActiveRecord::Schema.define(version: 2021_07_06_060027) do
     t.index ["department_id"], name: "index_programs_on_department_id"
   end
 
+  create_table "student_addresses", force: :cascade do |t|
+    t.bigint "student_id"
+    t.string "country", null: false
+    t.string "city", null: false
+    t.string "region"
+    t.string "zone", null: false
+    t.string "sub_city"
+    t.string "house_number", null: false
+    t.string "cell_phone", null: false
+    t.string "house_phone"
+    t.string "pobox"
+    t.string "woreda", null: false
+    t.string "created_by", default: "self"
+    t.string "last_updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_id"], name: "index_student_addresses_on_student_id"
+  end
+
+  create_table "students", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet "current_sign_in_ip"
+    t.inet "last_sign_in_ip"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "middle_name"
+    t.string "gender", null: false
+    t.string "student_id"
+    t.datetime "date_of_birth", null: false
+    t.bigint "program_id"
+    t.string "department"
+    t.string "admission_type", null: false
+    t.string "study_level", null: false
+    t.string "marital_status"
+    t.integer "year", default: 1
+    t.integer "semester", default: 1
+    t.string "account_verification_status", default: "pending"
+    t.string "document_verification_status", default: "pending"
+    t.string "account_status", default: "active"
+    t.string "graduation_status"
+    t.string "created_by", default: "self"
+    t.string "last_updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_students_on_email", unique: true
+    t.index ["program_id"], name: "index_students_on_program_id"
+    t.index ["reset_password_token"], name: "index_students_on_reset_password_token", unique: true
+  end
+
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "departments", "collages"
 end

@@ -20,6 +20,7 @@ class Ability
         can :manage, Department
         can :manage, CourseModule
         can :manage, Course
+        can :manage, Student
     when "General Manager"
         can :manage, ActiveAdmin
         can :manage, AdminUser

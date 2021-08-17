@@ -1,6 +1,6 @@
 ActiveAdmin.register Program do
 
-  permit_params :department_id,:program_name,:overview,:program_description,:created_by,:last_updated_by,:total_tuition,:study_level,:admission_type,:program_duration, curriculums_attributes: [:id,:course_id,:semester,:course_starting_date,:course_ending_date,:year,:credit_hour,:ects,:full_course_price,:monthly_course_price,:created_by,:last_updated_by, :_destroy]
+  permit_params :department_id,:program_name,:program_code,:overview,:program_description,:created_by,:last_updated_by,:total_tuition,:study_level,:admission_type,:program_duration, curriculums_attributes: [:id,:course_id,:semester,:course_starting_date,:course_ending_date,:year,:credit_hour,:ects,:full_course_price,:monthly_course_price,:created_by,:last_updated_by, :_destroy]
 
   index do
     selectable_column
@@ -46,6 +46,7 @@ ActiveAdmin.register Program do
     f.semantic_errors
     f.inputs "porgram information" do
       f.input :program_name
+      f.input :program_code
       f.input :overview,  :input_html => { :class => 'autogrow', :rows => 10, :cols => 20}
       f.input :program_description,  :input_html => { :class => 'autogrow', :rows => 10, :cols => 20}
       f.input :department_id, as: :search_select, url: admin_departments_path,
@@ -92,6 +93,7 @@ ActiveAdmin.register Program do
         panel "Program information" do
           attributes_table_for program do
             row :program_name
+            row :program_code
             row :overview
             row :program_description
             row "Department", sortable: true do |d|
@@ -138,6 +140,12 @@ ActiveAdmin.register Program do
                   number_column "course price",:full_course_price, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 
                   column :created_by
                   column :last_updated_by
+                  column "Starts at", sortable: true do |c|
+                    c.course_starting_date.strftime("%b %d, %Y")
+                  end
+                  column "ends At", sortable: true do |c|
+                    c.course_ending_date.strftime("%b %d, %Y")
+                  end
                 end
               end
             end      
