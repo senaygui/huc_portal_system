@@ -10,10 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_23_171504) do
+ActiveRecord::Schema.define(version: 2021_08_23_180321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "academic_calendars", force: :cascade do |t|
+    t.string "calender_year", null: false
+    t.datetime "starting_date", null: false
+    t.datetime "ending_date", null: false
+    t.string "admission_type", null: false
+    t.string "study_level", null: false
+    t.integer "from_year"
+    t.integer "to_year"
+    t.string "remark"
+    t.string "last_updated_by"
+    t.string "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
@@ -48,6 +63,21 @@ ActiveRecord::Schema.define(version: 2021_08_23_171504) do
     t.string "checksum", null: false
     t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "activities", force: :cascade do |t|
+    t.bigint "academic_calendar_id"
+    t.string "activity", null: false
+    t.integer "semester", null: false
+    t.string "description"
+    t.string "category", null: false
+    t.datetime "starting_date", null: false
+    t.datetime "ending_date", null: false
+    t.string "last_updated_by"
+    t.string "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_activities_on_academic_calendar_id"
   end
 
   create_table "admin_users", force: :cascade do |t|
