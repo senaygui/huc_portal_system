@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_23_180321) do
+ActiveRecord::Schema.define(version: 2021_08_23_192720) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,6 +101,36 @@ ActiveRecord::Schema.define(version: 2021_08_23_180321) do
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
     t.index ["role"], name: "index_admin_users_on_role"
+  end
+
+  create_table "collage_payments", force: :cascade do |t|
+    t.string "study_level", null: false
+    t.string "admission_type", null: false
+    t.string "student_nationality"
+    t.decimal "total_fee", default: "0.0"
+    t.decimal "registration_fee", default: "0.0"
+    t.decimal "late_registration_fee", default: "0.0"
+    t.decimal "daily_late_registration_penalty", default: "0.0"
+    t.decimal "makeup_exam_fee", default: "0.0"
+    t.decimal "add_drop", default: "0.0"
+    t.decimal "tution_per_credit_hr", default: "0.0"
+    t.decimal "readmission", default: "0.0"
+    t.decimal "reissuance_of_grade_report", default: "0.0"
+    t.decimal "student_copy", default: "0.0"
+    t.decimal "additional_student_copy", default: "0.0"
+    t.decimal "tempo", default: "0.0"
+    t.decimal "original_certificate", default: "0.0"
+    t.decimal "original_certificate_replacement", default: "0.0"
+    t.decimal "tempo_replacement", default: "0.0"
+    t.decimal "letter", default: "0.0"
+    t.decimal "student_id_card", default: "0.0"
+    t.decimal "student_id_card_replacement", default: "0.0"
+    t.decimal "name_change", default: "0.0"
+    t.decimal "transfer_fee", default: "0.0"
+    t.string "last_updated_by"
+    t.string "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "collages", force: :cascade do |t|
