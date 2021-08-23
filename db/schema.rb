@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_14_085800) do
+ActiveRecord::Schema.define(version: 2021_08_23_171504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -182,6 +182,19 @@ ActiveRecord::Schema.define(version: 2021_07_14_085800) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["student_id"], name: "index_emergency_contacts_on_student_id"
+  end
+
+  create_table "payment_methods", force: :cascade do |t|
+    t.string "bank_name", null: false
+    t.string "account_full_name", null: false
+    t.string "account_number"
+    t.string "phone_number"
+    t.string "account_type"
+    t.string "payment_method_type", null: false
+    t.string "last_updated_by"
+    t.string "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "programs", force: :cascade do |t|
