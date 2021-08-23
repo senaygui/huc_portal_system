@@ -21,6 +21,7 @@ class Ability
         can :manage, CourseModule
         can :manage, Course
         can :manage, Student
+        can :manage, PaymentMethod
     when "General Manager"
         can :manage, ActiveAdmin
         can :manage, AdminUser
