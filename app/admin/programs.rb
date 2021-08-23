@@ -141,10 +141,10 @@ ActiveAdmin.register Program do
                   column :created_by
                   column :last_updated_by
                   column "Starts at", sortable: true do |c|
-                    c.course_starting_date.strftime("%b %d, %Y")
+                    c.course_starting_date.strftime("%b %d, %Y") if c.course_starting_date.present?
                   end
                   column "ends At", sortable: true do |c|
-                    c.course_ending_date.strftime("%b %d, %Y")
+                    c.course_ending_date.strftime("%b %d, %Y") if c.course_ending_date.present?
                   end
                 end
               end
