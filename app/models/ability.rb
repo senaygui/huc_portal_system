@@ -24,6 +24,7 @@ class Ability
         can :manage, PaymentMethod
         can :manage, AcademicCalendar
         can :manage, CollagePayment
+        can :manage, StudentRegistration
     when "General Manager"
         can :manage, ActiveAdmin
         can :manage, AdminUser

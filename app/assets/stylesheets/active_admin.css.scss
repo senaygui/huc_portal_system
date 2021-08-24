@@ -191,3 +191,16 @@ label.asdndzone{
 // .denied a{
 //   background: #d45f53 !important; 
 // }
+
+.tags .label {
+    
+    display: block;
+    width: 15%;
+    float: left;
+    font-size: 1.0em;
+    font-weight: bold;
+    color: #5E6469;
+}
+ul, ol{
+  list-style-type: none !important;
+}

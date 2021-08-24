@@ -1,6 +1,6 @@
 ActiveAdmin.register Program do
 
-  permit_params :department_id,:program_name,:program_code,:overview,:program_description,:created_by,:last_updated_by,:total_tuition,:study_level,:admission_type,:program_duration, curriculums_attributes: [:id,:course_id,:semester,:course_starting_date,:course_ending_date,:year,:credit_hour,:ects,:full_course_price,:monthly_course_price,:created_by,:last_updated_by, :_destroy]
+  permit_params :department_id,:program_name,:program_code,:overview,:program_description,:created_by,:last_updated_by,:total_tuition,:study_level,:admission_type,:program_duration, curriculums_attributes: [:id,:course_id,:semester,:course_starting_date,:course_ending_date,:year,:credit_hour,:ects,:full_course_price,:course_title,:monthly_course_price,:created_by,:last_updated_by, :_destroy]
 
   index do
     selectable_column

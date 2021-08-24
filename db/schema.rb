@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_23_192720) do
+ActiveRecord::Schema.define(version: 2021_08_23_232145) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -173,6 +173,16 @@ ActiveRecord::Schema.define(version: 2021_08_23_192720) do
     t.index ["department_id"], name: "index_course_modules_on_department_id"
   end
 
+  create_table "course_registrations", force: :cascade do |t|
+    t.bigint "student_registration_id"
+    t.bigint "curriculum_id"
+    t.string "enrollment_status", default: "pending"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["curriculum_id"], name: "index_course_registrations_on_curriculum_id"
+    t.index ["student_registration_id"], name: "index_course_registrations_on_student_registration_id"
+  end
+
   create_table "courses", force: :cascade do |t|
     t.bigint "course_module_id"
     t.string "course_title", null: false
@@ -200,6 +210,7 @@ ActiveRecord::Schema.define(version: 2021_08_23_192720) do
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "course_title"
     t.index ["course_id"], name: "index_curriculums_on_course_id"
     t.index ["program_id"], name: "index_curriculums_on_program_id"
   end
@@ -291,6 +302,30 @@ ActiveRecord::Schema.define(version: 2021_08_23_192720) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["student_id"], name: "index_student_addresses_on_student_id"
+  end
+
+  create_table "student_registrations", force: :cascade do |t|
+    t.bigint "student_id"
+    t.string "program_name"
+    t.string "admission_type"
+    t.string "study_level"
+    t.bigint "academic_calendar_id"
+    t.decimal "total_price", default: "0.0"
+    t.decimal "registration_fee", default: "0.0"
+    t.decimal "late_registration_fee", default: "0.0"
+    t.decimal "remaining_amount", default: "0.0"
+    t.string "mode_of_payment"
+    t.integer "semester", null: false
+    t.integer "year", null: false
+    t.integer "total_enrolled_course"
+    t.string "registrar_approval_status", default: "pending"
+    t.string "finance_approval_status", default: "pending"
+    t.string "last_updated_by"
+    t.string "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_student_registrations_on_academic_calendar_id"
+    t.index ["student_id"], name: "index_student_registrations_on_student_id"
   end
 
   create_table "students", force: :cascade do |t|

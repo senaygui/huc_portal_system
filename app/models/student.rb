@@ -2,6 +2,8 @@ class Student < ApplicationRecord
   ##callbacks
   before_save :department_assignment
   before_save :student_id_generator
+  after_save :semester_registration
+  # after_save :course_registration
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -13,6 +15,7 @@ class Student < ApplicationRecord
   accepts_nested_attributes_for :student_address
   has_one :emergency_contact, dependent: :destroy
   accepts_nested_attributes_for :emergency_contact
+  has_many :student_registrations
   has_many_attached :documents
   has_one_attached :photo
      
@@ -47,11 +50,40 @@ class Student < ApplicationRecord
     self[:department] = program.department.department_name
   end
   def student_id_generator
-    if self.document_verification_status == "approved" && self.student_id.empty?
+    if self.document_verification_status == "approved" && !(self.student_id.present?)
       begin
         self.student_id = "#{self.program.program_code}/#{SecureRandom.random_number(1000..10000)}/#{Time.now.strftime("%y")}"
       end while Student.where(student_id: self.student_id).exists?
     end
   end
+
+  def semester_registration
+   if self.document_verification_status == "approved" && self.year == 1
+    StudentRegistration.create do |registration|
+      registration.student_id = self.id
+      registration.academic_calendar_id = AcademicCalendar.last.id
+      registration.year = self.year
+      registration.semester = self.semester
+    end
+   end 
+   if self.document_verification_status == "approved" && self.student_registrations.last.present? && self.year == 1
+    self.program.curriculums.where(year: self.year, semester: self.semester).each do |co|
+      CourseRegistration.create do |course|
+        course.student_registration_id = self.student_registrations.last.id
+        course.curriculum_id = co.id
+      end
+    end
+   end
+  end
+  # def course_registration
+  #  if self.student_registrations.last.present? && self.year == 1
+  #   self.program.curriculums.where(year: self.year, semester: self.semester).each do |co|
+  #     CourseRegistration.create do |course|
+  #       course.student_registration_id = self.student_registrations.last.id
+  #       course.curriculum_id = co.id
+  #     end
+  #   end
+  #  end 
+  # end
 
 end
