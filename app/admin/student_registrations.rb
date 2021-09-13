@@ -25,12 +25,12 @@ ActiveAdmin.register StudentRegistration do
     column :admission_type
     column :study_level
     column "academic year", sortable: true do |n|
-      n.academic_calendar.calender_year
+      link_to n.academic_calendar.calender_year, admin_academic_calendar_path(n.academic_calendar)
     end
     column :semester
     column :year
     column "approval status", sortable: true do |c|
-      c.registrar_approval_status
+      status_tag c.registrar_approval_status
     end
     # column :mode_of_payment
     column "Created At", sortable: true do |c|

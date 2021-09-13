@@ -1,5 +1,5 @@
 class StudentRegistration < ApplicationRecord
-	after_create :student_information
+	after_save :generate_invoice
 	##validations
 	  validates :semester, :presence => true
 		validates :year, :presence => true
@@ -17,11 +17,27 @@ class StudentRegistration < ApplicationRecord
 	  has_many :course_registrations, dependent: :destroy
   	has_many :curriculums, through: :course_registrations, dependent: :destroy
   	# accepts_nested_attributes_for :course_registrations, reject_if: :all_blank, allow_destroy: true
-
-  	private
-	  	def student_information
-	  		self[:admission_type] = self.student.admission_type
-	  		self[:study_level] = self.student.study_level
-	  		self[:program_name] = self.student.program.program_name
+  	has_many :invoices
+  	private	
+	  	def generate_invoice
+	  		if (self.semester == 1) && (self.year == 1) && self.mode_of_payment.present? && self.invoices.last.nil?
+	  			Invoice.create do |invoice|
+	  				invoice.student_registration_id = self.id
+	  				invoice.created_by = self.created_by
+	  				invoice.due_date = self.created_at.day + 2.days 
+	  				invoice.invoice_status = "pending"
+						invoice.registration_fee = CollagePayment.where(study_level: self.study_level,admission_type: self.admission_type).first.registration_fee
+						invoice.invoice_number = SecureRandom.random_number(1000..10000)
+						if mode_of_payment == "monthly"
+							tution_price = (self.course_registrations.collect { |oi| oi.valid? ? (CollagePayment.where(study_level: self.study_level,admission_type: self.admission_type).first.tution_per_credit_hr * oi.curriculum.credit_hour) : 0 }.sum) /4 
+						elsif mode_of_payment == "full"
+							tution_price = (self.course_registrations.collect { |oi| oi.valid? ? (CollagePayment.where(study_level: self.study_level,admission_type: self.admission_type).first.tution_per_credit_hr * oi.curriculum.credit_hour) : 0 }.sum) 
+						elsif mode_of_payment == "half"
+							tution_price = (self.course_registrations.collect { |oi| oi.valid? ? (CollagePayment.where(study_level: self.study_level,admission_type: self.admission_type).first.tution_per_credit_hr * oi.curriculum.credit_hour) : 0 }.sum)/2
+						end	
+						invoice.total_price = tution_price + CollagePayment.where(study_level: self.study_level,admission_type: self.admission_type).first.registration_fee
+						self.total_price = (self.course_registrations.collect { |oi| oi.valid? ? (CollagePayment.where(study_level: self.study_level,admission_type: self.admission_type).first.tution_per_credit_hr * oi.curriculum.credit_hour) : 0 }.sum) + CollagePayment.where(study_level: self.study_level,admission_type: self.admission_type).first.registration_fee
+	  			end
+	  		end
 	  	end
 end

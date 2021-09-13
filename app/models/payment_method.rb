@@ -12,4 +12,5 @@ class PaymentMethod < ApplicationRecord
 
   ##associations
   	has_one_attached :bank_logo
+    has_many :payment_transactions
 end

@@ -59,7 +59,7 @@ permit_params :calender_year,:starting_date,:ending_date,:admission_type,:study_
             a.input :semester, as: :select, :collection => [1, 2,3,4], :include_blank => false
             a.input :starting_date, as: :date_time_picker 
             a.input :ending_date, as: :date_time_picker
-            a.input :category, as: :select, :collection => ["registration", "readmission","late registration", "class begining","add/drop""class ending", "examination period", "makeup examination application","grade submission","makeup examination day","makeup examination day","makeup examination grade submission" ,"break","other"]
+            a.input :category, as: :select, :collection => ["registration", "readmission","late registration", "class begining","add/drop","class ending", "examination period", "makeup examination application","grade submission","makeup examination day","makeup examination day","makeup examination grade submission" ,"break","other"]
             a.input :description
             a.label :_destroy
             if a.object.new_record?

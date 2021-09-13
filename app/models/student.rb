@@ -58,15 +58,20 @@ class Student < ApplicationRecord
   end
 
   def semester_registration
-   if self.document_verification_status == "approved" && self.year == 1
+   if self.document_verification_status == "approved" && self.student_registrations.last.nil? && self.year == 1
     StudentRegistration.create do |registration|
       registration.student_id = self.id
+      registration.created_by = self.created_by
+      ## TODO: find the calender of student admission type and study level
       registration.academic_calendar_id = AcademicCalendar.last.id
       registration.year = self.year
       registration.semester = self.semester
+      registration.program_name = self.program.program_name
+      registration.admission_type = self.admission_type
+      registration.study_level = self.study_level
     end
    end 
-   if self.document_verification_status == "approved" && self.student_registrations.last.present? && self.year == 1
+   if self.document_verification_status == "approved" && self.year == 1
     self.program.curriculums.where(year: self.year, semester: self.semester).each do |co|
       CourseRegistration.create do |course|
         course.student_registration_id = self.student_registrations.last.id

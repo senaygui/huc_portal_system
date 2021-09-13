@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_23_232145) do
+ActiveRecord::Schema.define(version: 2021_08_24_023417) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -255,6 +255,35 @@ ActiveRecord::Schema.define(version: 2021_08_23_232145) do
     t.index ["student_id"], name: "index_emergency_contacts_on_student_id"
   end
 
+  create_table "invoice_items", force: :cascade do |t|
+    t.bigint "invoice_id"
+    t.bigint "course_registration_id"
+    t.decimal "price", default: "0.0"
+    t.string "last_updated_by"
+    t.string "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_registration_id"], name: "index_invoice_items_on_course_registration_id"
+    t.index ["invoice_id"], name: "index_invoice_items_on_invoice_id"
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.bigint "student_registration_id"
+    t.string "invoice_number", null: false
+    t.decimal "total_price"
+    t.decimal "registration_fee", default: "0.0"
+    t.decimal "late_registration_fee", default: "0.0"
+    t.decimal "penalty", default: "0.0"
+    t.decimal "daily_penalty", default: "0.0"
+    t.string "invoice_status", default: "not paid"
+    t.string "last_updated_by"
+    t.string "created_by"
+    t.datetime "due_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_registration_id"], name: "index_invoices_on_student_registration_id"
+  end
+
   create_table "payment_methods", force: :cascade do |t|
     t.string "bank_name", null: false
     t.string "account_full_name", null: false
@@ -266,6 +295,22 @@ ActiveRecord::Schema.define(version: 2021_08_23_232145) do
     t.string "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "payment_transactions", force: :cascade do |t|
+    t.bigint "invoice_id"
+    t.bigint "payment_method_id"
+    t.string "account_holder_fullname", null: false
+    t.string "phone_number"
+    t.string "account_number"
+    t.string "transaction_reference"
+    t.string "finance_approval_status", default: "pending"
+    t.string "last_updated_by"
+    t.string "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invoice_id"], name: "index_payment_transactions_on_invoice_id"
+    t.index ["payment_method_id"], name: "index_payment_transactions_on_payment_method_id"
   end
 
   create_table "programs", force: :cascade do |t|
