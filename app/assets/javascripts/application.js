@@ -9,8 +9,54 @@
 //
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
-//
+//= require jquery3
+//= require datatables
+//= require popper
+//= require bootstrap
+//= require adminlte.min.js
+//= require jquery.overlayScrollbars.min
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
-//= require_tree .
+//= require datatables
+//= require bs-stepper.min.js
+//= require flatpickr
+//= require jquery.inputmask.min.js
+//= require active_storage_drag_and_drop
+
+
+
+$(document).on('turbolinks:load', function(){
+  $("#student_photo").change(function(data){
+
+    var imageFile = data.target.files[0];
+    var reader = new FileReader();
+    reader.readAsDataURL(imageFile);
+
+    reader.onload = function(evt){
+      $('#imagePreview').attr('src', evt.target.result);
+      $('#imagePreview').hide();
+      $('#imagePreview').fadeIn(650);
+    }
+    
+  });
+  //Datemask dd/mm/yyyy
+  $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    //Datemask2 mm/dd/yyyy
+  $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    //Money Euro
+  $('#student_student_address_attributes_cell_phone').inputmask()
+  $('#student_student_address_attributes_house_phone').inputmask()
+  $('#student_student_emergency_contact_attributes_cell_phone').inputmask()
+  $('#student_student_emergency_contact_attributes_office_phone_number').inputmask()
+})
+
+
+// BS-Stepper Init
+document.addEventListener('turbolinks:load', function () {
+  window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+})
+
+document.addEventListener('turbolinks:load', function() {
+  flatpickr('.datepicker');
+})

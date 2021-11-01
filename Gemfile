@@ -32,6 +32,25 @@ gem 'jbuilder', '~> 2.5'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
+gem 'jquery-rails'
+gem 'jquery-datatables', '~> 1.10', '>= 1.10.20'
+# Use ActiveStorage variant
+# gem 'mini_magick', '~> 4.8'
+gem 'devise', '~> 4.8'
+gem 'activeadmin', '~> 2.9'
+gem 'inherited_resources', github: 'activeadmin/inherited_resources'
+gem 'activeadmin_addons', '~> 1.7', '>= 1.7.1'
+gem 'active_admin_theme', '~> 1.1', '>= 1.1.4'
+gem 'name_of_person', '~> 1.1', '>= 1.1.1'
+gem 'cancancan', '~> 3.2', '>= 3.2.2'
+gem 'country_select', '~> 3.1', '>= 3.1.1'
+gem 'active_storage_drag_and_drop', '~> 1.1'
+gem 'image_processing'
+gem 'active_storage_validations', '~> 0.9.5'
+gem 'bootstrap', '~> 4.6'
+gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.7'
+gem 'simple_form', '~> 5.0', '>= 5.0.2'
+gem 'flatpickr', '~> 4.6', '>= 4.6.3.1'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
@@ -43,6 +62,11 @@ group :development, :test do
 end
 
 group :development do
+  gem 'capistrano', '~> 3.11'
+  gem 'capistrano-rails', '~> 1.4'
+  gem 'capistrano-passenger', '~> 0.2.0'
+  gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
+  gem 'capistrano-rails-db'
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
