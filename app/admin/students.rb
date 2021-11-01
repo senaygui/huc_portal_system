@@ -1,6 +1,6 @@
 ActiveAdmin.register Student do
   menu parent: "Admission"
-  permit_params :created_by,:last_updated_by,:photo,:email,:password,:first_name,:last_name,:middle_name,:gender,:student_id,:date_of_birth,:program_id,:department,:admission_type,:study_level,:marital_status,:year,:semester,:account_verification_status,:document_verification_status,:account_status,:graduation_status,student_address_attributes: [:id,:country,:city,:region,:zone,:sub_city,:house_number,:cell_phone,:house_phone,:pobox,:woreda,:created_by,:last_updated_by],emergency_contact_attributes: [:id,:full_name,:relationship,:cell_phone,:email,:current_occupation,:name_of_current_employer,:pobox,:email_of_employer,:office_phone_number,:created_by,:last_updated_by], documents: []
+  permit_params :tempo_status,:created_by,:last_updated_by,:photo,:email,:password,:first_name,:last_name,:middle_name,:gender,:student_id,:date_of_birth,:program_id,:department,:admission_type,:study_level,:marital_status,:year,:semester,:account_verification_status,:document_verification_status,:account_status,:graduation_status,student_address_attributes: [:id,:country,:city,:region,:zone,:sub_city,:house_number,:cell_phone,:house_phone,:pobox,:woreda,:created_by,:last_updated_by],emergency_contact_attributes: [:id,:full_name,:relationship,:cell_phone,:email,:current_occupation,:name_of_current_employer,:pobox,:email_of_employer,:office_phone_number,:created_by,:last_updated_by], documents: []
   controller do
     def update_resource(object, attributes)
       update_method = attributes.first[:password].present? ? :update_attributes : :update_without_password
@@ -136,6 +136,7 @@ ActiveAdmin.register Student do
         f.drag_and_drop_file_field :documents do
           'Drag and drop or click here to upload all the necessary documents!'
         end
+        
       end
       if f.object.documents.attached?
         div class: "document-preview container" do
@@ -155,7 +156,9 @@ ActiveAdmin.register Student do
         end
       end
     end
-
+    f.inputs "temporary document status" do
+      f.input :tempo_status
+    end
     f.inputs "Student account and document verification" do
       f.input :account_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"], :include_blank => false
       f.input :document_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"], :include_blank => false         
@@ -202,6 +205,7 @@ ActiveAdmin.register Student do
             row "admission Date" do |d|
               d.created_at.strftime("%b %d, %Y")
             end
+            row :tempo_status
             #row :graduation_status
           end
         end

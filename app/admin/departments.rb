@@ -1,5 +1,5 @@
 ActiveAdmin.register Department do
-  permit_params :department_name,:background,:facility,:overview,:location,:phone_number,:email,:facebook_handle,:telegram_handle,:twitter_handle,:instagram_handle,:created_by,:last_updated_by, :alternative_phone_number, :collage_id
+  permit_params :department_name,:background,:facility,:overview,:location,:phone_number,:email,:facebook_handle,:telegram_handle,:twitter_handle,:instagram_handle,:created_by,:last_updated_by, :alternative_phone_number, :college_id
 
   index do
     selectable_column
@@ -26,7 +26,7 @@ ActiveAdmin.register Department do
 
   form do |f|
     f.semantic_errors
-    f.input :collage_id, as: :hidden, :input_html => { :value => 1}
+    f.input :college_id, as: :hidden, :input_html => { :value => 1}
     f.inputs "Department basic information" do
       f.input :department_name
       f.input :overview,  :input_html => { :class => 'autogrow', :rows => 10, :cols => 20}
@@ -60,8 +60,8 @@ ActiveAdmin.register Department do
     panel "Department basic information" do
       attributes_table_for department do
         row :department_name
-        row "collage" do |c|
-          link_to c.collage.collage_name, [:admin, c.collage]
+        row "college" do |c|
+          link_to c.college.college_name, [:admin, c.college]
         end
         row :overview
         row :background

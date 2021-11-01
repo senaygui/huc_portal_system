@@ -1,13 +1,13 @@
 class CreateDepartments < ActiveRecord::Migration[5.2]
   def change
     create_table :departments do |t|
-    	t.belongs_to :collage, index: true, foreign_key: true
+    	t.belongs_to :college, index: true, foreign_key: true
       t.string :department_name
       t.text :overview
       t.text :background
       t.text :facility
       
-      ## collage address
+      ## college address
       t.string :location
       t.string :phone_number
       t.string :alternative_phone_number

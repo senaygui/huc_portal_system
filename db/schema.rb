@@ -103,7 +103,7 @@ ActiveRecord::Schema.define(version: 2021_08_24_023417) do
     t.index ["role"], name: "index_admin_users_on_role"
   end
 
-  create_table "collage_payments", force: :cascade do |t|
+  create_table "college_payments", force: :cascade do |t|
     t.string "study_level", null: false
     t.string "admission_type", null: false
     t.string "student_nationality"
@@ -133,8 +133,8 @@ ActiveRecord::Schema.define(version: 2021_08_24_023417) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "collages", force: :cascade do |t|
-    t.string "collage_name", null: false
+  create_table "colleges", force: :cascade do |t|
+    t.string "college_name", null: false
     t.text "background"
     t.text "mission"
     t.text "vision"
@@ -174,13 +174,13 @@ ActiveRecord::Schema.define(version: 2021_08_24_023417) do
   end
 
   create_table "course_registrations", force: :cascade do |t|
-    t.bigint "student_registration_id"
+    t.bigint "semester_registration_id"
     t.bigint "curriculum_id"
     t.string "enrollment_status", default: "pending"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["curriculum_id"], name: "index_course_registrations_on_curriculum_id"
-    t.index ["student_registration_id"], name: "index_course_registrations_on_student_registration_id"
+    t.index ["semester_registration_id"], name: "index_course_registrations_on_semester_registration_id"
   end
 
   create_table "courses", force: :cascade do |t|
@@ -216,7 +216,7 @@ ActiveRecord::Schema.define(version: 2021_08_24_023417) do
   end
 
   create_table "departments", force: :cascade do |t|
-    t.bigint "collage_id"
+    t.bigint "college_id"
     t.string "department_name"
     t.text "overview"
     t.text "background"
@@ -234,7 +234,7 @@ ActiveRecord::Schema.define(version: 2021_08_24_023417) do
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["collage_id"], name: "index_departments_on_collage_id"
+    t.index ["college_id"], name: "index_departments_on_college_id"
   end
 
   create_table "emergency_contacts", force: :cascade do |t|
@@ -268,7 +268,7 @@ ActiveRecord::Schema.define(version: 2021_08_24_023417) do
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.bigint "student_registration_id"
+    t.bigint "semester_registration_id"
     t.string "invoice_number", null: false
     t.decimal "total_price"
     t.decimal "registration_fee", default: "0.0"
@@ -281,7 +281,7 @@ ActiveRecord::Schema.define(version: 2021_08_24_023417) do
     t.datetime "due_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["student_registration_id"], name: "index_invoices_on_student_registration_id"
+    t.index ["semester_registration_id"], name: "index_invoices_on_semester_registration_id"
   end
 
   create_table "payment_methods", force: :cascade do |t|
@@ -330,26 +330,7 @@ ActiveRecord::Schema.define(version: 2021_08_24_023417) do
     t.index ["department_id"], name: "index_programs_on_department_id"
   end
 
-  create_table "student_addresses", force: :cascade do |t|
-    t.bigint "student_id"
-    t.string "country", null: false
-    t.string "city", null: false
-    t.string "region"
-    t.string "zone", null: false
-    t.string "sub_city"
-    t.string "house_number", null: false
-    t.string "cell_phone", null: false
-    t.string "house_phone"
-    t.string "pobox"
-    t.string "woreda", null: false
-    t.string "created_by", default: "self"
-    t.string "last_updated_by"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["student_id"], name: "index_student_addresses_on_student_id"
-  end
-
-  create_table "student_registrations", force: :cascade do |t|
+  create_table "semester_registrations", force: :cascade do |t|
     t.bigint "student_id"
     t.string "program_name"
     t.string "admission_type"
@@ -369,8 +350,27 @@ ActiveRecord::Schema.define(version: 2021_08_24_023417) do
     t.string "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["academic_calendar_id"], name: "index_student_registrations_on_academic_calendar_id"
-    t.index ["student_id"], name: "index_student_registrations_on_student_id"
+    t.index ["academic_calendar_id"], name: "index_semester_registrations_on_academic_calendar_id"
+    t.index ["student_id"], name: "index_semester_registrations_on_student_id"
+  end
+
+  create_table "student_addresses", force: :cascade do |t|
+    t.bigint "student_id"
+    t.string "country", null: false
+    t.string "city", null: false
+    t.string "region"
+    t.string "zone", null: false
+    t.string "sub_city"
+    t.string "house_number", null: false
+    t.string "cell_phone", null: false
+    t.string "house_phone"
+    t.string "pobox"
+    t.string "woreda", null: false
+    t.string "created_by", default: "self"
+    t.string "last_updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_id"], name: "index_student_addresses_on_student_id"
   end
 
   create_table "students", force: :cascade do |t|
@@ -401,6 +401,7 @@ ActiveRecord::Schema.define(version: 2021_08_24_023417) do
     t.string "document_verification_status", default: "pending"
     t.string "account_status", default: "active"
     t.string "graduation_status"
+    t.boolean "tempo_status", default: false
     t.string "created_by", default: "self"
     t.string "last_updated_by"
     t.datetime "created_at", null: false
@@ -411,5 +412,5 @@ ActiveRecord::Schema.define(version: 2021_08_24_023417) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "departments", "collages"
+  add_foreign_key "departments", "colleges"
 end

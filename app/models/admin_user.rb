@@ -6,7 +6,7 @@ class AdminUser < ApplicationRecord
   has_person_name
 
   ##validations
-    validates :username , :presence => true,:length => { :within => 2..50 }
+    # validates :username , :presence => true,:length => { :within => 2..50 }
     validates :first_name , :presence => true,:length => { :within => 2..50 }
     validates :last_name , :presence => true,:length => { :within => 1..50 }, uniqueness: true
     validates :role , :presence => true

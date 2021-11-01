@@ -1,18 +1,18 @@
 ActiveAdmin.register Invoice do
-  permit_params :student_registration_id,:invoice_number,:total_price,:registration_fee,:late_registration_fee,:penalty,:daily_penalty,:invoice_status,:last_updated_by,:created_by,:due_date,payment_transaction_attributes: [:id,:invoice_id,:payment_method_id,:account_holder_fullname,:phone_number,:account_number,:transaction_reference,:finance_approval_status,:last_updated_by,:created_by, :receipt_image], inovice_item_ids: []
+  permit_params :semester_registration_id,:invoice_number,:total_price,:registration_fee,:late_registration_fee,:penalty,:daily_penalty,:invoice_status,:last_updated_by,:created_by,:due_date,payment_transaction_attributes: [:id,:invoice_id,:payment_method_id,:account_holder_fullname,:phone_number,:account_number,:transaction_reference,:finance_approval_status,:last_updated_by,:created_by, :receipt_image], inovice_item_ids: []
 
 
   index do
     selectable_column
     column "invoice no",:invoice_number
     column "student", sortable: true do |n|
-      n.student_registration.student.name.full 
+      n.semester_registration.student.name.full 
     end
     column "admission type", sortable: true do |n|
-      n.student_registration.admission_type 
+      n.semester_registration.admission_type 
     end
     column "study level", sortable: true do |n|
-      n.student_registration.study_level 
+      n.semester_registration.study_level 
     end
     column :invoice_status do |s|
       status_tag s.invoice_status
@@ -71,14 +71,14 @@ ActiveAdmin.register Invoice do
           attributes_table_for invoice do
             row :invoice_number
             row "registration academic year" do |s|
-              link_to s.student_registration.academic_calendar.calender_year, admin_student_registration_path(s.student_registration.id)
+              link_to s.semester_registration.academic_calendar.calender_year, admin_semester_registration_path(s.semester_registration.id)
             end
             row :invoice_status do |s|
               status_tag s.invoice_status
             end
             
             row "payment mode", sortable: true do |n|
-              n.student_registration.mode_of_payment
+              n.semester_registration.mode_of_payment
             end
             row :due_date if invoice.due_date.present?
             number_row :registration_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if invoice.registration_fee > 0
@@ -125,7 +125,7 @@ ActiveAdmin.register Invoice do
       end
       column do
         panel "Student Information" do
-          attributes_table_for invoice.student_registration do
+          attributes_table_for invoice.semester_registration do
             row "Student name", sortable: true do |n|
               n.student.name.full 
             end

@@ -2,7 +2,7 @@ class Student < ApplicationRecord
   ##callbacks
   before_save :department_assignment
   before_save :student_id_generator
-  after_save :semester_registration
+  after_save :student_semester_registration
   # after_save :course_registration
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -15,20 +15,19 @@ class Student < ApplicationRecord
   accepts_nested_attributes_for :student_address
   has_one :emergency_contact, dependent: :destroy
   accepts_nested_attributes_for :emergency_contact
-  has_many :student_registrations
+  has_many :semester_registrations
   has_many_attached :documents
   has_one_attached :photo
      
   ##validations
   validates :first_name , :presence => true,:length => { :within => 2..100 }
   validates :last_name , :presence => true,:length => { :within => 2..100 }
-  validates :student_id , uniqueness: true
+  # validates :student_id , uniqueness: true
   validates	:gender, :presence => true
 	validates	:date_of_birth , :presence => true
 	validates	:study_level, :presence => true
   validates :admission_type, :presence => true,:length => { :within => 2..10 }
-  validates :photo,
-            content_type: ['image/gif', 'image/png', 'image/jpg', 'image/jpeg']
+  validates :photo, attached: true, content_type: ['image/gif', 'image/png', 'image/jpg', 'image/jpeg']
   validates :documents, attached: true
   
   ##scope
@@ -57,9 +56,9 @@ class Student < ApplicationRecord
     end
   end
 
-  def semester_registration
-   if self.document_verification_status == "approved" && self.student_registrations.last.nil? && self.year == 1
-    StudentRegistration.create do |registration|
+  def student_semester_registration
+   if self.document_verification_status == "approved" && self.semester_registrations.last.nil? && self.year == 1
+    SemesterRegistration.create do |registration|
       registration.student_id = self.id
       registration.created_by = self.created_by
       ## TODO: find the calender of student admission type and study level
@@ -74,7 +73,7 @@ class Student < ApplicationRecord
    if self.document_verification_status == "approved" && self.year == 1
     self.program.curriculums.where(year: self.year, semester: self.semester).each do |co|
       CourseRegistration.create do |course|
-        course.student_registration_id = self.student_registrations.last.id
+        course.semester_registration_id = self.semester_registrations.last.id
         course.curriculum_id = co.id
       end
     end

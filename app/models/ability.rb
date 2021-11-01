@@ -13,9 +13,9 @@ class Ability
         can :manage, AdminUser
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :manage, Program
-        can :manage, Collage
-        #TODO: after one collage created disable new action   
-        cannot :destroy, Collage, id: 1
+        can :manage, College
+        #TODO: after one college created disable new action   
+        cannot :destroy, College, id: 1
 
         can :manage, Department
         can :manage, CourseModule
@@ -23,42 +23,39 @@ class Ability
         can :manage, Student
         can :manage, PaymentMethod
         can :manage, AcademicCalendar
-        can :manage, CollagePayment
-        can :manage, StudentRegistration
+        can :manage, CollegePayment
+        can :manage, SemesterRegistration
         can :manage, Invoice
-    when "General Manager"
-        can :manage, ActiveAdmin
-        can :manage, AdminUser
+    when "finance"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
-        # can :manage, ActiveAdmin::Comment
-        can :manage, Product
-        can :manage, Catagory
-        cannot :destroy, Catagory
-        can :manage, Sale
-        can :manage, Supplier
-        can :manage, Customer
-        can :manage, CustomerNotification
-        can :manage, LocalVender
-        can :manage, Account
-        can :read, Notification
-        can :destroy, Notification
-        can :manage, Purchase
-        can :manage, PurchaseItem
-        can :manage, ProductItem
-        # can :manage, Expense
-    when "Sales"
-        can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
-        can :manage, Sale
-        can :manage, CustomerNotification
-        can :manage, Customer
+        can :manage, Program
+        #TODO: after one college created disable new action   
+        # cannot :destroy, College, id: 1
 
-        can :read, Product
-        can :read, Catagory
-        can :read, Supplier
-        can :read, LocalVender
-        can :read, Notification, notifiable_type: "Sale"
-        can :read, PurchaseItem
-        can :manage, ProductItem
+        can :read, Department
+        can :read, CourseModule
+        can :read, Course
+        can :read, Student
+        can :manage, PaymentMethod
+        can :read, AcademicCalendar
+        can :manage, CollegePayment
+        can :manage, SemesterRegistration
+        can :manage, Invoice
+    when "registrar"
+        can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
+        can :manage, Program
+        #TODO: after one college created disable new action   
+        # cannot :destroy, College, id: 1
+
+        can :manage, Department
+        can :manage, CourseModule
+        can :manage, Course
+        can :manage, Student
+        can :manage, PaymentMethod
+        can :manage, AcademicCalendar
+        can :manage, CollegePayment
+        can :manage, SemesterRegistration
+        can :manage, Invoice
 
     when "Stock Manager"
         can :read, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
