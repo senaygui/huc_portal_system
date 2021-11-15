@@ -36,7 +36,7 @@ class Invoice < ApplicationRecord
 					if self.semester_registration.mode_of_payment == "monthly"
 						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.curriculum.credit_hour / 4
 					elsif self.semester_registration.mode_of_payment == "full"
-						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.registration.admission_type).first.tution_per_credit_hr * course.curriculum.credit_hour
+						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.curriculum.credit_hour
 					elsif self.semester_registration.mode_of_payment == "half"
 						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.curriculum.credit_hour / 2
 					end
