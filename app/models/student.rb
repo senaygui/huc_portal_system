@@ -30,6 +30,14 @@ class Student < ApplicationRecord
   validates :photo, attached: true, content_type: ['image/gif', 'image/png', 'image/jpg', 'image/jpeg']
   validates :documents, attached: true
   
+  validate :password_complexity
+  def password_complexity
+    if password.present?
+       if !password.match(/^(?=.*[a-z])(?=.*[A-Z])/) 
+         errors.add :password, "must be bbetween 5 to 20 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character"
+       end
+    end
+  end
   ##scope
     scope :recently_added, lambda { where('created_at >= ?', 1.week.ago)}
     scope :undergraduate, lambda { where(study_level: "undergraduate")}
@@ -42,6 +50,11 @@ class Student < ApplicationRecord
     scope :approved, lambda { where(document_verification_status: "approved")}
     scope :denied, lambda { where(document_verification_status: "denied")}
     scope :incomplete, lambda { where(document_verification_status: "incomplete")}
+
+    # def with_student_address
+    #   build_student_address if student_address.nil?
+    # end
+    
 
   private
   ## callback methods

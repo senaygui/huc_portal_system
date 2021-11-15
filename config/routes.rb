@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   
   # devise_for :students
   
-  devise_for :students
+  devise_for :students, controllers: {
+    registrations: 'registrations'
+  }
   authenticated :student do
     root 'pages#dashboard', as: 'authenticated_user_root'
   end
