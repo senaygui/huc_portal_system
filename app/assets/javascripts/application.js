@@ -49,6 +49,7 @@ $(document).on('turbolinks:load', function(){
   $('#student_student_address_attributes_house_phone').inputmask()
   $('#student_emergency_contact_attributes_cell_phone').inputmask()
   $('#student_emergency_contact_attributes_office_phone_number').inputmask()
+  $('#student_emergency_contact_attributes_email_of_employer').inputmask()
 })
 
 

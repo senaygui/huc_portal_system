@@ -52,31 +52,38 @@
                   </div>
                 </div>
                 <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), multiple: true) do |f| %>
-                  <%= render "students/shared/error_messages", resource: resource %>
-              
                   <div class="bs-stepper-content">
                     <!-- your steps content here -->
                     <div id="bi" class="content" role="tabpanel" aria-labelledby="bi-trigger">
                       <div class="row">
+                        
                         <div class="col-12 col-md-3">
-                          <div class="card  card-primary">
-                            <div class="card-header">
-                              <h3 class="card-title">
-                                <i class="fas fa-info-circle mr-2"></i>
-                                <strong>Instruction</strong>
+                          <div class="row">
+                            <div class="col-12">
+                              <%= render "students/shared/error_messages", resource: resource %>
+                            </div>
+                            <div class="col-12">
+                              <div class="card  card-primary">
+                                <div class="card-header">
+                                  <h3 class="card-title">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    <strong>Instruction</strong>
 
-                              </h3>
+                                  </h3>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                  <p  class="text-center"><strong>Fill in the space(s) or Select the appropriate box(es) or selctions. * fields are required.</strong></p>  
+                                  <p class="text-muted text-center">
+                                    You must provide your address information on the fields provided. Once you fill all the required feilds hit the Continue button.
+                                  </p>
+                                  <hr>
+                                </div>
+                                <!-- /.card-body -->
+                              </div>
                             </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                              <p  class="text-center"><strong>Fill in the space(s) or Select the appropriate box(es) or selctions. * fields are required.</strong></p>  
-                              <p class="text-muted text-center">
-                                You must provide your address information on the fields provided. Once you fill all the required feilds hit the Continue button.
-                              </p>
-                              <hr>
-                            </div>
-                            <!-- /.card-body -->
                           </div>
+                          
                         </div>
                         <div class="col-12 col-md-9">
                           <div class="card card-outline card-primary">
@@ -160,7 +167,7 @@
                           </div>
                         </div>
                         <div class="col-12 col-md-9">
-                          <div class="card card-primary">
+                          <div class="card card-outline card-primary">
                             <div class="card-header">
                               <h3 class="card-title">
                                 <i class="fas fa-info-circle mr-2"></i>
@@ -202,7 +209,7 @@
                           </div>
                         </div>
                         <div class="col-12 col-md-9">
-                          <div class="card card-primary">
+                          <div class="card card-outline card-primary">
                             <div class="card-header">
                               <h3 class="card-title">
                                 <i class="fas fa-info-circle mr-2"></i>
@@ -244,7 +251,7 @@
                           </div>
                         </div>
                         <div class="col-12 col-md-9">
-                          <div class="card card-primary">
+                          <div class="card card-outline card-primary">
                             <div class="card-header">
                               <h3 class="card-title">
                                 <i class="fas fa-info-circle mr-2"></i>

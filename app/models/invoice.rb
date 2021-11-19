@@ -1,6 +1,6 @@
 class Invoice < ApplicationRecord
 	after_create :add_invoice_item
-	after_update :update_total_price
+	# after_update :update_total_price
 	##validations
     validates :invoice_number , :presence => true
   ##associations
@@ -21,9 +21,9 @@ class Invoice < ApplicationRecord
     scope :denied, lambda { where(invoice_status: "denied")}
     scope :incomplete, lambda { where(invoice_status: "incomplete")}
 
-	def total_price
-    self.invoice_items.collect { |oi| oi.valid? ? (CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.registration_fee * oi.course_registration.curriculum.credit_hour) : 0 }.sum + self.registration_fee
-  end
+	# def total_price
+ #    self.invoice_items.collect { |oi| oi.valid? ? (CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * oi.course_registration.curriculum.credit_hour) : 0 }.sum + self.registration_fee
+ #  end
   
   private
 
@@ -35,16 +35,19 @@ class Invoice < ApplicationRecord
 					invoice_item.created_by = self.created_by
 					if self.semester_registration.mode_of_payment == "monthly"
 						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.curriculum.credit_hour / 4
+						invoice_item.price = course_price
 					elsif self.semester_registration.mode_of_payment == "full"
 						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.curriculum.credit_hour
+						invoice_item.price = course_price
 					elsif self.semester_registration.mode_of_payment == "half"
 						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.curriculum.credit_hour / 2
+						invoice_item.price = course_price
 					end
-					invoice_item.price = course_price
+					
 				end
 			end
 		end
-	  def update_total_price
-	    self[:total_price] = total_price
-	  end
+	  # def update_total_price
+	  #   self[:total_price] = total_price
+	  # end
 end

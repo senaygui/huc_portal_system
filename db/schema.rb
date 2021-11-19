@@ -402,6 +402,7 @@ ActiveRecord::Schema.define(version: 2021_11_15_125656) do
     t.string "account_status", default: "active"
     t.string "graduation_status"
     t.boolean "tempo_status", default: false
+    t.string "current_occupation"
     t.string "created_by", default: "self"
     t.string "last_updated_by"
     t.datetime "created_at", null: false

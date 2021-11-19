@@ -1,6 +1,6 @@
 ActiveAdmin.register Student do
   menu parent: "Admission"
-  permit_params :tempo_status,:created_by,:last_updated_by,:photo,:email,:password,:first_name,:last_name,:middle_name,:gender,:student_id,:date_of_birth,:program_id,:department,:admission_type,:study_level,:marital_status,:year,:semester,:account_verification_status,:document_verification_status,:account_status,:graduation_status,student_address_attributes: [:id,:country,:city,:region,:zone,:sub_city,:house_number,:cell_phone,:house_phone,:pobox,:woreda,:created_by,:last_updated_by],emergency_contact_attributes: [:id,:full_name,:relationship,:cell_phone,:email,:current_occupation,:name_of_current_employer,:pobox,:email_of_employer,:office_phone_number,:created_by,:last_updated_by], documents: []
+  permit_params :current_occupation,:tempo_status,:created_by,:last_updated_by,:photo,:email,:password,:first_name,:last_name,:middle_name,:gender,:student_id,:date_of_birth,:program_id,:department,:admission_type,:study_level,:marital_status,:year,:semester,:account_verification_status,:document_verification_status,:account_status,:graduation_status,student_address_attributes: [:id,:country,:city,:region,:zone,:sub_city,:house_number,:cell_phone,:house_phone,:pobox,:woreda,:created_by,:last_updated_by],emergency_contact_attributes: [:id,:full_name,:relationship,:cell_phone,:email,:current_occupation,:name_of_current_employer,:pobox,:email_of_employer,:office_phone_number,:created_by,:last_updated_by], documents: []
   controller do
     def update_resource(object, attributes)
       update_method = attributes.first[:password].present? ? :update_attributes : :update_without_password
@@ -42,6 +42,7 @@ ActiveAdmin.register Student do
   filter :admission_type, as: :select, :collection => ["online", "regular", "extention", "distance"]
   filter :department   
   filter :year
+  filter :current_occupation
   filter :account_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"]
   filter :document_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"]
   filter :account_status, as: :select, :collection => ["active","suspended"]
@@ -98,7 +99,8 @@ ActiveAdmin.register Student do
       else
         f.input :current_password
         f.input :last_updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full} 
-      end      
+      end   
+      f.input :current_occupation   
     end
     f.inputs "Student admission information" do
       f.input :study_level, as: :select, :collection => ["undergraduate", "graduate", "TPVT"], :include_blank => false
@@ -194,6 +196,7 @@ ActiveAdmin.register Student do
             row "Program" do |pr|
               link_to pr.program.program_name, admin_program_path(pr.program.id)
             end
+            row :current_occupation
             row :department
             row :admission_type
             row :study_level

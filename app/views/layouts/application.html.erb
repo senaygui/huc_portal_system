@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
   </head>
 
-  <%if current_page?(new_student_registration_path) || current_page?(new_student_session_path) || current_page?(new_student_password_path)%>
+  <%if !student_signed_in?%>
     <body class="hold-transition control-sidebar-slide-open sidebar-collapse">
       <div class="wrapper">
         <%= render 'layouts/registration_navbar'%>

@@ -19,6 +19,8 @@ class PaymentTransactionsController < ApplicationController
 
   # GET /payment_transactions/1/edit
   def edit
+    @payment_method = @payment_transaction.payment_method
+    @invoice = @payment_transaction.invoice
   end
 
   # POST /payment_transactions or /payment_transactions.json

@@ -1,13 +1,13 @@
 <%= f.fields_for :emergency_contact  do |a|%>
   <div class="row">
     <div class="col-12 col-md-6 form-group">
-      <%= a.input :full_name, input_html: { class: 'form-control', autocomplete: "full_name" },placeholder: "Full name", required: true %>
+      <%= a.input :full_name, input_html: { class: 'form-control', autocomplete: "full_name"  },placeholder: "Full name", required: true %>
     </div>
     <div class="col-12 col-md-6 form-group">
       <%= a.input :relationship, as: :select, :collection => ["Husband", "Wife", "Father", "Mother", "Legal guardian","Son","Daughter","Brother","Sister", "Friend","Uncle","Aunt","Cousin","Nephew","Niece","Grandparent"], input_html: {class: "form-control custom-select"}, required: true%>
     </div>
     <div class="col-12 col-md-6 form-group">
-      <%= a.input :cell_phone, input_html: { class: 'form-control', 'data-inputmask'=>'"mask": "(+251) 999-999999"' }, required: true %>
+      <%= a.input :cell_phone, input_html: { class: 'form-control', 'data-inputmask'=>'"mask": "(+251) 999-999999"' },placeholder: "Cell Phone", required: true %>
     </div>
     
     
@@ -21,7 +21,7 @@
       <%= a.input :email_of_employer, input_html: { class: 'form-control', autocomplete: "email_of_employer" },placeholder: "Email of employer"%>
     </div>
     <div class="col-12 col-md-6 form-group">
-      <%= a.input :office_phone_number, input_html: { class: 'form-control', 'data-inputmask'=>'"mask": "(+251) 999-999999"' }, required: true%>
+      <%= a.input :office_phone_number, input_html: { class: 'form-control', 'data-inputmask'=>'"mask": "(+251) 999-999999"' },placeholder: "office phone number", required: true%>
     </div>
     <div class="col-12 col-md-6 form-group">
       <%= a.input :pobox, input_html: { class: 'form-control', autocomplete: "pobox" },placeholder: "Pobox" %>

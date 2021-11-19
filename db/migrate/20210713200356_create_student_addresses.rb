@@ -7,7 +7,7 @@ class CreateStudentAddresses < ActiveRecord::Migration[5.2]
       t.string :region
       t.string :zone, null: false
       t.string :sub_city
-      t.string :house_number, null: false
+      t.string :house_number
       t.string :cell_phone, null: false
       t.string :house_phone
       t.string :pobox

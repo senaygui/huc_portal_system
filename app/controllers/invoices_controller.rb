@@ -3,7 +3,7 @@ class InvoicesController < ApplicationController
 
   # GET /invoices or /invoices.json
   def index
-    @invoices = Invoice.all
+    @semesters = current_student.semester_registrations.all
   end
 
   # GET /invoices/1 or /invoices/1.json
