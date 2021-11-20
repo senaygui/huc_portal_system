@@ -51,7 +51,6 @@ class DeviseCreateStudents < ActiveRecord::Migration[5.2]
       t.string :account_status, default: "active"
       t.string :graduation_status
       t.boolean :tempo_status, default: false
-      t.string :current_occupation
       ##created and updated by
       t.string :created_by, default: "self"
       t.string :last_updated_by
