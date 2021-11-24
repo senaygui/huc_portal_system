@@ -1,4 +1,5 @@
 ActiveAdmin.register PaymentMethod do
+  menu priority: 3
 permit_params :bank_name,:account_number,:phone_number,:account_type,:payment_method_type,:created_by,:bank_logo ,:account_full_name, :last_updated_by
 
   index do

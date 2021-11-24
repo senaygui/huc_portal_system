@@ -1,4 +1,5 @@
 ActiveAdmin.register CollegePayment do
+  menu priority: 3
   permit_params :study_level,:admission_type,:student_nationality,:registration_fee,:late_registration_fee,:daily_late_registration_penalty,:makeup_exam_fee,:add_drop,:tution_per_credit_hr,:readmission,:reissuance_of_grade_report,:student_copy,:additional_student_copy,:tempo,:original_certificate,:original_certificate_replacement,:tempo_replacement,:letter,:student_id_card,:student_id_card_replacement,:name_change,:transfer_fee,:created_by, :last_updated_by, :total_fee
 
   index do

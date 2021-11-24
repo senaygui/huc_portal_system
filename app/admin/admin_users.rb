@@ -1,4 +1,5 @@
 ActiveAdmin.register AdminUser do
+  menu priority: 2
   permit_params :email, :password, :password_confirmation,:first_name,:last_name,:middle_name,:role,:username
   controller do
     def update_resource(object, attributes)

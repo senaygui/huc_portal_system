@@ -1,5 +1,5 @@
 ActiveAdmin.register AcademicCalendar do
-
+menu priority: 3
 permit_params :calender_year,:starting_date,:ending_date,:admission_type,:study_level,:remark,:from_year,:to_year,:last_updated_by,:created_by, activities_attributes: [:id,:activity,:semester,:description,:category,:starting_date,:ending_date,:last_updated_by,:created_by, :_destroy]
 
   index do

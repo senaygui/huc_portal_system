@@ -11,6 +11,7 @@ class CreateCurriculums < ActiveRecord::Migration[5.2]
       t.integer :ects
       t.decimal :full_course_price, default: 0.0
       t.decimal :monthly_course_price, default: 0.0
+      t.string :course_title
       ##created and updated by
       t.string :created_by
       t.string :last_updated_by

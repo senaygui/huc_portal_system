@@ -88,6 +88,8 @@ class Student < ApplicationRecord
       CourseRegistration.create do |course|
         course.semester_registration_id = self.semester_registrations.last.id
         course.curriculum_id = co.id
+        course.course_title = co.course.course_title
+        # course.course_title = co.course.course_title
       end
     end
    end

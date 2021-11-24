@@ -10,6 +10,7 @@ class CreatePrograms < ActiveRecord::Migration[5.2]
     	t.text :program_description
       t.integer :total_semester, null: false
     	t.integer :program_duration, null: false
+      t.integer :program_semester, null: false
       t.decimal :total_tuition, default: 0.0
     	t.string :created_by
     	t.string :last_updated_by

@@ -1,5 +1,6 @@
 class Program < ApplicationRecord
   before_save :update_subtotal
+  before_save :total_semester_calc
   
 
 	##validations
@@ -7,6 +8,7 @@ class Program < ApplicationRecord
     validates :study_level , :presence => true
     validates :admission_type , :presence => true
     validates :program_duration , :presence => true
+    validates :program_semester , :presence => true
     validates :program_code, :presence => true
     # validates :total_semester, :presence => true
   ##scope
@@ -27,9 +29,16 @@ class Program < ApplicationRecord
   def total_tuition
     curriculums.collect { |oi| oi.valid? ? (oi.full_course_price) : 0 }.sum
   end
+
+  def total_semester
+    total_semester = program_semester * program_duration
+  end
   private
 
   def update_subtotal
     self[:total_tuition] = total_tuition
+  end
+  def total_semester_calc
+    self[:total_semester] = total_semester
   end
 end

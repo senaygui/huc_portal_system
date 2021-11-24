@@ -1,5 +1,5 @@
 ActiveAdmin.register SemesterRegistration do
-
+  menu priority: 9
   permit_params :student_id,:total_price,:registration_fee,:late_registration_fee,:remaining_amount,:mode_of_payment,:semester,:year,:total_enrolled_course,:academic_calendar_id,:registrar_approval_status,:finance_approval_status,:created_by,:last_updated_by, curriculum_ids: []
 
   controller do

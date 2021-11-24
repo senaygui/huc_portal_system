@@ -1,4 +1,6 @@
 ActiveAdmin.register Course do
+  menu priority: 5
+  
 permit_params :course_module_id,:course_title,:course_code,:course_description,:created_by,:last_updated_by
 
   index do

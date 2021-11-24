@@ -177,6 +177,7 @@ ActiveRecord::Schema.define(version: 2021_11_20_071600) do
     t.bigint "semester_registration_id"
     t.bigint "curriculum_id"
     t.string "enrollment_status", default: "pending"
+    t.string "course_title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["curriculum_id"], name: "index_course_registrations_on_curriculum_id"
@@ -206,11 +207,11 @@ ActiveRecord::Schema.define(version: 2021_11_20_071600) do
     t.integer "ects"
     t.decimal "full_course_price", default: "0.0"
     t.decimal "monthly_course_price", default: "0.0"
+    t.string "course_title"
     t.string "created_by"
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "course_title"
     t.index ["course_id"], name: "index_curriculums_on_course_id"
     t.index ["program_id"], name: "index_curriculums_on_program_id"
   end
@@ -321,7 +322,9 @@ ActiveRecord::Schema.define(version: 2021_11_20_071600) do
     t.string "admission_type", null: false
     t.text "overview"
     t.text "program_description"
-    t.integer "program_duration"
+    t.integer "total_semester", null: false
+    t.integer "program_duration", null: false
+    t.integer "program_semester", null: false
     t.decimal "total_tuition", default: "0.0"
     t.string "created_by"
     t.string "last_updated_by"

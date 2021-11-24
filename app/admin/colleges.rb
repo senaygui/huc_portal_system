@@ -1,4 +1,5 @@
 ActiveAdmin.register College do
+  menu priority: 2
   permit_params :college_name,:background,:mission,:vision,:overview,:headquarter,:city,:country,:phone_number,:email,:facebook_handle,:twitter_handle,:instagram_handle,:map_embed,:created_by,:last_updated_by,:state,:region,:zone,:worda, :sub_city, :alternative_phone_number
 
   index do

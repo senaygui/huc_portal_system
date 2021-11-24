@@ -4,6 +4,7 @@ class CreateCourseRegistrations < ActiveRecord::Migration[5.2]
       t.belongs_to :semester_registration, index: true
       t.belongs_to :curriculum, index: true
       t.string :enrollment_status, default:"pending"
+      t.string :course_title
       t.timestamps
     end
   end

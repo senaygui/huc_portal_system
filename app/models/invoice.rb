@@ -7,7 +7,7 @@ class Invoice < ApplicationRecord
 	  belongs_to :semester_registration
 	  has_one :payment_transaction
 	  accepts_nested_attributes_for :payment_transaction, reject_if: :all_blank, allow_destroy: true
-	  has_many :invoice_items
+	  has_many :invoice_items, dependent: :destroy
 	##scope
     scope :recently_added, lambda {where('created_at >= ?', 1.week.ago)}
     # scope :undergraduate, lambda { self.registration.where(study_level: "undergraduate")}

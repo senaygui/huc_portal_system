@@ -1,6 +1,6 @@
 ActiveAdmin.register Program do
-
-  permit_params :department_id,:total_semester,:program_name,:program_code,:overview,:program_description,:created_by,:last_updated_by,:total_tuition,:study_level,:admission_type,:program_duration, curriculums_attributes: [:id,:course_id,:semester,:course_starting_date,:course_ending_date,:year,:credit_hour,:ects,:full_course_price,:course_title,:monthly_course_price,:created_by,:last_updated_by, :_destroy]
+  menu priority: 6
+  permit_params :program_semester,:department_id,:total_semester,:program_name,:program_code,:overview,:program_description,:created_by,:last_updated_by,:total_tuition,:study_level,:admission_type,:program_duration, curriculums_attributes: [:id,:course_id,:semester,:course_starting_date,:course_ending_date,:year,:credit_hour,:ects,:full_course_price,:course_title,:monthly_course_price,:created_by,:last_updated_by, :_destroy]
 
   index do
     selectable_column
@@ -30,6 +30,7 @@ ActiveAdmin.register Program do
   filter :study_level, as: :select, :collection => ["undergraduate", "graduate"]
   filter :admission_type, as: :select, :collection => ["online", "regular", "extention", "distance"]
   filter :program_duration, as: :select, :collection => [1, 2,3,4,5,6,7]
+  filter :program_semester
   # filter :total_semester     
   filter :created_by
   filter :last_updated_by
@@ -56,6 +57,7 @@ ActiveAdmin.register Program do
       f.input :study_level, as: :select, :collection => ["undergraduate", "graduate", "TPVT"], :include_blank => false
       f.input :admission_type, as: :select, :collection => ["online", "regular", "extention", "distance"], :include_blank => false
       f.input :program_duration, as: :select, :collection => [1, 2,3,4,5,6,7], :include_blank => false
+      f.input :program_semester , :collection => [1, 2,3,4], :include_blank => false
       # f.input :total_semester
       if f.object.new_record?
         f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
@@ -106,6 +108,7 @@ ActiveAdmin.register Program do
             row :study_level
             row :admission_type
             row :program_duration
+            row :program_semester
             # row :total_semester
             number_row "Tuition",:total_tuition, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 
             row :created_by
@@ -118,7 +121,7 @@ ActiveAdmin.register Program do
       tab "Program curriculums" do
         (1..program.program_duration).map do |i|
           panel "ClassYear: Year #{i}" do
-            (1..2).map do |s|
+            (1..program.program_semester).map do |s|
               panel "Semester: #{s}" do
                 table_for program.curriculums.where(year: i, semester: s).order('year ASC','semester ASC') do
                   ## TODO: wordwrap titles and long texts
