@@ -3,6 +3,9 @@ class Student < ApplicationRecord
   before_save :department_assignment
   before_save :student_id_generator
   after_save :student_semester_registration
+  before_create :set_pwd
+
+  
   # after_save :course_registration
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -15,9 +18,10 @@ class Student < ApplicationRecord
   accepts_nested_attributes_for :student_address
   has_one :emergency_contact, dependent: :destroy
   accepts_nested_attributes_for :emergency_contact
-  has_many :semester_registrations
-  has_many_attached :documents
-  has_one_attached :photo
+  has_many :semester_registrations, dependent: :destroy
+  has_many :invoices, dependent: :destroy
+  has_many_attached :documents, dependent: :destroy
+  has_one_attached :photo, dependent: :destroy
      
   ##validations
   validates :first_name , :presence => true,:length => { :within => 2..100 }
@@ -58,6 +62,9 @@ class Student < ApplicationRecord
 
   private
   ## callback methods
+  def set_pwd
+    self[:student_password] = self.password
+  end
   def department_assignment
     self[:department] = program.department.department_name
   end

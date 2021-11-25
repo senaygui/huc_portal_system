@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_20_071600) do
+ActiveRecord::Schema.define(version: 2021_11_24_104528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -270,6 +270,7 @@ ActiveRecord::Schema.define(version: 2021_11_20_071600) do
 
   create_table "invoices", force: :cascade do |t|
     t.bigint "semester_registration_id"
+    t.bigint "student_id"
     t.string "invoice_number", null: false
     t.decimal "total_price"
     t.decimal "registration_fee", default: "0.0"
@@ -283,6 +284,7 @@ ActiveRecord::Schema.define(version: 2021_11_20_071600) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["semester_registration_id"], name: "index_invoices_on_semester_registration_id"
+    t.index ["student_id"], name: "index_invoices_on_student_id"
   end
 
   create_table "payment_methods", force: :cascade do |t|
@@ -410,6 +412,7 @@ ActiveRecord::Schema.define(version: 2021_11_20_071600) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "current_occupation"
+    t.string "student_password"
     t.index ["email"], name: "index_students_on_email", unique: true
     t.index ["program_id"], name: "index_students_on_program_id"
     t.index ["reset_password_token"], name: "index_students_on_reset_password_token", unique: true

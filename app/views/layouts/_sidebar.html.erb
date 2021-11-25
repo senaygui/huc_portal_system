@@ -62,15 +62,6 @@
             <a href="/" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
-                Courses
-                <!-- <i class="right fas fa-angle-left"></i> -->
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
                 Grade Report
                 <!-- <i class="right fas fa-angle-left"></i> -->
               </p>
@@ -95,7 +86,7 @@
             </a>
           </li>
           <li class="nav-header"></li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a href="pages/calendar.html" class="nav-link">
               <i class="nav-icon far fa-calendar-alt"></i>
               <p>
@@ -103,6 +94,14 @@
                 <span class="badge badge-info right">2</span>
               </p>
             </a>
+          </li> -->
+          <li class="nav-item">
+            <%= link_to destroy_student_session_path, method: :delete, class: "nav-link" do%>
+              <i class="nav-icon far fa-calendar-alt"></i>
+              <p>
+                Logout
+              </p>
+            <%end%>
           </li>
         </ul>
       </nav>

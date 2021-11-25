@@ -9,10 +9,14 @@
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li> -->
         <li class="nav-item"> 
-          <strong> <%= link_to "Home", root_path, class: "nav-link"%>  </strong>
+          <strong> <%= link_to "Home", "http://online.bstcollege.edu.et/", class: "nav-link"%>  </strong>
         </li>
         <li class="nav-item d-none d-sm-inline-block"> 
-          <strong><%= link_to "Contact", "#", class: "nav-link"%> </strong> 
+          <%if current_page?(new_student_registration_path)%>
+            <strong><%= link_to "Sign in", new_student_session_path, class: "nav-link"%> </strong> 
+          <%elsif current_page?(new_student_session_path)%>
+            <strong><%= link_to "Register Now", new_student_registration_path, class: "nav-link"%> </strong> 
+          <%end%>
         </li>
         <li class="nav-item">
           <a class="nav-link" data-widget="fullscreen" href="#" role="button">

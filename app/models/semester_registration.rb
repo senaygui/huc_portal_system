@@ -23,6 +23,7 @@ class SemesterRegistration < ApplicationRecord
 	  		if (self.semester == 1) && (self.year == 1) && self.mode_of_payment.present? && self.invoices.last.nil?
 	  			Invoice.create do |invoice|
 	  				invoice.semester_registration_id = self.id
+	  				invoice.student_id = self.student.id
 	  				invoice.created_by = self.created_by
 	  				invoice.due_date = self.created_at.day + 2.days 
 	  				invoice.invoice_status = "pending"

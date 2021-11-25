@@ -5,6 +5,7 @@ class Invoice < ApplicationRecord
     validates :invoice_number , :presence => true
   ##associations
 	  belongs_to :semester_registration
+	  belongs_to :student
 	  has_one :payment_transaction
 	  accepts_nested_attributes_for :payment_transaction, reject_if: :all_blank, allow_destroy: true
 	  has_many :invoice_items, dependent: :destroy
@@ -47,7 +48,7 @@ class Invoice < ApplicationRecord
 				end
 			end
 		end
-	  # def update_total_price
+	  # def update_semester_registration
 	  #   self[:total_price] = total_price
 	  # end
 end
