@@ -50,6 +50,8 @@ class DeviseCreateStudents < ActiveRecord::Migration[5.2]
       t.string :document_verification_status, default: "pending"
       t.string :account_status, default: "active"
       t.string :graduation_status
+      t.string :current_occupation
+      t.string :student_password
       t.boolean :tempo_status, default: false
       ##created and updated by
       t.string :created_by, default: "self"
