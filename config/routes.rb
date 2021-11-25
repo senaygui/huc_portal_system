@@ -9,6 +9,8 @@ Rails.application.routes.draw do
     root 'pages#dashboard', as: 'authenticated_user_root'
   end
   get 'documents' => 'pages#documents'
+  get 'profile' => 'pages#profile'
+  get 'grade_report' => 'pages#grade_report'
   resources :semester_registrations
   resources :invoices
   resources :payment_methods

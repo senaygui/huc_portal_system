@@ -59,32 +59,33 @@
             <%end%>
           </li>
           <li class="nav-item">
-            <a href="/" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Grade Report
-                <!-- <i class="right fas fa-angle-left"></i> -->
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/" class="nav-link">
+            <%= link_to profile_path, class: "nav-link" do %>
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Profile
                 <!-- <i class="right fas fa-angle-left"></i> -->
               </p>
-            </a>
+            <%end%>
           </li>
           <li class="nav-item">
-            <a href="/" class="nav-link">
+            <%= link_to grade_report_path, class: "nav-link" do %>
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Grade Report
+                <!-- <i class="right fas fa-angle-left"></i> -->
+              </p>
+            <%end%>
+          </li>
+          <li class="nav-item">
+            <%= link_to documents_path, class: "nav-link" do %>
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Documents
                 <!-- <i class="right fas fa-angle-left"></i> -->
               </p>
-            </a>
+            <%end%>
           </li>
+          
           <li class="nav-header"></li>
           <!-- <li class="nav-item">
             <a href="pages/calendar.html" class="nav-link">
