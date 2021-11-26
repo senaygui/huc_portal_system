@@ -1,9 +1,9 @@
-role :app, %w{deploy@165.22.18.246}
-role :web, %w{deploy@165.22.18.246}
-role :db, %w{deploy@165.22.18.246}, :primary => true
+role :app, %w{deploy@164.90.217.19}
+role :web, %w{deploy@164.90.217.19}
+role :db, %w{deploy@164.90.217.19}, :primary => true
 set :branch, "master"
 set :rails_env, "production"
-set :deploy_to, '/home/deploy/portal_system'
+set :deploy_to, '/home/deploy/huc_portal_system'
 
 # server-based syntax
 # ======================
