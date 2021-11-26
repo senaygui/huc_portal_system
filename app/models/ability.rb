@@ -54,6 +54,10 @@ class Ability
         can :read, SemesterRegistration
         can :manage, Invoice
     when "registrar"
+        can :manage, StudentGrade
+        can :manage, GradeReport
+        can :manage, GradeRule
+        can :manage, Grade
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, Program
         #TODO: after one college created disable new action   
