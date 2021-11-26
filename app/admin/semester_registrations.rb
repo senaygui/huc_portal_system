@@ -16,6 +16,14 @@ ActiveAdmin.register SemesterRegistration do
       # super
     end 
   end 
+  member_action :generate_grade_report, method: :put do
+    @semester_registration= SemesterRegistration.find(params[:id])
+    @semester_registration.generate_grade_report
+    redirect_back(fallback_location: admin_student_grade_path)
+  end
+  action_item :update, only: :show do
+    link_to 'generate grade report', generate_grade_report_admin_semester_registration_path(semester_registration.id), method: :put, data: { confirm: 'Are you sure?' }        
+  end
 
   index do
     selectable_column

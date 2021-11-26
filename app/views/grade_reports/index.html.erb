@@ -30,12 +30,31 @@
 						<th>Academic Year</th>
 						<th>Semester</th>
 						<th>Year</th>
-						<th>Registration Date</th>
+						<td>CGPA</td>
+						<td>SGPA</td>
+						<td>Academic Status</td>
+						<th>Generated</th>
 						
 						<th>Actions</th>
 					</tr>
 				</thead>
-
+					<%@grade_reports.each do |sm|%>
+							<tr>
+								<td><%= sm.student.name.full  %></td>
+								<td><%= sm.student.student_id %></td>
+								<td><%= sm.academic_calendar.calender_year %></td>
+								<td><%= sm.semester %></td>
+								<td><%= sm.year %></td>
+								<td><%= sm.cgpa %></td>
+								<td><%= sm.sgpa %></td>
+								<td><%= sm.academic_status %></td>
+								<td><%= sm.created_at.strftime("%b %d, %Y") %></td>
+								
+								<td class="actions">
+					        <%= link_to("View", grade_report_path(sm), :class => 'btn-sm btn-primary') %>
+					      </td>
+							</tr>
+					<%end%>
 				<tbody>
 
 				</tbody>

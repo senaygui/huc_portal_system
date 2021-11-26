@@ -10,6 +10,10 @@ class Ability
 
     case user.role
     when "admin"
+        can :manage, StudentGrade
+        can :manage, GradeReport
+        can :manage, GradeRule
+        can :manage, Grade
         can :manage, AdminUser
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :manage, Program
@@ -26,6 +30,14 @@ class Ability
         can :manage, CollegePayment
         can :manage, SemesterRegistration
         can :manage, Invoice
+    when "teacher"
+        can :read, Student
+        can :read, SemesterRegistration
+        can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
+        can :manage, StudentGrade
+        can :manage, GradeReport
+        can :manage, GradeRule
+        can :manage, Grade
     when "finance"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, Program

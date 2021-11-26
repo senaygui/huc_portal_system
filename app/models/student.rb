@@ -22,7 +22,8 @@ class Student < ApplicationRecord
   has_many :invoices, dependent: :destroy
   has_many_attached :documents, dependent: :destroy
   has_one_attached :photo, dependent: :destroy
-     
+  has_many :student_grades, dependent: :destroy
+  has_many :grade_reports
   ##validations
   validates :first_name , :presence => true,:length => { :within => 2..100 }
   validates :last_name , :presence => true,:length => { :within => 2..100 }

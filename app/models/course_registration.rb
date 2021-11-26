@@ -1,9 +1,11 @@
 class CourseRegistration < ApplicationRecord
 	after_create :add_invoice_item
+	after_create :add_grade
 	##associations
 	  belongs_to :semester_registration
 	  belongs_to :curriculum
 	  has_many :invoice_items
+	  has_one :student_grade, dependent: :destroy
 
 
 	private
@@ -23,5 +25,13 @@ class CourseRegistration < ApplicationRecord
 					invoice_item.price = course_price
 				end
 			end
+		end
+
+		def add_grade
+			StudentGrade.create do |student_grade|
+					student_grade.course_registration_id = self.id
+					student_grade.student_id = self.semester_registration.student.id 
+					student_grade.course_id = self.curriculum.course.id
+				end
 		end
 end

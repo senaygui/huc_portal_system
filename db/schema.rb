@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_15_125656) do
+ActiveRecord::Schema.define(version: 2021_11_26_004620) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,15 @@ ActiveRecord::Schema.define(version: 2021_11_15_125656) do
     t.index ["role"], name: "index_admin_users_on_role"
   end
 
+  create_table "assessments", force: :cascade do |t|
+    t.bigint "student_grade_id"
+    t.string "assessment"
+    t.decimal "result"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_grade_id"], name: "index_assessments_on_student_grade_id"
+  end
+
   create_table "college_payments", force: :cascade do |t|
     t.string "study_level", null: false
     t.string "admission_type", null: false
@@ -158,6 +167,15 @@ ActiveRecord::Schema.define(version: 2021_11_15_125656) do
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "course_assessments", force: :cascade do |t|
+    t.bigint "curriculums_id"
+    t.integer "weight"
+    t.string "assessment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["curriculums_id"], name: "index_course_assessments_on_curriculums_id"
   end
 
   create_table "course_modules", force: :cascade do |t|
@@ -254,6 +272,41 @@ ActiveRecord::Schema.define(version: 2021_11_15_125656) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["student_id"], name: "index_emergency_contacts_on_student_id"
+  end
+
+  create_table "grade_reports", force: :cascade do |t|
+    t.bigint "semester_registration_id"
+    t.bigint "student_id"
+    t.bigint "academic_calendar_id"
+    t.decimal "cgpa"
+    t.decimal "sgpa"
+    t.integer "semester"
+    t.integer "year"
+    t.string "academic_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_grade_reports_on_academic_calendar_id"
+    t.index ["semester_registration_id"], name: "index_grade_reports_on_semester_registration_id"
+    t.index ["student_id"], name: "index_grade_reports_on_student_id"
+  end
+
+  create_table "grade_rules", force: :cascade do |t|
+    t.string "admission_type"
+    t.string "study_level"
+    t.integer "min_cgpa_value_to_pass"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "grades", force: :cascade do |t|
+    t.bigint "grade_rule_id"
+    t.string "grade"
+    t.integer "min_value"
+    t.integer "max_value"
+    t.integer "grade_value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grade_rule_id"], name: "index_grades_on_grade_rule_id"
   end
 
   create_table "invoice_items", force: :cascade do |t|
@@ -376,6 +429,20 @@ ActiveRecord::Schema.define(version: 2021_11_15_125656) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["student_id"], name: "index_student_addresses_on_student_id"
+  end
+
+  create_table "student_grades", force: :cascade do |t|
+    t.bigint "course_registration_id"
+    t.bigint "student_id"
+    t.string "grade_in_letter"
+    t.string "grade_in_number"
+    t.decimal "grade_letter_value"
+    t.bigint "course_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_student_grades_on_course_id"
+    t.index ["course_registration_id"], name: "index_student_grades_on_course_registration_id"
+    t.index ["student_id"], name: "index_student_grades_on_student_id"
   end
 
   create_table "students", force: :cascade do |t|

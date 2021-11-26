@@ -172,11 +172,11 @@ ActiveAdmin.register Student do
     end
     f.actions
   end
-  member_action :delete_document, method: :delete do
-    @pic = ActiveStorage::Attachment.find(params[:id])
-    @pic.purge_later
-    redirect_back(fallback_location: edit_admin_student_path)
-  end
+  # member_action :delete_document, method: :delete do
+  #   @pic = ActiveStorage::Attachment.find(params[:id])
+  #   @pic.purge_later
+  #   redirect_back(fallback_location: edit_admin_student_path)
+  # end
   #TODO: make delete btn in show not primery color
   #TODO: add account approval status action modal
   show :title => proc{|student| truncate(student.name.full, length: 50) } do

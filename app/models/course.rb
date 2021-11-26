@@ -6,6 +6,7 @@ class Course < ApplicationRecord
   	belongs_to :course_module
   	has_many :curriculums, dependent: :destroy
  		has_many :programs, through: :curriculums, dependent: :destroy
+ 		has_many :student_grades, dependent: :destroy
   ##scope
   	scope :recently_added, lambda { where('created_at >= ?', 1.week.ago)}
 end
