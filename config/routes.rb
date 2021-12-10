@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   get 'documents' => 'pages#documents'
   get 'profile' => 'pages#profile'
   get 'grade_report' => 'pages#grade_report'
+  get 'digital-iteracy-quiz' => 'pages#digital_iteracy_quiz'
+  get 'requirements' => 'pages#requirement'
+  resources :almunis
   resources :semester_registrations
   resources :invoices
   resources :payment_methods

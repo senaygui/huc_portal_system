@@ -1,6 +1,8 @@
 ActiveAdmin.register Student do
+
   menu priority: 7
-  permit_params :current_occupation,:tempo_status,:created_by,:last_updated_by,:photo,:email,:password,:first_name,:last_name,:middle_name,:gender,:student_id,:date_of_birth,:program_id,:department,:admission_type,:study_level,:marital_status,:year,:semester,:account_verification_status,:document_verification_status,:account_status,:graduation_status,student_address_attributes: [:id,:country,:city,:region,:zone,:sub_city,:house_number,:cell_phone,:house_phone,:pobox,:woreda,:created_by,:last_updated_by],emergency_contact_attributes: [:id,:full_name,:relationship,:cell_phone,:email,:current_occupation,:name_of_current_employer,:pobox,:email_of_employer,:office_phone_number,:created_by,:last_updated_by], documents: []
+  permit_params :current_location,:current_occupation,:tempo_status,:created_by,:last_updated_by,:photo,:email,:password,:first_name,:last_name,:middle_name,:gender,:student_id,:date_of_birth,:program_id,:department,:admission_type,:study_level,:marital_status,:year,:semester,:account_verification_status,:document_verification_status,:account_status,:graduation_status,student_address_attributes: [:id,:country,:city,:region,:zone,:sub_city,:house_number,:cell_phone,:house_phone,:pobox,:woreda,:created_by,:last_updated_by],emergency_contact_attributes: [:id,:full_name,:relationship,:cell_phone,:email,:current_occupation,:name_of_current_employer,:pobox,:email_of_employer,:office_phone_number,:created_by,:last_updated_by], documents: []
+  active_admin_import
   controller do
     def update_resource(object, attributes)
       update_method = attributes.first[:password].present? ? :update_attributes : :update_without_password
@@ -11,7 +13,7 @@ ActiveAdmin.register Student do
     selectable_column
     column :student_id
     column "full name", sortable: true do |n|
-      n.name.full 
+      n.name.full.upcase
     end
     column "Department", sortable: true do |d|
       link_to d.program.department.department_name, [:admin, d.program.department]
@@ -43,6 +45,8 @@ ActiveAdmin.register Student do
   filter :department   
   filter :year
   filter :current_occupation
+  filter :current_location
+
   filter :account_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"]
   filter :document_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"]
   filter :account_status, as: :select, :collection => ["active","suspended"]
@@ -60,106 +64,109 @@ ActiveAdmin.register Student do
   scope :incomplete
   scope :undergraduate
   scope :graduate
-  scope :online
-  scope :regular
-  scope :extention
-  scope :distance
+
+  scope :online, :if => proc { current_admin_user.role == "admin" }
+  scope :regular, :if => proc { current_admin_user.role == "admin" }
+  scope :extention, :if => proc { current_admin_user.role == "admin" }
+  scope :distance, :if => proc { current_admin_user.role == "admin" }
 
   
 
   form do |f|
     f.semantic_errors
     f.semantic_errors *f.object.errors.keys
-    f.inputs "Student basic information" do
-      div class: "avatar-upload" do
-        div class: "avatar-edit" do
-          f.input :photo, as: :file, label: "Upload Photo"
-        end
-        div class: "avatar-preview" do
-          if f.object.photo.attached? 
-            image_tag(f.object.photo,resize: '100x100',class: "profile-user-img img-responsive img-circle", id: "imagePreview")
-          else
-            image_tag("blank-profile-picture-973460_640.png",class: "profile-user-img img-responsive img-circle", id: "imagePreview")
+    if f.object.new_record?
+      f.inputs "Student basic information" do
+        div class: "avatar-upload" do
+          div class: "avatar-edit" do
+            f.input :photo, as: :file, label: "Upload Photo"
           end
-        end
-      end
-      f.input :first_name
-      f.input :last_name
-      f.input :middle_name
-      f.input :gender, as: :select, :collection => ["Male", "Female"], :include_blank => false
-      f.input :date_of_birth, as: :date_time_picker
-      f.input :marital_status, as: :select, :collection => ["Single", "Married", "Widowed","Separated","Divorced"], :include_blank => false
-      f.input :email
-      f.input :password
-      f.input :password_confirmation
-      if f.object.new_record?
-        f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-        f.input :year, as: :hidden, :input_html => { :value => 1}
-        f.input :semester, as: :hidden, :input_html => { :value => 1}
-      else
-        f.input :current_password
-        f.input :last_updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full} 
-      end   
-      f.input :current_occupation   
-    end
-    f.inputs "Student admission information" do
-      f.input :study_level, as: :select, :collection => ["undergraduate", "graduate", "TPVT"], :include_blank => false
-      f.input :admission_type, as: :select, :collection => ["online", "regular", "extention", "distance"], :include_blank => false
-      f.input :program_id, as: :search_select, url: admin_programs_path,
-          fields: [:program_name, :id], display_name: 'program_name', minimum_input_length: 2,
-          order_by: 'id_asc'
-    end
-    f.inputs "Student address information", :for => [:student_address, f.object.student_address || StudentAddress.new ] do |a|
-      a.input :country, as: :country, selected: 'ET', priority_countries: ["ET", "US"], include_blank: "select country"
-      #TODO: add select list to city,sub_city,state,region,zone
-      a.input :city
-      a.input :sub_city
-      a.input :region
-      a.input :zone
-      a.input :woreda
-      a.input :house_number
-      a.input :cell_phone
-      a.input :house_phone
-      a.input :pobox
-    end
-    f.inputs "Student emergency contact person information", :for => [:emergency_contact, f.object.emergency_contact || EmergencyContact.new ] do |a|
-      a.input :full_name
-      a.input :relationship, as: :select, :collection => ["Husband", "Wife", "Father", "Mother", "Legal guardian","Son","Daughter","Brother","Sister", "Friend","Uncle","Aunt","Cousin","Nephew","Niece","Grandparent"], :include_blank => false
-      a.input :cell_phone
-      a.input :email
-      a.input :current_occupation
-      a.input :name_of_current_employer, hint: "current employer company name or person name of the student emergency contact person"
-      a.input :email_of_employer, hint: "current employer company email or person email of the student emergency contact person"
-      a.input :office_phone_number, hint: "current employer company phone number or person phone number of the student emergency contact person"
-      a.input :pobox
-    end
-    f.inputs 'Dcouemnts', multipart: true do
-      div class: "file-upload" do
-        f.drag_and_drop_file_field :documents do
-          'Drag and drop or click here to upload all the necessary documents!'
-        end
-        
-      end
-      if f.object.documents.attached?
-        div class: "document-preview container" do
-          f.object.documents.each do |document|
-            if document.variable?
-                div class: "preview-card" do
-                  span image_tag(document, size: '200x200')
-                  span link_to 'delete', delete_document_admin_student_path(document.id), method: :delete, data: { confirm: 'Are you sure?' }
-                end
-            elsif document.previewable?
-                div class: "preview-card" do
-                  span image_tag(document.preview(resize: '200x200'))
-                  span link_to 'delete', delete_document_admin_student_path(document.id), method: :delete, data: { confirm: 'Are you sure?' }
-                end
+          div class: "avatar-preview" do
+            if f.object.photo.attached? 
+              image_tag(f.object.photo,resize: '100x100',class: "profile-user-img img-responsive img-circle", id: "imagePreview")
+            else
+              image_tag("blank-profile-picture-973460_640.png",class: "profile-user-img img-responsive img-circle", id: "imagePreview")
             end
           end
         end
+        f.input :first_name
+        f.input :last_name
+        f.input :middle_name
+        f.input :gender, as: :select, :collection => ["Male", "Female"], :include_blank => false
+        f.input :date_of_birth, as: :date_time_picker
+        f.input :marital_status, as: :select, :collection => ["Single", "Married", "Widowed","Separated","Divorced"], :include_blank => false
+        f.input :email
+        f.input :password
+        f.input :password_confirmation
+        if f.object.new_record?
+          f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+          f.input :year, as: :hidden, :input_html => { :value => 1}
+          f.input :semester, as: :hidden, :input_html => { :value => 1}
+        else
+          f.input :current_password
+          f.input :last_updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full} 
+        end   
+        f.input :current_occupation   
       end
-    end
-    f.inputs "temporary document status" do
-      f.input :tempo_status
+      f.inputs "Student admission information" do
+        f.input :study_level, as: :select, :collection => ["undergraduate", "graduate", "TPVT"], :include_blank => false
+        f.input :admission_type, as: :select, :collection => ["online", "regular", "extention", "distance"], :include_blank => false
+        f.input :program_id, as: :search_select, url: admin_programs_path,
+            fields: [:program_name, :id], display_name: 'program_name', minimum_input_length: 2,
+            order_by: 'id_asc'
+      end
+      f.inputs "Student address information", :for => [:student_address, f.object.student_address || StudentAddress.new ] do |a|
+        a.input :country, as: :country, selected: 'ET', priority_countries: ["ET", "US"], include_blank: "select country"
+        #TODO: add select list to city,sub_city,state,region,zone
+        a.input :city
+        a.input :sub_city
+        a.input :region
+        a.input :zone
+        a.input :woreda
+        a.input :house_number
+        a.input :cell_phone
+        a.input :house_phone
+        a.input :pobox
+      end
+      f.inputs "Student emergency contact person information", :for => [:emergency_contact, f.object.emergency_contact || EmergencyContact.new ] do |a|
+        a.input :full_name
+        a.input :relationship, as: :select, :collection => ["Husband", "Wife", "Father", "Mother", "Legal guardian","Son","Daughter","Brother","Sister", "Friend","Uncle","Aunt","Cousin","Nephew","Niece","Grandparent"], :include_blank => false
+        a.input :cell_phone
+        a.input :email
+        a.input :current_occupation
+        a.input :name_of_current_employer, hint: "current employer company name or person name of the student emergency contact person"
+        a.input :email_of_employer, hint: "current employer company email or person email of the student emergency contact person"
+        a.input :office_phone_number, hint: "current employer company phone number or person phone number of the student emergency contact person"
+        a.input :pobox
+      end
+      f.inputs 'Dcouemnts', multipart: true do
+        div class: "file-upload" do
+          f.drag_and_drop_file_field :documents do
+            'Drag and drop or click here to upload all the necessary documents!'
+          end
+          
+        end
+        # if f.object.documents.attached?
+        #   div class: "document-preview container" do
+        #     f.object.documents.each do |document|
+        #       if document.variable?
+        #           div class: "preview-card" do
+        #             span image_tag(document, size: '200x200')
+        #             span link_to 'delete', delete_document_admin_student_path(document.id), method: :delete, data: { confirm: 'Are you sure?' }
+        #           end
+        #       elsif document.previewable?
+        #           div class: "preview-card" do
+        #             span image_tag(document.preview(resize: '200x200'))
+        #             span link_to 'delete', delete_document_admin_student_path(document.id), method: :delete, data: { confirm: 'Are you sure?' }
+        #           end
+        #       end
+        #     end
+        #   end
+        # end
+      end
+      f.inputs "temporary document status" do
+        f.input :tempo_status
+      end
     end
     f.inputs "Student account and document verification" do
       f.input :account_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"], :include_blank => false
@@ -179,6 +186,15 @@ ActiveAdmin.register Student do
   # end
   #TODO: make delete btn in show not primery color
   #TODO: add account approval status action modal
+
+  # member_action :student_approval, method: :put do
+  #   @student= Student.find(params[:id])
+  #   @student.approve_student
+  #   redirect_back(fallback_location: admin_student_path)
+  # end
+  action_item :edit, only: :show do
+    link_to 'Approve Student', edit_admin_student_path(student.id)
+  end
   show :title => proc{|student| truncate(student.name.full, length: 50) } do
     tabs do
       tab "student General information" do
@@ -188,7 +204,7 @@ ActiveAdmin.register Student do
               span image_tag(pt.photo, size: '150x150', class: "img-corner")
             end
             row "full name", sortable: true do |n|
-              n.name.full 
+              n.name.full.upcase
             end
             row "Student ID" do |si|
               si.student_id

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_26_004620) do
+ActiveRecord::Schema.define(version: 2021_12_10_060219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,6 +101,18 @@ ActiveRecord::Schema.define(version: 2021_11_26_004620) do
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
     t.index ["role"], name: "index_admin_users_on_role"
+  end
+
+  create_table "almunis", force: :cascade do |t|
+    t.string "fullname", null: false
+    t.string "sex", null: false
+    t.string "phone_number", null: false
+    t.string "modality"
+    t.string "study_level"
+    t.datetime "graduation_date"
+    t.string "program_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "assessments", force: :cascade do |t|
@@ -385,7 +397,24 @@ ActiveRecord::Schema.define(version: 2021_11_26_004620) do
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "monthly_price"
+    t.decimal "full_semester_price"
+    t.decimal "two_monthly_price"
+    t.decimal "three_monthly_price"
     t.index ["department_id"], name: "index_programs_on_department_id"
+  end
+
+  create_table "sections", force: :cascade do |t|
+    t.bigint "course_id"
+    t.bigint "curriculum_id"
+    t.bigint "program_id"
+    t.string "section_name"
+    t.integer "total_capacity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_sections_on_course_id"
+    t.index ["curriculum_id"], name: "index_sections_on_curriculum_id"
+    t.index ["program_id"], name: "index_sections_on_program_id"
   end
 
   create_table "semester_registrations", force: :cascade do |t|
@@ -480,6 +509,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_004620) do
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "current_location"
     t.index ["email"], name: "index_students_on_email", unique: true
     t.index ["program_id"], name: "index_students_on_program_id"
     t.index ["reset_password_token"], name: "index_students_on_reset_password_token", unique: true

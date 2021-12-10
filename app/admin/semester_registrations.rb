@@ -1,7 +1,59 @@
 ActiveAdmin.register SemesterRegistration do
   menu priority: 9
   permit_params :student_id,:total_price,:registration_fee,:late_registration_fee,:remaining_amount,:mode_of_payment,:semester,:year,:total_enrolled_course,:academic_calendar_id,:registrar_approval_status,:finance_approval_status,:created_by,:last_updated_by, curriculum_ids: []
-
+  csv do
+    column "username" do |username|
+      username.student.student_id
+    end
+    column "password" do |pass|
+      pass.student.student_password
+    end
+    column "firstname" do |fn|
+      fn.student.first_name
+    end
+    column "lastname" do |ln|
+      ln.student.last_name
+    end
+    column "email" do |e|
+      e.student.email
+    end
+    column "course1" do |e|
+      e.course_registrations[0].curriculum.course.course_code if e.course_registrations[0]
+    end
+    column "role1" do |e|
+      "student"
+    end
+    column "course2" do |e|
+       e.course_registrations[1].curriculum.course.course_code if e.course_registrations[1]
+    end
+    column "role2" do |e|
+      "student"
+    end
+    column "course3" do |e|
+       e.course_registrations[2].curriculum.course.course_code if e.course_registrations[2]
+    end
+    column "role3" do |e|
+      "student"
+    end
+    column "course4" do |e|
+       e.course_registrations[3].curriculum.course.course_code if e.course_registrations[3]
+    end
+    column "role4" do |e|
+      "student"
+    end
+    column "course5" do |e|
+       e.course_registrations[4].curriculum.course.course_code if e.course_registrations[4]
+    end
+    column "role5" do |e|
+      "student"
+    end
+    column "course6" do |e|
+       e.course_registrations[5].curriculum.course.course_code if e.course_registrations[5]
+    end
+    column "role6" do |e|
+      "student"
+    end
+  end
   controller do
     def create
       super do |format|
@@ -69,10 +121,10 @@ ActiveAdmin.register SemesterRegistration do
   scope :recently_added
   scope :undergraduate
   scope :graduate
-  scope :online
-  scope :regular
-  scope :extention
-  scope :distance
+  scope :online, :if => proc { current_admin_user.role == "admin" }
+  scope :regular, :if => proc { current_admin_user.role == "admin" }
+  scope :extention, :if => proc { current_admin_user.role == "admin" }
+  scope :distance, :if => proc { current_admin_user.role == "admin" }
   
   form do |f|
     f.semantic_errors
@@ -123,7 +175,7 @@ ActiveAdmin.register SemesterRegistration do
           order_by: 'id_asc'
       f.input :semester , :collection => [1, 2,3,4], :include_blank => false
       f.input :year, :collection => [1, 2,3,4,5,6,7], :include_blank => false
-      f.input :mode_of_payment, as: :select, :collection => ["full", "half", "monthly"]
+      f.input :mode_of_payment, as: :select, :collection => [ "Monthly Payment", "Every Two Month Payment", "Every Three Month Payment","Full Semester Payment"]
       # f.input :remark
       # if f.object.course_registrations.empty?
       #   f.object.course_registrations << CourseRegistration.new

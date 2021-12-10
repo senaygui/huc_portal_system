@@ -1,6 +1,6 @@
 ActiveAdmin.register Program do
   menu priority: 6
-  permit_params :program_semester,:department_id,:total_semester,:program_name,:program_code,:overview,:program_description,:created_by,:last_updated_by,:total_tuition,:study_level,:admission_type,:program_duration, curriculums_attributes: [:id,:course_id,:semester,:course_starting_date,:course_ending_date,:year,:credit_hour,:ects,:full_course_price,:course_title,:monthly_course_price,:created_by,:last_updated_by, :_destroy]
+  permit_params :monthly_price,:full_semester_price,:two_monthly_price,:three_monthly_price,:program_semester,:department_id,:total_semester,:program_name,:program_code,:overview,:program_description,:created_by,:last_updated_by,:total_tuition,:study_level,:admission_type,:program_duration, curriculums_attributes: [:id,:course_id,:semester,:course_starting_date,:course_ending_date,:year,:credit_hour,:ects,:full_course_price,:course_title,:monthly_course_price,:created_by,:last_updated_by, :_destroy]
 
   index do
     selectable_column
@@ -40,10 +40,10 @@ ActiveAdmin.register Program do
   scope :recently_added
   scope :undergraduate
   scope :graduate
-  scope :online
-  scope :regular
-  scope :extention
-  scope :distance
+  scope :online, :if => proc { current_admin_user.role == "admin" }
+  scope :regular, :if => proc { current_admin_user.role == "admin" }
+  scope :extention, :if => proc { current_admin_user.role == "admin" }
+  scope :distance, :if => proc { current_admin_user.role == "admin" }
   form do |f|
     f.semantic_errors
     f.inputs "porgram information" do
@@ -58,6 +58,10 @@ ActiveAdmin.register Program do
       f.input :admission_type, as: :select, :collection => ["online", "regular", "extention", "distance"], :include_blank => false
       f.input :program_duration, as: :select, :collection => [1, 2,3,4,5,6,7], :include_blank => false
       f.input :program_semester , :collection => [1, 2,3,4], :include_blank => false
+      f.input :monthly_price
+      f.input :full_semester_price
+      f.input :two_monthly_price
+      f.input :three_monthly_price
       # f.input :total_semester
       if f.object.new_record?
         f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}

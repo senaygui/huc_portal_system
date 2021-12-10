@@ -26,6 +26,8 @@ class Student < ApplicationRecord
   has_many :grade_reports
   ##validations
   validates :first_name , :presence => true,:length => { :within => 2..100 }
+  validates :middle_name , :presence => true,:length => { :within => 2..100 }
+  # validates :current_location , :presence => true,:length => { :within => 2..100 }
   validates :last_name , :presence => true,:length => { :within => 2..100 }
   # validates :student_id , uniqueness: true
   validates	:gender, :presence => true
@@ -39,7 +41,7 @@ class Student < ApplicationRecord
   def password_complexity
     if password.present?
        if !password.match(/^(?=.*[a-z])(?=.*[A-Z])/) 
-         errors.add :password, "must be bbetween 5 to 20 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character"
+         errors.add :password, "must be between 5 to 20 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character"
        end
     end
   end
@@ -60,7 +62,9 @@ class Student < ApplicationRecord
     #   build_student_address if student_address.nil?
     # end
     
-
+  # def approve_student
+  #   self[:document_verification_status] = "approved"
+  # end
   private
   ## callback methods
   def set_pwd
@@ -89,9 +93,11 @@ class Student < ApplicationRecord
       registration.program_name = self.program.program_name
       registration.admission_type = self.admission_type
       registration.study_level = self.study_level
+      registration.registrar_approval_status ="approved"
+      registration.finance_approval_status ="approved"
     end
    end 
-   if self.document_verification_status == "approved" && self.year == 1
+   if self.document_verification_status == "approved" && self.year == 1 
     self.program.curriculums.where(year: self.year, semester: self.semester).each do |co|
       CourseRegistration.create do |course|
         course.semester_registration_id = self.semester_registrations.last.id

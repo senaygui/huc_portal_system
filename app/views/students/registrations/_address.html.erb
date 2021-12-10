@@ -6,11 +6,13 @@
     <div class="col-12 col-md-6 form-group">
       <%= a.input :city, input_html: { class: 'form-control', autofocus: true, autocomplete: "city" },placeholder: "City", required: true, error: 'city is mandatory, please specify one' %>
     </div>
+    
+    
     <div class="col-12 col-md-6 form-group">
       <%= a.input :sub_city, input_html: { class: 'form-control', autocomplete: "sub_city" },placeholder: "Sub city"%>
     </div>
     <div class="col-12 col-md-6 form-group">
-      <%= a.input :region, input_html: { class: 'form-control' },placeholder: "Region"%>
+      <%= a.input :region, as: :select, :collection => ["Addis Ababa", "Afar", "Amahara","Benishangul Gumuz","Dire Dawa","Gambela","Harari","Oromia","Somali","Tigray","Sidama","Southern Nations Nationalities and People", "Southern West Nation"], input_html: { class: 'form-control' },placeholder: "Region", required: true%>
     </div>
     <div class="col-12 col-md-6 form-group">
       <%= a.input :zone, input_html: { class: 'form-control', autocomplete: "zone" },placeholder: "Zone"%>
@@ -25,10 +27,11 @@
       <%= a.input :cell_phone, input_html: { class: 'form-control', 'data-inputmask'=>'"mask": "(+251) 999-999999"' },placeholder: "Cell Phone", required: true %>
     </div>
     <div class="col-12 col-md-6 form-group">
-      <%= a.input :house_phone, input_html: { class: 'form-control', autocomplete: "house_phone", 'data-inputmask'=>'"mask": "(+251) 999-999999"' },placeholder: "House Phone"%>
+      <%= a.input :house_phone, input_html: { class: 'form-control', autocomplete: "house_phone", 'data-inputmask'=>'"mask": "(+251) 999-999999"' },placeholder: "Second Phone Number", label: "Second Phone Number"%>
     </div>
     <div class="col-12 col-md-6 form-group">
-      <%= a.input :pobox, input_html: { class: 'form-control', autocomplete: "pobox" },placeholder: "Pobox"%>
+      <%= f.input :current_location, input_html: { class: 'form-control', autocomplete: "current_location"},placeholder: "Current Location"%>
+      <%= f.hint "current residence"%>
     </div>
   </div>
 <%end%>

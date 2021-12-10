@@ -10,6 +10,7 @@ class Curriculum < ApplicationRecord
 	  belongs_to :course
 	  has_many :course_registrations, dependent: :destroy
   	has_many :semester_registrations, through: :course_registrations, dependent: :destroy
+  	has_many :sections
   private
 
   def course_title_assign

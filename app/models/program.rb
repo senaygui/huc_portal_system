@@ -20,6 +20,7 @@ class Program < ApplicationRecord
   	scope :extention, lambda { where(admission_type: "extention")}
   	scope :distance, lambda { where(admission_type: "distance")}
   ##associations
+    has_many :sections
     belongs_to :department
     has_many :students
     has_many :curriculums

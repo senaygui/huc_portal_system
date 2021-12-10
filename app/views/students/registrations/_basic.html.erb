@@ -18,6 +18,7 @@
                 <% else %>
                   <%= image_tag("blank-profile-picture-973460_640.png",class: "profile-user-img img-responsive img-circle", id: "imagePreview") %>
                 <%end%>
+                <%= f.hint "your photo have be passport size 5X5"%>
               </div>
             </div>
           </div>
@@ -54,6 +55,7 @@
     </div>
     <div class="col-12 col-md-6 form-group">
       <%= f.input :password, input_html: { class: 'form-control', autocomplete: "password" },placeholder: "Password", required: true %>
+      <%= f.hint "must be between 5 to 20 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character"%>
     </div>
     <div class="col-12 col-md-6 form-group">
       <%= f.input :password_confirmation, input_html: { class: 'form-control', autocomplete: "password_confirmation" },placeholder: "Password confirmation", required: true %>
