@@ -9,7 +9,7 @@ ActiveAdmin.register AdminUser do
   end
   index do
     selectable_column
-    id_column
+    
     column "full name", sortable: true do |n|
       n.name.full 
     end

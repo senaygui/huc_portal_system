@@ -1,11 +1,11 @@
 class CreateSemesterRegistrations < ActiveRecord::Migration[5.2]
   def change
-    create_table :semester_registrations do |t|
-      t.belongs_to :student, index: true
+    create_table :semester_registrations, id: :uuid do |t|
+      t.belongs_to :student, index: true, type: :uuid
       t.string :program_name
       t.string :admission_type
       t.string :study_level
-      t.belongs_to :academic_calendar, index: true
+      t.belongs_to :academic_calendar, index: true, type: :uuid
       t.decimal :total_price, default: 0.0
       t.decimal :registration_fee, default: 0.0
       t.decimal :late_registration_fee, default: 0.0

@@ -1,7 +1,7 @@
 class CreatePrograms < ActiveRecord::Migration[5.2]
   def change
-    create_table :programs do |t|
-    	t.belongs_to :department, index: true
+    create_table :programs, id: :uuid do |t|
+    	t.belongs_to :department, index: true, type: :uuid
     	t.string :program_name, null:false
       t.string :program_code, null:false
     	t.string :study_level, null: false

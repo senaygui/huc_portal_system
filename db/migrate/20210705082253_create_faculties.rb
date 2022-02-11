@@ -1,11 +1,9 @@
-class CreateDepartments < ActiveRecord::Migration[5.2]
+class CreateFaculties < ActiveRecord::Migration[5.2]
   def change
-    create_table :departments, id: :uuid do |t|
-    	t.belongs_to :faculty, index: true, foreign_key: true, type: :uuid
-      t.string :department_name
+    create_table :faculties, id: :uuid do |t|
+      t.string :faculty_name, null: false
       t.text :overview
       t.text :background
-      t.text :facility
       
       ## college address
       t.string :location
@@ -21,7 +19,6 @@ class CreateDepartments < ActiveRecord::Migration[5.2]
       ##created and updated by
     	t.string :created_by
     	t.string :last_updated_by
-
       t.timestamps
     end
   end

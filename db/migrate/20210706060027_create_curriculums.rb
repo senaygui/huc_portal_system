@@ -1,7 +1,7 @@
 class CreateCurriculums < ActiveRecord::Migration[5.2]
   def change
-    create_table :curriculums do |t|
-      t.belongs_to :program, index: true
+    create_table :curriculums, id: :uuid do |t|
+      t.belongs_to :program, index: true, type: :uuid
       t.belongs_to :course, index: true
       t.integer :semester, null: false, default: 1
       t.datetime :course_starting_date

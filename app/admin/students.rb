@@ -89,6 +89,7 @@ ActiveAdmin.register Student do
             end
           end
         end
+        f.input :authors, :as => :check_boxes, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
         f.input :first_name
         f.input :last_name
         f.input :middle_name

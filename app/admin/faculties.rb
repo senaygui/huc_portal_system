@@ -1,15 +1,13 @@
-ActiveAdmin.register Department do
-  menu priority: 4
-  permit_params :department_name,:background,:facility,:overview,:location,:phone_number,:email,:facebook_handle,:telegram_handle,:twitter_handle,:instagram_handle,:created_by,:last_updated_by, :alternative_phone_number, :faculty_id
+ActiveAdmin.register Faculty do
+
+  menu priority: 2
+  permit_params :faculty_name,:background,:overview,:location,:phone_number,:email,:facebook_handle,:telegram_handle,:twitter_handle,:instagram_handle,:created_by,:last_updated_by, :alternative_phone_number
 
   index do
     selectable_column
-    column :department_name
-    column "Faculty", sortable: true do |c|
-      c.facility.faculty_name
-    end
-    column "Programs", sortable: true do |c|
-      c.programs.count
+    column :faculty_name
+    column "Departments", sortable: true do |c|
+      c.departments.count
     end
     column :overview, sortable: true do |o|
       truncate o.overview, length: 140
@@ -22,7 +20,7 @@ ActiveAdmin.register Department do
     actions
   end
 
-  filter :department_name
+  filter :faculty_name
   filter :created_by
   filter :last_updated_by
   filter :created_at
@@ -30,17 +28,13 @@ ActiveAdmin.register Department do
 
   form do |f|
     f.semantic_errors
-    
-    f.inputs "Department basic information" do
-      f.input :department_name
+    f.inputs "Faculty basic information" do
+      f.input :faculty_name
       f.input :overview,  :input_html => { :class => 'autogrow', :rows => 10, :cols => 20}
       f.input :background,  :input_html => { :class => 'autogrow', :rows => 10, :cols => 20}
-      f.input :faculty_id, as: :search_select, url: admin_faculties_path,
-          fields: [:faculty_name, :id], display_name: 'faculty_name', minimum_input_length: 2,
-          order_by: 'id_asc'
     end
 
-    f.inputs "Department address" do
+    f.inputs "Faculty address" do
       f.input :location 
       #TODO: add phone number mask
       f.input :phone_number
@@ -62,17 +56,14 @@ ActiveAdmin.register Department do
     f.actions
   end
 
-  show title: :department_name do
-    panel "Department basic information" do
-      attributes_table_for department do
-        row :department_name
-        row "Faculty" do |c|
-          link_to c.faculty.faculty_name, [:admin, c.faculty]
-        end
+  show title: :faculty_name do
+    panel "Faculty basic information" do
+      attributes_table_for faculty do
+        row :faculty_name
         row :overview
         row :background
-        row "Programs", sortable: true do |c|
-          department.programs.count
+        row "Departments", sortable: true do |c|
+          c.departments.count
         end
         row :location
         row :phone_number
@@ -89,21 +80,22 @@ ActiveAdmin.register Department do
     end
   end
   
-  sidebar "Programs", :only => :show do
-    table_for department.programs do
+  sidebar "Departments", :only => :show do
+    table_for faculty.departments do
 
-      column "Program name" do |program|
-        link_to program.program_name, admin_program_path(program.id)
+      column "department name" do |department|
+        link_to department.department_name, admin_department_path(department.id)
       end
     end
   end
-  sidebar "modules", :only => :show do
-    table_for department.course_modules do
+  # sidebar "modules", :only => :show do
+  #   table_for department.course_modules do
 
-      column "Course Modules" do |course_module|
-        link_to course_module.module_title, admin_course_module_path(course_module.id)
-      end
-    end
-  end
+  #     column "Course Modules" do |course_module|
+  #       link_to course_module.module_title, admin_course_module_path(course_module.id)
+  #     end
+  #   end
+  # end
+  
   
 end

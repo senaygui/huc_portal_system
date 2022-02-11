@@ -39,6 +39,10 @@ GEM
       activerecord-import (>= 0.27)
       rchardet (>= 1.6)
       rubyzip (>= 1.2)
+    active_admin_role (0.2.2)
+      activeadmin (>= 1.2.0)
+      cancancan (>= 1.15.0)
+      railties (>= 5.0.0)
     active_admin_theme (1.1.4)
     active_material (1.5.2)
     active_storage_drag_and_drop (1.1.0)
@@ -363,6 +367,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_admin_import
+  active_admin_role
   active_admin_theme (~> 1.1, >= 1.1.4)
   active_storage_drag_and_drop (~> 1.1)
   active_storage_validations (~> 0.9.5)

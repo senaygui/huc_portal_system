@@ -1,7 +1,7 @@
 class CreateActivities < ActiveRecord::Migration[5.2]
   def change
-    create_table :activities do |t|
-    	t.belongs_to :academic_calendar, index: true
+    create_table :activities, id: :uuid do |t|
+    	t.belongs_to :academic_calendar, index: true, type: :uuid
       t.string :activity, null:false
       t.integer :semester, null:false
       t.string :description

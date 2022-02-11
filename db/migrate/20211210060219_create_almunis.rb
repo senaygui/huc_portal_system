@@ -1,6 +1,6 @@
 class CreateAlmunis < ActiveRecord::Migration[5.2]
   def change
-    create_table :almunis do |t|
+    create_table :almunis, id: :uuid do |t|
       t.string :fullname, null: false
       t.string :sex, null: false
       t.string :phone_number, null: false

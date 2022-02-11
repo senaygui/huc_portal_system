@@ -5,9 +5,9 @@ ActiveAdmin.register College do
   index do
     selectable_column
     column :college_name
-    column "Departments" do |c|
-      c.departments.count
-    end
+    # column "Departments" do |c|
+    #   c.departments.count
+    # end
     column :headquarter
     column :created_by
     column :last_updated_by
@@ -71,9 +71,9 @@ ActiveAdmin.register College do
         row :background
         row :mission
         row :vision 
-        row "Departments" do |c|
-          c.departments.count
-        end
+        # row "Departments" do |c|
+        #   c.departments.count
+        # end
         row :headquarter
         row :country
         row :city
@@ -99,12 +99,12 @@ ActiveAdmin.register College do
     end
   end
   
-  sidebar "Departments", :only => :show do
-    table_for college.departments do
+  # sidebar "Departments", :only => :show do
+  #   table_for college.departments do
 
-      column "department name" do |department|
-        link_to department.department_name, admin_department_path(department.id)
-      end
-    end
-  end
+  #     column "department name" do |department|
+  #       link_to department.department_name, admin_department_path(department.id)
+  #     end
+  #   end
+  # end
 end

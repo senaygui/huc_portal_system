@@ -2,7 +2,7 @@
 
 class DeviseCreateStudents < ActiveRecord::Migration[5.2]
   def change
-    create_table :students do |t|
+    create_table :students, id: :uuid do |t|
       ## Database authenticatable
       t.string :email,              null: false, default: ""
       t.string :encrypted_password, null: false, default: ""
@@ -39,7 +39,7 @@ class DeviseCreateStudents < ActiveRecord::Migration[5.2]
       t.string :gender, null: false
       t.string :student_id, :unique =>  true
       t.datetime :date_of_birth, null: false
-      t.belongs_to :program, index: true
+      t.belongs_to :program, index: true, type: :uuid
       t.string :department
       t.string :admission_type, null: false
       t.string :study_level, null: false

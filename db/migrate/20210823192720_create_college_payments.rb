@@ -1,6 +1,6 @@
 class CreateCollegePayments < ActiveRecord::Migration[5.2]
   def change
-    create_table :college_payments do |t|
+    create_table :college_payments, id: :uuid do |t|
       t.string :study_level, null: false
       t.string :admission_type, null: false
       t.string :student_nationality

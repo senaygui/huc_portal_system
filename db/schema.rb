@@ -13,9 +13,10 @@
 ActiveRecord::Schema.define(version: 2021_12_10_060219) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "academic_calendars", force: :cascade do |t|
+  create_table "academic_calendars", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "calender_year", null: false
     t.datetime "starting_date", null: false
     t.datetime "ending_date", null: false
@@ -30,13 +31,13 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "active_admin_comments", force: :cascade do |t|
+  create_table "active_admin_comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "namespace"
     t.text "body"
     t.string "resource_type"
-    t.bigint "resource_id"
+    t.uuid "resource_id"
     t.string "author_type"
-    t.bigint "author_id"
+    t.uuid "author_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
@@ -44,17 +45,17 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
   end
 
-  create_table "active_storage_attachments", force: :cascade do |t|
+  create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
-    t.bigint "record_id", null: false
-    t.bigint "blob_id", null: false
+    t.uuid "record_id", null: false
+    t.uuid "blob_id", null: false
     t.datetime "created_at", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "active_storage_blobs", force: :cascade do |t|
+  create_table "active_storage_blobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "key", null: false
     t.string "filename", null: false
     t.string "content_type"
@@ -65,8 +66,8 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "activities", force: :cascade do |t|
-    t.bigint "academic_calendar_id"
+  create_table "activities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "academic_calendar_id"
     t.string "activity", null: false
     t.integer "semester", null: false
     t.string "description"
@@ -80,7 +81,7 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["academic_calendar_id"], name: "index_activities_on_academic_calendar_id"
   end
 
-  create_table "admin_users", force: :cascade do |t|
+  create_table "admin_users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -103,7 +104,7 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["role"], name: "index_admin_users_on_role"
   end
 
-  create_table "almunis", force: :cascade do |t|
+  create_table "almunis", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "fullname", null: false
     t.string "sex", null: false
     t.string "phone_number", null: false
@@ -116,7 +117,7 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
   end
 
   create_table "assessments", force: :cascade do |t|
-    t.bigint "student_grade_id"
+    t.uuid "student_grade_id"
     t.string "assessment"
     t.decimal "result"
     t.datetime "created_at", null: false
@@ -124,7 +125,7 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["student_grade_id"], name: "index_assessments_on_student_grade_id"
   end
 
-  create_table "college_payments", force: :cascade do |t|
+  create_table "college_payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "study_level", null: false
     t.string "admission_type", null: false
     t.string "student_nationality"
@@ -154,7 +155,7 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "colleges", force: :cascade do |t|
+  create_table "colleges", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "college_name", null: false
     t.text "background"
     t.text "mission"
@@ -181,8 +182,8 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "course_assessments", force: :cascade do |t|
-    t.bigint "curriculums_id"
+  create_table "course_assessments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "curriculums_id"
     t.integer "weight"
     t.string "assessment"
     t.datetime "created_at", null: false
@@ -190,9 +191,9 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["curriculums_id"], name: "index_course_assessments_on_curriculums_id"
   end
 
-  create_table "course_modules", force: :cascade do |t|
+  create_table "course_modules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "module_title", null: false
-    t.bigint "department_id"
+    t.uuid "department_id"
     t.string "module_code", null: false
     t.text "overview"
     t.text "description"
@@ -203,9 +204,9 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["department_id"], name: "index_course_modules_on_department_id"
   end
 
-  create_table "course_registrations", force: :cascade do |t|
-    t.bigint "semester_registration_id"
-    t.bigint "curriculum_id"
+  create_table "course_registrations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "semester_registration_id"
+    t.uuid "curriculum_id"
     t.string "enrollment_status", default: "pending"
     t.string "course_title"
     t.datetime "created_at", null: false
@@ -214,8 +215,8 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["semester_registration_id"], name: "index_course_registrations_on_semester_registration_id"
   end
 
-  create_table "courses", force: :cascade do |t|
-    t.bigint "course_module_id"
+  create_table "courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "course_module_id"
     t.string "course_title", null: false
     t.string "course_code", null: false
     t.text "course_description"
@@ -226,8 +227,8 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["course_module_id"], name: "index_courses_on_course_module_id"
   end
 
-  create_table "curriculums", force: :cascade do |t|
-    t.bigint "program_id"
+  create_table "curriculums", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "program_id"
     t.bigint "course_id"
     t.integer "semester", default: 1, null: false
     t.datetime "course_starting_date"
@@ -246,8 +247,8 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["program_id"], name: "index_curriculums_on_program_id"
   end
 
-  create_table "departments", force: :cascade do |t|
-    t.bigint "college_id"
+  create_table "departments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "faculty_id"
     t.string "department_name"
     t.text "overview"
     t.text "background"
@@ -265,11 +266,11 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["college_id"], name: "index_departments_on_college_id"
+    t.index ["faculty_id"], name: "index_departments_on_faculty_id"
   end
 
-  create_table "emergency_contacts", force: :cascade do |t|
-    t.bigint "student_id"
+  create_table "emergency_contacts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "student_id"
     t.string "full_name", null: false
     t.string "relationship"
     t.string "cell_phone", null: false
@@ -286,10 +287,29 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["student_id"], name: "index_emergency_contacts_on_student_id"
   end
 
-  create_table "grade_reports", force: :cascade do |t|
-    t.bigint "semester_registration_id"
-    t.bigint "student_id"
-    t.bigint "academic_calendar_id"
+  create_table "faculties", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "faculty_name", null: false
+    t.text "overview"
+    t.text "background"
+    t.string "location"
+    t.string "phone_number"
+    t.string "alternative_phone_number"
+    t.string "email"
+    t.string "facebook_handle"
+    t.string "twitter_handle"
+    t.string "telegram_handle"
+    t.string "instagram_handle"
+    t.string "map_embed"
+    t.string "created_by"
+    t.string "last_updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "grade_reports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "semester_registration_id"
+    t.uuid "student_id"
+    t.uuid "academic_calendar_id"
     t.decimal "cgpa"
     t.decimal "sgpa"
     t.integer "semester"
@@ -302,7 +322,7 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["student_id"], name: "index_grade_reports_on_student_id"
   end
 
-  create_table "grade_rules", force: :cascade do |t|
+  create_table "grade_rules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "admission_type"
     t.string "study_level"
     t.integer "min_cgpa_value_to_pass"
@@ -310,8 +330,8 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "grades", force: :cascade do |t|
-    t.bigint "grade_rule_id"
+  create_table "grades", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "grade_rule_id"
     t.string "grade"
     t.integer "min_value"
     t.integer "max_value"
@@ -321,9 +341,9 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["grade_rule_id"], name: "index_grades_on_grade_rule_id"
   end
 
-  create_table "invoice_items", force: :cascade do |t|
-    t.bigint "invoice_id"
-    t.bigint "course_registration_id"
+  create_table "invoice_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "invoice_id"
+    t.uuid "course_registration_id"
     t.decimal "price", default: "0.0"
     t.string "last_updated_by"
     t.string "created_by"
@@ -333,8 +353,8 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["invoice_id"], name: "index_invoice_items_on_invoice_id"
   end
 
-  create_table "invoices", force: :cascade do |t|
-    t.bigint "semester_registration_id"
+  create_table "invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "semester_registration_id"
     t.bigint "student_id"
     t.string "invoice_number", null: false
     t.decimal "total_price"
@@ -352,7 +372,7 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["student_id"], name: "index_invoices_on_student_id"
   end
 
-  create_table "payment_methods", force: :cascade do |t|
+  create_table "payment_methods", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "bank_name", null: false
     t.string "account_full_name", null: false
     t.string "account_number"
@@ -365,9 +385,9 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "payment_transactions", force: :cascade do |t|
-    t.bigint "invoice_id"
-    t.bigint "payment_method_id"
+  create_table "payment_transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "invoice_id"
+    t.uuid "payment_method_id"
     t.string "account_holder_fullname", null: false
     t.string "phone_number"
     t.string "account_number"
@@ -381,8 +401,8 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["payment_method_id"], name: "index_payment_transactions_on_payment_method_id"
   end
 
-  create_table "programs", force: :cascade do |t|
-    t.bigint "department_id"
+  create_table "programs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "department_id"
     t.string "program_name", null: false
     t.string "program_code", null: false
     t.string "study_level", null: false
@@ -404,10 +424,10 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["department_id"], name: "index_programs_on_department_id"
   end
 
-  create_table "sections", force: :cascade do |t|
-    t.bigint "course_id"
-    t.bigint "curriculum_id"
-    t.bigint "program_id"
+  create_table "sections", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "course_id"
+    t.uuid "curriculum_id"
+    t.uuid "program_id"
     t.string "section_name"
     t.integer "total_capacity"
     t.datetime "created_at", null: false
@@ -417,12 +437,12 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["program_id"], name: "index_sections_on_program_id"
   end
 
-  create_table "semester_registrations", force: :cascade do |t|
-    t.bigint "student_id"
+  create_table "semester_registrations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "student_id"
     t.string "program_name"
     t.string "admission_type"
     t.string "study_level"
-    t.bigint "academic_calendar_id"
+    t.uuid "academic_calendar_id"
     t.decimal "total_price", default: "0.0"
     t.decimal "registration_fee", default: "0.0"
     t.decimal "late_registration_fee", default: "0.0"
@@ -441,8 +461,8 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["student_id"], name: "index_semester_registrations_on_student_id"
   end
 
-  create_table "student_addresses", force: :cascade do |t|
-    t.bigint "student_id"
+  create_table "student_addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "student_id"
     t.string "country", null: false
     t.string "city", null: false
     t.string "region"
@@ -460,12 +480,13 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["student_id"], name: "index_student_addresses_on_student_id"
   end
 
-  create_table "student_grades", force: :cascade do |t|
-    t.bigint "course_registration_id"
-    t.bigint "student_id"
+  create_table "student_grades", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "course_registration_id"
+    t.uuid "student_id"
     t.string "grade_in_letter"
     t.string "grade_in_number"
     t.decimal "grade_letter_value"
+    t.decimal "grade_point"
     t.bigint "course_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -474,7 +495,7 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["student_id"], name: "index_student_grades_on_student_id"
   end
 
-  create_table "students", force: :cascade do |t|
+  create_table "students", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -491,7 +512,7 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.string "gender", null: false
     t.string "student_id"
     t.datetime "date_of_birth", null: false
-    t.bigint "program_id"
+    t.uuid "program_id"
     t.string "department"
     t.string "admission_type", null: false
     t.string "study_level", null: false
@@ -516,5 +537,5 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "departments", "colleges"
+  add_foreign_key "departments", "faculties"
 end

@@ -1,13 +1,13 @@
 class CreateStudentAddresses < ActiveRecord::Migration[5.2]
   def change
-    create_table :student_addresses do |t|
-      t.belongs_to :student, index: true
+    create_table :student_addresses, id: :uuid do |t|
+      t.belongs_to :student, index: true, type: :uuid
       t.string :country, null: false
       t.string :city, null: false
       t.string :region
       t.string :zone, null: false
       t.string :sub_city
-      t.string :house_number
+      t.string :house_number, null: true
       t.string :cell_phone, null: false
       t.string :house_phone
       t.string :pobox

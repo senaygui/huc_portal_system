@@ -59,6 +59,7 @@ gem "rqrcode", "~> 2.1"
 gem "chunky_png", "~> 1.4"
 
 gem "barby", "~> 0.6.8"
+gem 'active_admin_role'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 

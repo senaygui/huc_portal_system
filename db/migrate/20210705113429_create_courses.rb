@@ -1,7 +1,7 @@
 class CreateCourses < ActiveRecord::Migration[5.2]
   def change
-    create_table :courses do |t|
-      t.belongs_to :course_module, index: true
+    create_table :courses, id: :uuid do |t|
+      t.belongs_to :course_module, index: true, type: :uuid
       t.string :course_title, null: false
       t.string :course_code, null: false
       t.text :course_description

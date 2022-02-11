@@ -1,6 +1,6 @@
 class CreateAcademicCalendars < ActiveRecord::Migration[5.2]
   def change
-    create_table :academic_calendars do |t|
+    create_table :academic_calendars, id: :uuid do |t|
     	t.string :calender_year, null:false
       t.datetime :starting_date, null:false
       t.datetime :ending_date, null:false
