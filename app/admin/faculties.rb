@@ -9,9 +9,6 @@ ActiveAdmin.register Faculty do
     column "Departments", sortable: true do |c|
       c.departments.count
     end
-    column :overview, sortable: true do |o|
-      truncate o.overview, length: 140
-    end
     column :created_by
     column :last_updated_by
     column "Created At", sortable: true do |c|

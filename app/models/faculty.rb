@@ -4,5 +4,5 @@ class Faculty < ApplicationRecord
   	validates :faculty_name , :presence => true,:length => { :within => 2..200 }
 	
 	##associations
-  	has_many :departments, dependent: :destroy
+  	has_many :departments
 end

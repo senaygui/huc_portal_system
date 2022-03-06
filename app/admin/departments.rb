@@ -1,12 +1,12 @@
 ActiveAdmin.register Department do
   menu priority: 4
-  permit_params :department_name,:background,:facility,:overview,:location,:phone_number,:email,:facebook_handle,:telegram_handle,:twitter_handle,:instagram_handle,:created_by,:last_updated_by, :alternative_phone_number, :faculty_id
+  permit_params :department_name,:background,:overview,:location,:phone_number,:email,:facebook_handle,:telegram_handle,:twitter_handle,:instagram_handle,:created_by,:last_updated_by, :alternative_phone_number, :faculty_id
 
   index do
     selectable_column
     column :department_name
     column "Faculty", sortable: true do |c|
-      c.facility.faculty_name
+      c.faculty.faculty_name
     end
     column "Programs", sortable: true do |c|
       c.programs.count
