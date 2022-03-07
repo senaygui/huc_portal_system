@@ -1,6 +1,6 @@
 ActiveAdmin.register CollegePayment do
   menu priority: 3
-  permit_params :study_level,:admission_type,:student_nationality,:registration_fee,:late_registration_fee,:daily_late_registration_penalty,:makeup_exam_fee,:add_drop,:tution_per_credit_hr,:readmission,:reissuance_of_grade_report,:student_copy,:additional_student_copy,:tempo,:original_certificate,:original_certificate_replacement,:tempo_replacement,:letter,:student_id_card,:student_id_card_replacement,:name_change,:transfer_fee,:created_by, :last_updated_by, :total_fee
+  permit_params :study_level,:admission_type,:student_nationality,:registration_fee,:late_registration_fee,:makeup_exam_fee,:add_drop,:tution_per_credit_hr,:readmission,:reissuance_of_grade_report,:student_copy,:additional_student_copy,:tempo,:original_certificate,:original_certificate_replacement,:tempo_replacement,:letter,:student_id_card,:student_id_card_replacement,:name_change,:transfer_fee,:created_by, :last_updated_by, :total_fee,:starting_penalty_fee,:daily_penalty_fee
 
   index do
     selectable_column
@@ -22,7 +22,8 @@ ActiveAdmin.register CollegePayment do
   filter :total_fee
   filter :registration_fee
   filter :late_registration_fee
-  filter :daily_late_registration_penalty
+  filter :starting_penalty_fee
+  filter :daily_penalty_fee
   filter :makeup_exam_fee
   filter :add_drop
   filter :tution_per_credit_hr
@@ -61,7 +62,8 @@ ActiveAdmin.register CollegePayment do
       f.input :total_fee
       f.input :registration_fee
       f.input :late_registration_fee
-      f.input :daily_late_registration_penalty
+      f.input :starting_penalty_fee
+      f.input :daily_penalty_fee
       f.input :makeup_exam_fee
       f.input :add_drop
       f.input :tution_per_credit_hr
@@ -97,10 +99,11 @@ ActiveAdmin.register CollegePayment do
         number_row :total_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
         number_row :registration_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
         number_row :late_registration_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
-        number_row :daily_late_registration_penalty, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
         number_row :makeup_exam_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
         number_row :add_drop, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
         number_row :tution_per_credit_hr, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
+        number_row :starting_penalty_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
+        number_row :daily_penalty_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
         number_row :readmission, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
         number_row :reissuance_of_grade_report, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
         number_row :student_copy, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2

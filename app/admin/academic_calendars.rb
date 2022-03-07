@@ -1,6 +1,6 @@
 ActiveAdmin.register AcademicCalendar do
 menu priority: 3
-permit_params :calender_year,:starting_date,:ending_date,:admission_type,:study_level,:remark,:from_year,:to_year,:last_updated_by,:created_by, activities_attributes: [:id,:activity,:semester,:description,:category,:starting_date,:ending_date,:last_updated_by,:created_by, :_destroy]
+permit_params :calender_year_in_gc ,:calender_year_in_ec,:calender_year,:starting_date,:ending_date,:admission_type,:study_level,:remark,:from_year,:to_year,:last_updated_by,:created_by, activities_attributes: [:id,:activity,:semester,:description,:category,:starting_date,:ending_date,:last_updated_by,:created_by, :_destroy]
 
   index do
     selectable_column
@@ -21,6 +21,8 @@ permit_params :calender_year,:starting_date,:ending_date,:admission_type,:study_
   filter :calender_year
   filter :starting_date
   filter :ending_date
+  filter :calender_year_in_gc
+  filter :calender_year_in_ec
   filter :admission_type
   filter :study_level
   filter :from_year
@@ -42,7 +44,9 @@ permit_params :calender_year,:starting_date,:ending_date,:admission_type,:study_
   form do |f|
     f.semantic_errors
     f.inputs "Academic calendar information" do
-      f.input :calender_year
+      f.input :calender_year, label: "Calender title"
+      f.input :calender_year_in_gc
+      f.input :calender_year_in_ec
       f.input :starting_date, as: :date_time_picker 
       f.input :ending_date, as: :date_time_picker 
       f.input :admission_type, :collection => ["online", "regular", "extention", "distance"]
@@ -50,7 +54,14 @@ permit_params :calender_year,:starting_date,:ending_date,:admission_type,:study_
       f.input :from_year
       f.input :to_year
       f.input :remark
-      if f.object.activities.empty?
+      
+      if f.object.new_record?
+        f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+      else
+        f.input :last_updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+      end      
+    end
+    if f.object.activities.empty?
         f.object.activities << Activity.new
       end
       panel "Activities information" do
@@ -59,7 +70,7 @@ permit_params :calender_year,:starting_date,:ending_date,:admission_type,:study_
             a.input :semester, as: :select, :collection => [1, 2,3,4], :include_blank => false
             a.input :starting_date, as: :date_time_picker 
             a.input :ending_date, as: :date_time_picker
-            a.input :category, as: :select, :collection => ["registration", "readmission","late registration", "class begining","add/drop","class ending", "examination period", "makeup examination application","grade submission","makeup examination day","makeup examination day","makeup examination grade submission" ,"break","other"]
+            a.input :category, as: :select, :collection => ["registration", "enterance exam application","enterance exam","enterance exam result announcement","readmission","late registration", "class begining","add/drop","class ending", "examination period", "makeup examination application","grade submission","makeup examination day","makeup examination grade submission" ,"break","other"]
             a.input :description
             a.label :_destroy
             if a.object.new_record?
@@ -69,12 +80,6 @@ permit_params :calender_year,:starting_date,:ending_date,:admission_type,:study_
             end  
         end
       end
-      if f.object.new_record?
-        f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-      else
-        f.input :last_updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-      end      
-    end
     f.actions
   end
 
@@ -82,6 +87,8 @@ permit_params :calender_year,:starting_date,:ending_date,:admission_type,:study_
     panel "Academic calendar information" do
       attributes_table_for academic_calendar do
         row :calender_year
+        row :calender_year_in_gc
+        row :calender_year_in_ec
         row :starting_date
         row :ending_date
         row :admission_type

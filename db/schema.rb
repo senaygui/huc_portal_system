@@ -18,6 +18,8 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
 
   create_table "academic_calendars", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "calender_year", null: false
+    t.string "calender_year_in_gc", null: false
+    t.string "calender_year_in_ec", null: false
     t.datetime "starting_date", null: false
     t.datetime "ending_date", null: false
     t.string "admission_type", null: false
@@ -132,7 +134,8 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.decimal "total_fee", default: "0.0"
     t.decimal "registration_fee", default: "0.0"
     t.decimal "late_registration_fee", default: "0.0"
-    t.decimal "daily_late_registration_penalty", default: "0.0"
+    t.decimal "starting_penalty_fee", default: "0.0"
+    t.decimal "daily_penalty_fee", default: "0.0"
     t.decimal "makeup_exam_fee", default: "0.0"
     t.decimal "add_drop", default: "0.0"
     t.decimal "tution_per_credit_hr", default: "0.0"
