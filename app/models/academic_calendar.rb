@@ -1,5 +1,7 @@
 class AcademicCalendar < ApplicationRecord
 	##validations
+    validates :calender_year_in_gc, :presence => true
+    validates :calender_year_in_ec, :presence => true
 	  validates :calender_year, :presence => true
 		validates :starting_date, :presence => true
 		validates :ending_date, :presence => true

@@ -7,7 +7,8 @@ class CreateCollegePayments < ActiveRecord::Migration[5.2]
       t.decimal :total_fee, default: 0
       t.decimal :registration_fee, default: 0
       t.decimal :late_registration_fee, default: 0
-      t.decimal :daily_late_registration_penalty, default: 0
+      t.decimal :starting_penalty_fee, default: 0
+      t.decimal :daily_penalty_fee, default: 0
       t.decimal :makeup_exam_fee, default: 0
       t.decimal :add_drop, default: 0
       t.decimal :tution_per_credit_hr, default: 0
