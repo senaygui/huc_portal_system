@@ -4,8 +4,8 @@ class Course < ApplicationRecord
     validates :course_code, :presence => true,:length => { :within => 2..25 }
   ##associations
   	belongs_to :course_module
-  	has_many :curriculums, dependent: :destroy
- 		has_many :programs, through: :curriculums, dependent: :destroy
+  	has_many :course_breakdowns, dependent: :destroy
+ 		# has_many :programs, through: :curriculums, dependent: :destroy
  		has_many :student_grades, dependent: :destroy
  		has_many :sections
   ##scope

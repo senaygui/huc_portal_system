@@ -19,6 +19,7 @@ class Ability
         can :manage, Program
         can :manage, College
         can :manage, Faculty
+        can :manage, Curriculum
         #TODO: after one college created disable new action   
         cannot :destroy, College, id: 1
 

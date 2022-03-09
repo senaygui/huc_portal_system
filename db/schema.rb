@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_10_060219) do
+ActiveRecord::Schema.define(version: 2022_03_08_131247) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -194,6 +194,27 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.index ["curriculums_id"], name: "index_course_assessments_on_curriculums_id"
   end
 
+  create_table "course_breakdowns", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "course_id"
+    t.uuid "curriculum_id"
+    t.integer "semester", default: 1, null: false
+    t.datetime "course_starting_date"
+    t.datetime "course_ending_date"
+    t.integer "year", default: 1, null: false
+    t.integer "credit_hour", null: false
+    t.integer "lecture_hour", null: false
+    t.integer "lab_hour", default: 0
+    t.integer "ects", null: false
+    t.string "course_code"
+    t.string "course_title"
+    t.string "created_by"
+    t.string "last_updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_course_breakdowns_on_course_id"
+    t.index ["curriculum_id"], name: "index_course_breakdowns_on_curriculum_id"
+  end
+
   create_table "course_modules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "module_title", null: false
     t.uuid "department_id"
@@ -232,21 +253,18 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
 
   create_table "curriculums", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "program_id"
-    t.bigint "course_id"
-    t.integer "semester", default: 1, null: false
-    t.datetime "course_starting_date"
-    t.datetime "course_ending_date"
-    t.integer "year", default: 1, null: false
-    t.integer "credit_hour", null: false
-    t.integer "ects"
-    t.decimal "full_course_price", default: "0.0"
-    t.decimal "monthly_course_price", default: "0.0"
-    t.string "course_title"
+    t.string "curriculum_title", null: false
+    t.string "curriculum_version", null: false
+    t.integer "total_course"
+    t.integer "total_ects"
+    t.integer "total_credit_hour"
+    t.string "active_status", default: "active"
+    t.datetime "curriculum_active_date", null: false
+    t.datetime "depreciation_date"
     t.string "created_by"
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["course_id"], name: "index_curriculums_on_course_id"
     t.index ["program_id"], name: "index_curriculums_on_program_id"
   end
 
@@ -420,10 +438,6 @@ ActiveRecord::Schema.define(version: 2021_12_10_060219) do
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "monthly_price"
-    t.decimal "full_semester_price"
-    t.decimal "two_monthly_price"
-    t.decimal "three_monthly_price"
     t.index ["department_id"], name: "index_programs_on_department_id"
   end
 

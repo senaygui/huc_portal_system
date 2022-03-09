@@ -65,7 +65,7 @@ permit_params :course_module_id,:course_title,:course_code,:course_description,:
     end
   end 
   sidebar "program belongs to", :only => :show do
-    table_for course.curriculums do
+    table_for course.course_breakdowns do
 
       column "program" do |c|
         link_to c.program.program_name, admin_program_path(c.program.id)
