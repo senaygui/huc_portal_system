@@ -1,5 +1,5 @@
 class Program < ApplicationRecord
-  before_save :update_subtotal
+  # before_save :update_subtotal
   before_save :total_semester_calc
   
 
@@ -24,21 +24,20 @@ class Program < ApplicationRecord
     belongs_to :department
     has_many :students
     has_many :curriculums
-    has_many :courses, through: :curriculums, dependent: :destroy
     accepts_nested_attributes_for :curriculums, reject_if: :all_blank, allow_destroy: true
   
-  def total_tuition
-    curriculums.collect { |oi| oi.valid? ? (oi.full_course_price) : 0 }.sum
-  end
+  # def total_tuition
+  #   curriculums.collect { |oi| oi.valid? ? (oi.full_course_price) : 0 }.sum
+  # end
 
   def total_semester
     total_semester = program_semester * program_duration
   end
   private
 
-  def update_subtotal
-    self[:total_tuition] = total_tuition
-  end
+  # def update_subtotal
+  #   self[:total_tuition] = total_tuition
+  # end
   def total_semester_calc
     self[:total_semester] = total_semester
   end

@@ -1,19 +1,12 @@
 class Curriculum < ApplicationRecord
-	before_save :course_title_assign
+
 	##validations
-    validates :semester, :presence => true
-		validates :year, :presence => true
-		validates :credit_hour, :presence => true
-		validates :full_course_price, :presence => true
+    validates :curriculum_title, :presence => true
+		validates :curriculum_version, :presence => true, uniqueness: true
+		validates :curriculum_active_date, :presence => true
 	##associations
 	  belongs_to :program
-	  belongs_to :course
-	  has_many :course_registrations, dependent: :destroy
-  	has_many :semester_registrations, through: :course_registrations, dependent: :destroy
-  	has_many :sections
-  private
-
-  def course_title_assign
-  	self[:course_title] = self.course.course_title
-  end
+	  has_many :course_breakdowns, dependent: :destroy
+	  
+	  accepts_nested_attributes_for :course_breakdowns, reject_if: :all_blank, allow_destroy: true
 end
