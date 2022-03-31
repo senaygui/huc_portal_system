@@ -80,13 +80,13 @@
 						  </thead>
 
 						  <tbody>
-						    <% @curriculums.each do |curriculum| %>
+						    <% @semester_registration.course_registrations.each do |course| %>
 						      <tr>
 						        
-						        <td><%= curriculum.course.course_title %></td>
-						        <td><%= curriculum.course.course_module.module_code %></td>
-						        <td><%= curriculum.course.course_code %></td>
-						        <td><%= curriculum.credit_hour %></td>
+						        <td><%= course.course_breakdown.course_title %></td>
+						        <td><%= course.course_breakdown.course.course_module.module_code %></td>
+						        <td><%= course.course_breakdown.course_code %></td>
+						        <td><%= course.course_breakdown.credit_hour %></td>
 						      </tr>
 						    <% end %>
 						  </tbody>
@@ -97,10 +97,10 @@
       <div class="col-12">
       	<!-- <p class="lead">Amount Due 2/22/2014</p> -->
       	<div class="row">
-      		<div class="col-12 col-md-3">
-      			<div class="card card-primary">
+      		<div class="col-12 col-md-4">
+      			<div class="card card-primary shadow">
 	          <div class="card-header">
-	            <h3 class="card-title">Montly Prcing Option</h3>
+	            <h3 class="card-title">Montly Pricing Option</h3>
 	          </div>
 	          <div class="card-body">
 	          	<div class="table-responsive">
@@ -108,15 +108,15 @@
 			      			<tbody>
 				      			<tr>
 				      				<th style="width:50%">Montly Subtotal:</th>
-				      				<td><%= @semester_registration.student.program.monthly_price%> ETB</td>
+				      				<td><%= @tution_fee /4%> ETB</td>
 				      			</tr>
 				      			<tr>
 				      				<th>Registration Fee:</th>
-				      				<td>550 ETB</td>
+				      				<td><%= @registration_fee %> ETB</td>
 				      			</tr>
 				      			<tr>
 				      				<th>Total:</th>
-				      				<td><b><%= @semester_registration.student.program.monthly_price + 550%> ETB</b></td>
+				      				<td><b><%= (@tution_fee /4) + @registration_fee %> ETB</b></td>
 				      			</tr>
 			      			</tbody>
 			      		</table>
@@ -124,26 +124,26 @@
 	          </div>
         	</div>
       		</div>
-      		<div class="col-12 col-md-3">
-      			<div class="card card-primary">
+      		<div class="col-12 col-md-4">
+      			<div class="card card-success shadow">
 	          <div class="card-header">
-	            <h3 class="card-title">Every Two Montly Prcing Option</h3>
+	            <h3 class="card-title">Half Semester Prcing Option</h3>
 	          </div>
 	          <div class="card-body">
 	          	<div class="table-responsive">
 			      		<table class="table">
 			      			<tbody>
 				      			<tr>
-				      				<th style="width:50%">Two Month Subtotal:</th>
-				      				<td><%= @semester_registration.student.program.two_monthly_price%> ETB</td>
+				      				<th style="width:50%">Half Semester Subtotal:</th>
+				      				<td><%= @tution_fee /2%> ETB</td>
 				      			</tr>
 				      			<tr>
 				      				<th>Registration Fee:</th>
-				      				<td>550 ETB</td>
+				      				<td><%= @registration_fee %> ETB</td>
 				      			</tr>
 				      			<tr>
 				      				<th>Total:</th>
-				      				<td><b><%= @semester_registration.student.program.two_monthly_price + 550%> ETB</b></td>
+				      				<td><b><%= (@tution_fee /2) + @registration_fee %> ETB</b></td>
 				      			</tr>
 			      			</tbody>
 			      		</table>
@@ -151,35 +151,8 @@
 	          </div>
         	</div>
       		</div>
-      		<div class="col-12 col-md-3">
-      			<div class="card card-primary">
-	          <div class="card-header">
-	            <h3 class="card-title">Every Three Montly Prcing Option</h3>
-	          </div>
-	          <div class="card-body">
-	          	<div class="table-responsive">
-			      		<table class="table">
-			      			<tbody>
-				      			<tr>
-				      				<th style="width:50%">Three Month Subtotal:</th>
-				      				<td><%= @semester_registration.student.program.three_monthly_price%> ETB</td>
-				      			</tr>
-				      			<tr>
-				      				<th>Registration Fee:</th>
-				      				<td>550 ETB</td>
-				      			</tr>
-				      			<tr>
-				      				<th>Total:</th>
-				      				<td><b><%= @semester_registration.student.program.three_monthly_price + 550%> ETB</b></td>
-				      			</tr>
-			      			</tbody>
-			      		</table>
-			      	</div>
-	          </div>
-        	</div>
-      		</div>
-      		<div class="col-12 col-md-3">
-      			<div class="card card-primary">
+      		<div class="col-12 col-md-4">
+      			<div class="card card-warning shadow">
 	          <div class="card-header">
 	            <h3 class="card-title">Full Semester payment Mode</h3>
 	          </div>
@@ -189,15 +162,15 @@
 			      			<tbody>
 				      			<tr>
 				      				<th style="width:50%">Full Subtotal:</th>
-				      				<td><%= @semester_registration.student.program.full_semester_price%> ETB</td>
+				      				<td><%= @tution_fee%> ETB</td>
 				      			</tr>
 				      			<tr>
 				      				<th>Registration Fee:</th>
-				      				<td>550 ETB</td>
+				      				<td><%= @registration_fee %> ETB</td>
 				      			</tr>
 				      			<tr>
 				      				<th>Total:</th>
-				      				<td><b><%= @semester_registration.student.program.full_semester_price + 550%> ETB</b></td>
+				      				<td><b><%= (@tution_fee) + @registration_fee %> ETB</b></td>
 				      			</tr>
 			      			</tbody>
 			      		</table>

@@ -1,11 +1,13 @@
 class Invoice < ApplicationRecord
 	after_create :add_invoice_item
 	# after_update :update_total_price
+	after_save :update_status
 	##validations
     validates :invoice_number , :presence => true
   ##associations
 	  belongs_to :semester_registration
 	  belongs_to :student
+	  belongs_to :academic_calendar
 	  has_one :payment_transaction
 	  accepts_nested_attributes_for :payment_transaction, reject_if: :all_blank, allow_destroy: true
 	  has_many :invoice_items, dependent: :destroy
@@ -34,19 +36,27 @@ class Invoice < ApplicationRecord
 					invoice_item.invoice_id = self.id
 					invoice_item.course_registration_id = course.id
 					invoice_item.created_by = self.created_by
-					if self.semester_registration.mode_of_payment == "monthly"
-						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.curriculum.credit_hour / 4
+					if self.semester_registration.mode_of_payment == "Monthly Payment"
+						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.course_breakdown.credit_hour / 4
 						invoice_item.price = course_price
-					elsif self.semester_registration.mode_of_payment == "full"
-						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.curriculum.credit_hour
+					elsif self.semester_registration.mode_of_payment == "Full Semester Payment"
+						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.course_breakdown.credit_hour
 						invoice_item.price = course_price
-					elsif self.semester_registration.mode_of_payment == "half"
-						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.curriculum.credit_hour / 2
+					elsif self.semester_registration.mode_of_payment == "Half Semester Payment"
+						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.course_breakdown.credit_hour / 2
 						invoice_item.price = course_price
 					end
 					
 				end
 			end
+		end
+
+		def update_status
+			if self.payment_transaction.present? && self.payment_transaction.finance_approval_status == "approved"
+				# self.semester_registration.update_columns(registrar_approval_status: "approved")
+      	self.semester_registration.update_columns(finance_approval_status: "approved")
+
+    	end
 		end
 	  # def update_semester_registration
 	  #   self[:total_price] = total_price

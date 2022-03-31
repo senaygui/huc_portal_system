@@ -85,8 +85,8 @@ ActiveAdmin.register Invoice do
             row :due_date if invoice.due_date.present?
             number_row :registration_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if invoice.registration_fee > 0
             number_row :late_registration_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if invoice.late_registration_fee > 0 
-            number_row :penalty, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if invoice.penalty > 0 
-            number_row :daily_penalty, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if invoice.daily_penalty > 0 
+            # number_row :penalty, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if invoice.penalty > 0 
+            # number_row :daily_penalty, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if invoice.daily_penalty > 0 
             number_row :total_price, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
             row :created_by
             row :last_updated_by
@@ -159,16 +159,16 @@ ActiveAdmin.register Invoice do
         panel "Invoice Item Information" do
           table_for invoice.invoice_items do
             column "Course title" do |pr|
-              link_to pr.course_registration.curriculum.course.course_title, admin_course_path(pr.course_registration.curriculum.course.id)
+              link_to pr.course_registration.course_breakdown.course.course_title, admin_course_path(pr.course_registration.course_breakdown.course.id)
             end
             column "Course code" do |pr|
-              pr.course_registration.curriculum.course.course_code
+              pr.course_registration.course_breakdown.course.course_code
             end
             column "Course module" do |pr|
-              link_to pr.course_registration.curriculum.course.course_module.module_code, admin_course_module_path(pr.course_registration.curriculum.course.course_module.id) 
+              link_to pr.course_registration.course_breakdown.course.course_module.module_code, admin_course_module_path(pr.course_registration.course_breakdown.course.course_module.id) 
             end
             column "Credit hour" do |pr|
-              pr.course_registration.curriculum.credit_hour
+              pr.course_registration.course_breakdown.credit_hour
             end
             number_column :price, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
           end

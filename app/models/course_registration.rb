@@ -8,6 +8,7 @@ class CourseRegistration < ApplicationRecord
 	  # has_one :student_grade, dependent: :destroy
 	  belongs_to :student
 		belongs_to :academic_calendar
+		belongs_to :program
 
 
 	private

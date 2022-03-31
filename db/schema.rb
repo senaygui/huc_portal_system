@@ -230,6 +230,7 @@ ActiveRecord::Schema.define(version: 2022_03_29_120614) do
 
   create_table "course_registrations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "student_id"
+    t.uuid "program_id"
     t.uuid "semester_registration_id"
     t.uuid "course_breakdown_id"
     t.uuid "academic_calendar_id"
@@ -242,6 +243,7 @@ ActiveRecord::Schema.define(version: 2022_03_29_120614) do
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_course_registrations_on_academic_calendar_id"
     t.index ["course_breakdown_id"], name: "index_course_registrations_on_course_breakdown_id"
+    t.index ["program_id"], name: "index_course_registrations_on_program_id"
     t.index ["semester_registration_id"], name: "index_course_registrations_on_semester_registration_id"
     t.index ["student_id"], name: "index_course_registrations_on_student_id"
   end
@@ -383,19 +385,24 @@ ActiveRecord::Schema.define(version: 2022_03_29_120614) do
 
   create_table "invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "semester_registration_id"
-    t.bigint "student_id"
+    t.uuid "student_id"
+    t.uuid "academic_calendar_id"
+    t.string "student_name"
+    t.string "department"
+    t.string "program"
+    t.string "student_full_name"
+    t.string "student_id_number"
     t.string "invoice_number", null: false
     t.decimal "total_price"
     t.decimal "registration_fee", default: "0.0"
     t.decimal "late_registration_fee", default: "0.0"
-    t.decimal "penalty", default: "0.0"
-    t.decimal "daily_penalty", default: "0.0"
-    t.string "invoice_status", default: "not paid"
+    t.string "invoice_status", default: "not submitted"
     t.string "last_updated_by"
     t.string "created_by"
     t.datetime "due_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_invoices_on_academic_calendar_id"
     t.index ["semester_registration_id"], name: "index_invoices_on_semester_registration_id"
     t.index ["student_id"], name: "index_invoices_on_student_id"
   end
