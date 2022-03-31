@@ -30,7 +30,7 @@
               <%= image_tag(current_student.photo, size: '150x150', class: "profile-user-img img-fluid")%>
             </div>
 
-            <h1 class="profile-username text-center"><b><%= current_student.name.full.upcase%></b></h1>
+            <h1 class="profile-username text-center"><b><%= "#{current_student.first_name.upcase} #{current_student.middle_name.upcase} #{current_student.last_name.upcase}"%></b></h1>
 
 
             <div class= "text-center my-3">
@@ -40,7 +40,7 @@
             </div>
             <ul class="list-group list-group-unbordered mb-3">
               <li class="list-group-item mx-3">
-                <b>Student Fullname</b> <a class="text-muted float-right"><%= current_student.name.full.upcase%></a>
+                <b>Student Fullname</b> <a class="text-muted float-right"><%= "#{current_student.first_name.upcase} #{current_student.middle_name.upcase} #{current_student.last_name.upcase}"%></a>
               </li>
               <li class="list-group-item mx-3">
                 <b>Student ID</b> <a class="text-muted float-right"><%= current_student.student_id.present? ? current_student.student_id : "Not Assigned Yet"%></a>
@@ -146,6 +146,9 @@
               </li>
               <li class="list-group-item mx-3">
                 <b>Marital Status</b> <a class="text-muted float-right"><%= current_student.marital_status%></a>
+              </li>
+              <li class="list-group-item mx-3">
+                <b>Place Of Birth</b> <a class="text-muted float-right"><%= current_student.place_of_birth%></a>
               </li>
               
             </ul>

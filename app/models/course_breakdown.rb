@@ -11,6 +11,8 @@ class CourseBreakdown < ApplicationRecord
 	##associations
 	  belongs_to :course
 	  belongs_to :curriculum
+	  has_many :student_courses, dependent: :destroy
+
 	  # has_many :course_registrations, dependent: :destroy
 
 	private

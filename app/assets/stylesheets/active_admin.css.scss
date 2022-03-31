@@ -39,8 +39,8 @@ $menu-arrow-dark-icon-url: 'active_admin/nested_menu_arrow_dark.gif' !default;
   width: 90%;
 }
 label.asdndzone{
-	max-width: 10000px !important;
-	padding-top: 80px;
+  max-width: 10000px !important;
+  padding-top: 80px;
 }
 .asdndz__icon-container {
     text-align: center !important;
@@ -208,4 +208,36 @@ label.asdndzone{
 }
 ul, ol{
   list-style-type: none !important;
+}
+
+.text-center{
+  text-align: center;
+}
+
+.no-recent-data {
+    height: 300px;
+    width: 100%;
+    text-align: center;
+    color: #999;
+    line-height: 300px;
+    font-size: 14px;
+    word-wrap: break-word;
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;
+}
+
+// table row fix
+.row-name_of_current_employer th{
+  width: 250px !important;
+
+}
+.row-grade_10_exam_taken_year th{
+  width: 250px !important;
+
+}
+.row-field_of_specialization th{
+  width: 250px !important;
+
+}
+.row-account_verification_status th{
+  width: 250px !important;
 }
