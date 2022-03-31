@@ -26,7 +26,7 @@
                   <div class="step" data-target="#admission">
                     <button type="button" class="step-trigger" role="tab" aria-controls="admission" id="admission-trigger">
                       <span class="bs-stepper-circle">2</span>
-                      <span class="bs-stepper-label">Field Study Information</span>
+                      <span class="bs-stepper-label">Field Of Study Information</span>
                     </button>
                   </div>
                   <div class="line"></div>
@@ -44,14 +44,21 @@
                     </button>
                   </div>
                   <div class="line"></div>
+                  <div class="step" data-target="#school">
+                    <button type="button" class="step-trigger" role="tab" aria-controls="school" id="school-trigger">
+                      <span class="bs-stepper-circle">5</span>
+                      <span class="bs-stepper-label">School Information</span>
+                    </button>
+                  </div>
+                  <div class="line"></div>
                   <div class="step" data-target="#scan">
                     <button type="button" class="step-trigger" role="tab" aria-controls="scan" id="scan-trigger">
-                      <span class="bs-stepper-circle">5</span>
+                      <span class="bs-stepper-circle">6</span>
                       <span class="bs-stepper-label">Scan Documents</span>
                     </button>
                   </div>
                 </div>
-                <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), multiple: true) do |f| %>
+                <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name),wrapper: :input_group, multiple: true) do |f| %>
                   <div class="bs-stepper-content">
                     <!-- your steps content here -->
                     <div id="bi" class="content" role="tabpanel" aria-labelledby="bi-trigger">
@@ -76,6 +83,31 @@
                                   <p  class="text-center"><strong>Fill in the space(s) or Select the appropriate box(es) or selctions. * fields are required.</strong></p>  
                                   <p class="text-muted text-center">
                                     You must provide your address information on the fields provided. Once you fill all the required feilds hit the Continue button.
+                                  </p>
+                                  <hr>
+                                </div>
+                                <!-- /.card-body -->
+                              </div>
+                              <div class="card  card-primary">
+                                <div class="card-header">
+                                  <h3 class="card-title">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    <strong>Photo Instruction</strong>
+
+                                  </h3>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                  <p  class="text-center"><strong>We recommend you use a professional visa photo service to ensure your photo meets all the requirements.</strong></p>  
+                                  <p class="text-muted text-center">
+                                   <ol class="text-muted">
+                                    <li>Taken within the last 6 months to reflect your current appearance</li>
+                                    <li>Taken in front of a plain white or off-white background</li>
+                                    <li>With a neutral facial expression and both eyes open</li>
+                                    <li>Taken in clothing that you normally wear on a daily basis</li>
+                                    <li>Do not wear a hat or head covering that obscures the hair or hairline, unless worn daily for a religious purpose. Your full face must be visible, and the head covering must not cast any shadows on your face.Headphones, wireless hands-free devices, or similar items are not acceptable in your photo.</li>
+                                   </ol>
+                        
                                   </p>
                                   <hr>
                                 </div>
@@ -228,6 +260,49 @@
                         </div>
                       </div>
                     </div>
+                    
+                    <div id="school" class="content" role="tabpanel" aria-labelledby="school-trigger">
+                      <div class="row">
+                        <div class="col-12 col-md-3">
+                          <div class="card card-primary">
+                            <div class="card-header">
+                              <h3 class="card-title">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                <strong>Instruction</strong>
+
+                              </h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                              <p  class="text-center"><strong>Fill in the space(s) or Select the appropriate box(es) or selctions. * fields are required.</strong></p>  
+                              <p class="text-muted text-center">
+                                You must provide your address information on the fields provided. Once you fill all the required feilds hit the Continue button.
+                              </p>
+                              <hr>
+                            </div>
+                            <!-- /.card-body -->
+                          </div>
+                        </div>
+                        <div class="col-12 col-md-9">
+                          <div class="card card-outline card-primary">
+                            <div class="card-header">
+                              <h3 class="card-title">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                <strong>High School Information</strong>
+                              </h3>
+                            </div>
+                            <div class="card-body">
+                              <%= render 'school', f: f%>
+                            </div>
+                            <div class="card-footer">
+                              <a class="btn btn-secondary" onclick="stepper.previous()">Previous</a>
+                              <a class="btn btn-primary" onclick="stepper.next()">Continue</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                     <div id="scan" class="content" role="tabpanel" aria-labelledby="scan-trigger">
                       <div class="row">
                         <div class="col-12 col-md-3">
@@ -274,6 +349,7 @@
                   <%= f.input :created_by, as: :hidden, :input_html => { :value => "self"}%>
                   <%=f.input :year, as: :hidden, :input_html => { :value => 1}%>
                   <%=f.input :semester, as: :hidden, :input_html => { :value => 1}%>
+
                 <%end%>
               </div>
             </div>

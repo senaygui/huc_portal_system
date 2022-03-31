@@ -1,7 +1,7 @@
 ActiveAdmin.register Student do
 
   menu priority: 7
-  permit_params :current_location,:current_occupation,:tempo_status,:created_by,:last_updated_by,:photo,:email,:password,:first_name,:last_name,:middle_name,:gender,:student_id,:date_of_birth,:program_id,:department,:admission_type,:study_level,:marital_status,:year,:semester,:account_verification_status,:document_verification_status,:account_status,:graduation_status,student_address_attributes: [:id,:country,:city,:region,:zone,:sub_city,:house_number,:cell_phone,:house_phone,:pobox,:woreda,:created_by,:last_updated_by],emergency_contact_attributes: [:id,:full_name,:relationship,:cell_phone,:email,:current_occupation,:name_of_current_employer,:pobox,:email_of_employer,:office_phone_number,:created_by,:last_updated_by], documents: []
+  permit_params :undergraduate_transcript,:highschool_transcript, :grade_10_matric,:grade_12_matric,:coc,:diploma_certificate,:degree_certificate,:place_of_birth,:sponsorship_status,:entrance_exam_result_status,:student_id_taken_status,:old_id_number,:curriculum_version,:current_location,:current_occupation,:tempo_status,:created_by,:last_updated_by,:photo,:email,:password,:first_name,:last_name,:middle_name,:gender,:student_id,:date_of_birth,:program_id,:department,:admission_type,:study_level,:marital_status,:year,:semester,:account_verification_status,:document_verification_status,:account_status,:graduation_status,student_address_attributes: [:id,:country,:city,:region,:zone,:sub_city,:house_number,:cell_phone,:house_phone,:pobox,:woreda,:created_by,:last_updated_by],emergency_contact_attributes: [:id,:full_name,:relationship,:cell_phone,:email,:current_occupation,:name_of_current_employer,:pobox,:email_of_employer,:office_phone_number,:created_by,:last_updated_by],school_or_university_information_attributes: [:id, :college_or_university,:phone_number,:address,:field_of_specialization,:cgpa,:last_attended_high_school,:school_address,:grade_10_result,:grade_10_exam_taken_year,:grade_12_exam_result,:grade_12_exam_taken_year,:created_by,:updated_by]
   active_admin_import
   controller do
     def update_resource(object, attributes)
@@ -12,22 +12,22 @@ ActiveAdmin.register Student do
   index do
     selectable_column
     column :student_id
-    column "full name", sortable: true do |n|
-      n.name.full.upcase
+    column "Full Name", sortable: true do |n|
+      "#{n.first_name.upcase} #{n.middle_name.upcase} #{n.last_name.upcase}"
     end
     column "Department", sortable: true do |d|
       link_to d.program.department.department_name, [:admin, d.program.department]
     end
-    column "program", sortable: true do |d|
+    column "Program", sortable: true do |d|
       link_to d.program.program_name, [:admin, d.program]
     end
     column :study_level
     column :admission_type
     # column :year
-    column "document verification" do |s|
+    column "Verification" do |s|
       status_tag s.document_verification_status
     end
-    column "Created At", sortable: true do |c|
+    column "Admission", sortable: true do |c|
       c.created_at.strftime("%b %d, %Y")
     end
     actions
@@ -44,11 +44,13 @@ ActiveAdmin.register Student do
   filter :admission_type, as: :select, :collection => ["online", "regular", "extention", "distance"]
   filter :department   
   filter :year
+  filter :semester
   filter :current_occupation
   filter :current_location
 
   filter :account_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"]
   filter :document_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"]
+  filter :entrance_exam_result_status
   filter :account_status, as: :select, :collection => ["active","suspended"]
   filter :graduation_status      
   filter :created_by
@@ -75,7 +77,7 @@ ActiveAdmin.register Student do
   form do |f|
     f.semantic_errors
     f.semantic_errors *f.object.errors.keys
-    if f.object.new_record?
+    if f.object.new_record? || current_admin_user.role == "registrar"
       f.inputs "Student basic information" do
         div class: "avatar-upload" do
           div class: "avatar-edit" do
@@ -89,12 +91,12 @@ ActiveAdmin.register Student do
             end
           end
         end
-        f.input :authors, :as => :check_boxes, :collection => ["Justin", "Kate", "Amelia", "Gus", "Meg"]
         f.input :first_name
         f.input :last_name
         f.input :middle_name
         f.input :gender, as: :select, :collection => ["Male", "Female"], :include_blank => false
         f.input :date_of_birth, as: :date_time_picker
+        f.input :place_of_birth
         f.input :marital_status, as: :select, :collection => ["Single", "Married", "Widowed","Separated","Divorced"], :include_blank => false
         f.input :email
         f.input :password
@@ -140,32 +142,30 @@ ActiveAdmin.register Student do
         a.input :office_phone_number, hint: "current employer company phone number or person phone number of the student emergency contact person"
         a.input :pobox
       end
-      f.inputs 'Dcouemnts', multipart: true do
-        div class: "file-upload" do
-          f.drag_and_drop_file_field :documents do
-            'Drag and drop or click here to upload all the necessary documents!'
-          end
-          
-        end
-        # if f.object.documents.attached?
-        #   div class: "document-preview container" do
-        #     f.object.documents.each do |document|
-        #       if document.variable?
-        #           div class: "preview-card" do
-        #             span image_tag(document, size: '200x200')
-        #             span link_to 'delete', delete_document_admin_student_path(document.id), method: :delete, data: { confirm: 'Are you sure?' }
-        #           end
-        #       elsif document.previewable?
-        #           div class: "preview-card" do
-        #             span image_tag(document.preview(resize: '200x200'))
-        #             span link_to 'delete', delete_document_admin_student_path(document.id), method: :delete, data: { confirm: 'Are you sure?' }
-        #           end
-        #       end
-        #     end
-        #   end
-        # end
+      f.inputs "School And University Information", :for => [:school_or_university_information, f.object.school_or_university_information || SchoolOrUniversityInformation.new ] do |a|
+
+        a.input :last_attended_high_school
+        a.input :school_address
+        a.input :grade_10_result
+        a.input :grade_10_exam_taken_year, as: :date_time_picker
+        a.input :grade_12_exam_result
+        a.input :grade_12_exam_taken_year, as: :date_time_picker
+        
+        a.input :college_or_university, label: "Last college or university attended"
+        a.input :phone_number
+        a.input :address
+        a.input :field_of_specialization
+        a.input :cgpa
       end
-      f.inputs "temporary document status" do
+
+      f.inputs 'Student Documents', multipart: true do
+        f.input :highschool_transcript, as: :file, label: "Grade 9, 10, 11,and 12 transcripts"
+        f.input :grade_10_matric, as: :file, label: "Grade 10 matric certificate"
+        f.input :grade_12_matric, as: :file, label: "Grade 12 matric certificate"
+        f.input :coc, as: :file, label: "Certificate of competency (COC)"
+        f.input :diploma_certificate, as: :file, label: "TVET/Diploma certificate"
+        f.input :degree_certificate, as: :file, label: "Undergraduate degree certificate"
+        f.input :undergraduate_transcript, as: :file
         f.input :tempo_status
       end
     end
@@ -173,146 +173,314 @@ ActiveAdmin.register Student do
       f.input :account_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"], :include_blank => false
       f.input :document_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"], :include_blank => false         
     end
-    if !f.object.new_record?
-      f.inputs "Student account status" do
+    if !f.object.new_record? && !(params[:page_name] == "approval")
+      f.inputs "Entrance Exam Result" do
+        f.input :entrance_exam_result_status, as: :select, :collection => ["Pass", "Failed"]
+      end
+      f.inputs "Student ID Information" do
+        f.input :student_id_taken_status
+        f.input :old_id_number
+        if current_admin_user.role == "registrar"
+          f.input :student_id
+        end
+      end
+      f.inputs "Student Account Status" do
         f.input :account_status, as: :select, :collection => ["active","suspended"]
       end
     end
     f.actions
   end
-  # member_action :delete_document, method: :delete do
-  #   @pic = ActiveStorage::Attachment.find(params[:id])
-  #   @pic.purge_later
-  #   redirect_back(fallback_location: edit_admin_student_path)
-  # end
-  #TODO: make delete btn in show not primery color
-  #TODO: add account approval status action modal
-
-  # member_action :student_approval, method: :put do
-  #   @student= Student.find(params[:id])
-  #   @student.approve_student
-  #   redirect_back(fallback_location: admin_student_path)
-  # end
-  action_item :edit, only: :show do
-    link_to 'Approve Student', edit_admin_student_path(student.id)
+    
+  action_item :edit, only: :show, priority: 0 do
+    link_to 'Approve Student', edit_admin_student_path(student.id, page_name: "approval")
   end
-  show :title => proc{|student| truncate(student.name.full, length: 50) } do
+  show :title => proc{|student| truncate("#{student.first_name.upcase} #{student.middle_name.upcase} #{student.last_name.upcase}", length: 50) } do
     tabs do
       tab "student General information" do
-        panel "Student Main information" do
-          attributes_table_for student do
-            row "photo" do |pt|
-              span image_tag(pt.photo, size: '150x150', class: "img-corner")
-            end
-            row "full name", sortable: true do |n|
-              n.name.full.upcase
-            end
-            row "Student ID" do |si|
-              si.student_id
-            end
-            row "Program" do |pr|
-              link_to pr.program.program_name, admin_program_path(pr.program.id)
-            end
-            row :current_occupation
-            row :department
-            row :admission_type
-            row :study_level
-            row :year
-            # row :semester
-            row :account_verification_status do |s|
-              status_tag s.account_verification_status
-            end
-            row "admission Date" do |d|
-              d.created_at.strftime("%b %d, %Y")
-            end
-            row :tempo_status
-            #row :graduation_status
-          end
-        end
-        panel "Basic information" do
-          attributes_table_for student do
-            row :email
-            row :gender
-            row :date_of_birth, sortable: true do |c|
-              c.date_of_birth.strftime("%b %d, %Y")
-            end
-            row :marital_status
-          end
-        end  
-      end
-      tab "Account status information" do
-        panel "Account status information" do
-          attributes_table_for student do
-            row :account_verification_status do |s|
-              status_tag s.account_verification_status
-            end
-            row :document_verification_status do |s|
-              status_tag s.document_verification_status
-            end
-            row :account_status do |s|
-              status_tag s.account_status
-            end
-            row  :sign_in_count, default: 0, null: false
-            row :current_sign_in_at
-            row :last_sign_in_at
-            row :current_sign_in_ip
-            row :last_sign_in_ip
-            row :created_by
-            row :last_updated_by
-            row :created_at
-            row :updated_at
-          end
-        end
-      end
-      tab "Student Document" do
-        panel "Document" do
-          attributes_table_for student do
-            row "Documents" do |i|
-              div class: "document-preview container" do
-                i.documents.each do |doc| 
-                  if doc.variable?
-                    div class: "preview-card" do
-                      span link_to image_tag(doc, size: '200x200'), doc
-                    end
-                  elsif doc.previewable?
-                    div class: "preview-card" do
-                      span link_to image_tag(doc.preview(resize: '200x200')), doc
-                    end
-                  end
+        columns do 
+          column do 
+            panel "Student Main information" do
+              attributes_table_for student do
+                row "photo" do |pt|
+                  span image_tag(pt.photo, size: '150x150', class: "img-corner")
                 end
+                row "full name", sortable: true do |n|
+                  "#{n.first_name.upcase} #{n.middle_name.upcase} #{n.last_name.upcase}"
+                end
+                row "Student ID" do |si|
+                  si.student_id
+                end
+                row "Program" do |pr|
+                  link_to pr.program.program_name, admin_program_path(pr.program.id)
+                end
+                row :curriculum_version
+                row :department
+                row :admission_type
+                row :study_level
+                row :year
+                row :semester
+                row :account_verification_status do |s|
+                  status_tag s.account_verification_status
+                end
+                row :entrance_exam_result_status
+                row "admission Date" do |d|
+                  d.created_at.strftime("%b %d, %Y")
+                end
+                row :student_id_taken_status
+                row :old_id_number
+                
+                #row :graduation_status
+              end
+            end
+          end
+          column do 
+            panel "Basic information" do
+              attributes_table_for student do
+                row :email
+                row :gender
+                row :date_of_birth, sortable: true do |c|
+                  c.date_of_birth.strftime("%b %d, %Y")
+                end
+                row :place_of_birth
+                row :marital_status
+                row :current_occupation
+              end
+            end 
+            panel "Account status information" do
+              attributes_table_for student do
+                row :account_verification_status do |s|
+                  status_tag s.account_verification_status
+                end
+                row :document_verification_status do |s|
+                  status_tag s.document_verification_status
+                end
+                row :account_status do |s|
+                  status_tag s.account_status
+                end
+                row :sign_in_count, default: 0, null: false
+                row :current_sign_in_at
+                row :last_sign_in_at
+                row :current_sign_in_ip
+                row :last_sign_in_ip
+                row :created_by
+                row :last_updated_by
+                row :created_at
+                row :updated_at
               end
             end
           end
         end
       end
+      tab "Student Documents " do
+        columns do 
+          column do 
+            panel "High School Information" do
+              attributes_table_for student.school_or_university_information do
+                row :last_attended_high_school
+                row :school_address
+                row :grade_10_result
+                row :grade_10_exam_taken_year
+                row :grade_12_exam_result
+                row :grade_12_exam_taken_year
+              end
+            end
+          end
+          column do 
+            panel "University/College Information" do
+              attributes_table_for student.school_or_university_information do
+                row :college_or_university
+                row :phone_number
+                row :address
+                row :field_of_specialization
+                row :cgpa
+              end
+            end
+          end
+        end
+        columns do
+          column do
+            panel "Highschool Transcript" do 
+              if student.highschool_transcript.attached?
+                if student.highschool_transcript.variable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.highschool_transcript, size: '200x270'), student.highschool_transcript
+                  end
+                elsif student.highschool_transcript.previewable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.highschool_transcript.preview(resize: '200x200')), student.highschool_transcript
+                  end
+                end
+              else
+                h3 class: "text-center no-recent-data" do
+                  "Document Not Uploaded Yet"
+                end
+              end
+            end
+            panel "TVET/Diploma Certificate" do 
+              if student.diploma_certificate.attached?
+                if student.diploma_certificate.variable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.diploma_certificate, size: '200x270'), student.diploma_certificate
+                  end
+                elsif student.diploma_certificate.previewable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.diploma_certificate.preview(resize: '200x200')), student.diploma_certificate
+                  end
+                end
+              else
+                h3 class: "text-center no-recent-data" do
+                  "Document Not Uploaded Yet"
+                end
+              end
+            end
+          end
+          column do
+            panel "Grade 10 Matric Certificate" do 
+              if student.grade_10_matric.attached?
+                if student.grade_10_matric.variable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.grade_10_matric, size: '200x270'), student.grade_10_matric
+                  end
+                elsif student.grade_10_matric.previewable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.grade_10_matric.preview(resize: '200x200')), student.grade_10_matric
+                  end
+                end
+              else
+                h3 class: "text-center no-recent-data" do
+                  "Document Not Uploaded Yet"
+                end
+              end
+            end
+            panel "Certificate Of Competency(COC)" do
+              if student.coc.attached?
+                if student.coc.variable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.coc, size: '200x270'), student.coc
+                  end
+                elsif student.coc.previewable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.coc.preview(resize: '200x200')), student.coc
+                  end
+                end
+              else
+                h3 class: "text-center no-recent-data" do
+                  "Document Not Uploaded Yet"
+                end
+              end 
+            end
+          end
+          column do
+            panel "Grade 12 Matric Certificate" do 
+              if student.grade_12_matric.attached?
+                if student.grade_12_matric.variable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.grade_12_matric, size: '200x270'), student.grade_12_matric
+                  end
+                elsif student.grade_12_matric.previewable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.grade_12_matric.preview(resize: '200x200')), student.grade_12_matric
+                  end
+                end
+              else
+                h3 class: "text-center no-recent-data" do
+                  "Document Not Uploaded Yet"
+                end
+              end
+            end
+            panel "Undergraduate Degree Transcript" do 
+              if student.undergraduate_transcript.attached?
+                if student.undergraduate_transcript.variable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.undergraduate_transcript, size: '200x270'), student.undergraduate_transcript
+                  end
+                elsif student.undergraduate_transcript.previewable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.undergraduate_transcript.preview(resize: '200x200')), student.undergraduate_transcript
+                  end
+                end
+              else
+                h3 class: "text-center no-recent-data" do
+                  "Document Not Uploaded Yet"
+                end
+              end
+            end
+          end
+          column do
+            panel "Undergraduate Degree Certificate" do 
+              if student.degree_certificate.attached?
+                if student.degree_certificate.variable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.degree_certificate, size: '200x270'), student.degree_certificate
+                  end
+                elsif student.degree_certificate.previewable?
+                  div class: "preview-card text-center" do
+                    span link_to image_tag(student.degree_certificate.preview(resize: '200x200')), student.degree_certificate
+                  end
+                end
+
+                div class: "text-center" do 
+                  span "Temporary Degree Status"
+                  status_tag student.tempo_status
+                end
+              else
+                h3 class: "text-center no-recent-data" do
+                  "Not Uploaded Yet"
+                end
+              end
+            end 
+          end
+        end
+      end
       tab "Student Address" do
-        panel "Student Address" do
-          attributes_table_for student.student_address do
-            row :country
-            row :city
-            row :region
-            row :zone
-            row :sub_city
-            row :house_number
-            row :cell_phone
-            row :house_phone
-            row :pobox
-            row :woreda
+        columns do 
+          column do 
+            panel "Student Address" do
+              attributes_table_for student.student_address do
+                row :country
+                row :city
+                row :region
+                row :zone
+                row :sub_city
+                row :house_number
+                row :cell_phone
+                row :house_phone
+                row :pobox
+                row :woreda
+              end
+            end
           end
-        end
-        panel "Student Emergency Contact information" do
-          attributes_table_for student.emergency_contact do
-            row :full_name
-            row :relationship
-            row :cell_phone
-            row :email
-            row :current_occupation
-            row :name_of_current_employer
-            row :email_of_employer
-            row :office_phone_number
-            row :pobox
+          column do 
+            panel "Student Emergency Contact information" do
+              attributes_table_for student.emergency_contact do
+                row :full_name
+                row :relationship
+                row :cell_phone
+                row :email
+                row :current_occupation
+                row :name_of_current_employer
+                row :email_of_employer
+                row :office_phone_number
+                row :pobox
+              end
+            end
           end
-        end
+        end  
+      end
+      tab "Student Course" do      
+        panel "Course list" do
+          table_for student.student_courses.order('year ASC, semester ASC') do
+            ## TODO: wordwrap titles and long texts
+            column :course_title
+            column :course_code
+            column :credit_hour
+            column :ects
+            column :semester
+            column :year
+            column :letter_grade
+            column :grade_point
+          end      
+        end 
       end
       tab "Grade Report" do
       end

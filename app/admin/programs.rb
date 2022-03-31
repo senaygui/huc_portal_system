@@ -1,6 +1,6 @@
 ActiveAdmin.register Program do
   menu priority: 6
-  permit_params :program_semester,:department_id,:total_semester,:program_name,:program_code,:overview,:program_description,:created_by,:last_updated_by,:total_tuition,:study_level,:admission_type,:program_duration, curriculums_attributes: [:id, :curriculum_title,:curriculum_version,:total_course,:total_ects,:total_credit_hour,:active_status,:curriculum_active_date,:depreciation_date,:created_by,:last_updated_by, :_destroy]
+  permit_params :entrance_exam_requirement_status,:program_semester,:department_id,:total_semester,:program_name,:program_code,:overview,:program_description,:created_by,:last_updated_by,:total_tuition,:study_level,:admission_type,:program_duration, curriculums_attributes: [:id, :curriculum_title,:curriculum_version,:total_course,:total_ects,:total_credit_hour,:active_status,:curriculum_active_date,:depreciation_date,:created_by,:last_updated_by, :_destroy]
 
   index do
     selectable_column
@@ -16,7 +16,8 @@ ActiveAdmin.register Program do
     column :study_level
     column :admission_type
     column "duration",:program_duration
-    number_column "Tuition",:total_tuition, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 
+    column :entrance_exam_requirement_status
+    # number_column "Tuition",:total_tuition, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 
     # column "Created At", sortable: true do |c|
     #   c.created_at.strftime("%b %d, %Y")
     # end
@@ -31,6 +32,7 @@ ActiveAdmin.register Program do
   filter :admission_type, as: :select, :collection => ["online", "regular", "extention", "distance"]
   filter :program_duration, as: :select, :collection => [1, 2,3,4,5,6,7]
   filter :program_semester
+  filter :entrance_exam_requirement_status, as: :select
   # filter :total_semester     
   filter :created_by
   filter :last_updated_by
@@ -63,6 +65,7 @@ ActiveAdmin.register Program do
       # f.input :two_monthly_price
       # f.input :three_monthly_price
       # f.input :total_semester
+      f.input :entrance_exam_requirement_status
       if f.object.new_record?
         f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
       else
@@ -124,6 +127,7 @@ ActiveAdmin.register Program do
             row :program_semester
             # row :total_semester
             number_row "Tuition",:total_tuition, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 
+            row :entrance_exam_requirement_status
             row :created_by
             row :last_updated_by
             row :created_at
@@ -136,7 +140,7 @@ ActiveAdmin.register Program do
           table_for program.curriculums.order('created_at ASC') do
               ## TODO: wordwrap titles and long texts
               column "curriculum title" do |item|
-                item.curriculum_title
+                link_to item.curriculum_title, admin_curriculum_path(item)
               end
               column "curriculum version" do |item|
                 item.curriculum_version
@@ -179,7 +183,6 @@ ActiveAdmin.register Program do
                 panel "Semester: #{s}" do
                   table_for program.curriculums.last.course_breakdowns.where(year: i, semester: s).order('year ASC','semester ASC') do
                     ## TODO: wordwrap titles and long texts
-                    
                     column "course title" do |item|
                       link_to item.course.course_title, [ :admin, item.course] 
                     end

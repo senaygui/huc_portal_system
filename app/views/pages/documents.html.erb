@@ -1,3 +1,4 @@
+<%provide(:title, "Documents")%>
 <section class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
@@ -18,24 +19,189 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12 col-md-12">
-
-        <!-- Profile Image -->
         <div class="card card-primary">
           <div class="card-header">
             <h3 class="card-title">My Documents</h3>
           </div>
-          <div class="card-body box-profile">
-            <% current_student.documents.each do |doc| %>
-              <% if doc.variable? %>
-                <div class="preview-card" >
-                  <%= link_to image_tag(doc, size: '200x200'), doc%>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12 col-md-3">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Highschool Transcript</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <% if current_student.highschool_transcript.attached? %>
+                      <%if current_student.highschool_transcript.variable?%>
+                        <div class= "preview-card text-center no-recent-data" >
+                          <span> <%=link_to image_tag(current_student.highschool_transcript, size: '200x270'), current_student.highschool_transcript%></span>
+                        </div>
+                      <%elsif current_student.highschool_transcript.previewable?%>
+                        <div class= "preview-card text-center no-recent-data">
+                          <span> <%= link_to image_tag(current_student.highschool_transcript.preview(resize: '200x200')), current_student.highschool_transcript%></span> 
+                        </div>
+                      <%end%>
+                    <%else%>
+                      <div class= "text-center no-recent-data" >
+                        Document Not Uploaded Yet
+                      </div>
+                    <%end%>
+                  </div>
                 </div>
-                <% elsif doc.previewable? %>
-                <div class= "preview-card">
-                  <%= link_to image_tag(doc.preview(resize: '200x200')), doc%>
+              </div>
+              
+              <div class="col-12 col-md-3">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Grade 10 Matric Certificate</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <% if current_student.grade_10_matric.attached? %>
+                      <%if current_student.grade_10_matric.variable?%>
+                        <div class= "preview-card text-center no-recent-data" >
+                          <span> <%=link_to image_tag(current_student.grade_10_matric, size: '200x270'), current_student.grade_10_matric%></span>
+                        </div>
+                      <%elsif current_student.grade_10_matric.previewable?%>
+                        <div class= "preview-card text-center no-recent-data">
+                          <span> <%= link_to image_tag(current_student.grade_10_matric.preview(resize: '200x200')), current_student.grade_10_matric%></span> 
+                        </div>
+                      <%end%>
+                    <%else%>
+                      <div class= "text-center no-recent-data" >
+                        Document Not Uploaded Yet
+                      </div>
+                    <%end%>
+                  </div>
                 </div>
-              <%end%>
-            <%end%>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Grade 12 Matric Certificate</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <% if current_student.grade_12_matric.attached? %>
+                      <%if current_student.grade_12_matric.variable?%>
+                        <div class= "preview-card text-center no-recent-data" >
+                          <span> <%=link_to image_tag(current_student.grade_12_matric, size: '200x270'), current_student.grade_12_matric%></span>
+                        </div>
+                      <%elsif current_student.grade_12_matric.previewable?%>
+                        <div class= "preview-card text-center no-recent-data">
+                          <span> <%= link_to image_tag(current_student.grade_12_matric.preview(resize: '200x200')), current_student.grade_12_matric%></span> 
+                        </div>
+                      <%end%>
+                    <%else%>
+                      <div class= "text-center no-recent-data" >
+                        Document Not Uploaded Yet
+                      </div>
+                    <%end%>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Degree Certificate</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <% if current_student.degree_certificate.attached? %>
+                      <%if current_student.degree_certificate.variable?%>
+                        <div class= "preview-card text-center no-recent-data" >
+                          <span> <%=link_to image_tag(current_student.degree_certificate, size: '200x270'), current_student.degree_certificate%></span>
+                        </div>
+                      <%elsif current_student.degree_certificate.previewable?%>
+                        <div class= "preview-card text-center no-recent-data">
+                          <span> <%= link_to image_tag(current_student.degree_certificate.preview(resize: '200x200')), current_student.degree_certificate%></span> 
+                        </div>
+                      <%end%>
+                    <%else%>
+                      <h3 class= "text-center no-recent-data" >
+                        Document Not Uploaded Yet
+                      </h3>
+                    <%end%>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">TVET/Diploma Certificate</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <% if current_student.diploma_certificate.attached? %>
+                      <%if current_student.diploma_certificate.variable?%>
+                        <div class= "preview-card text-center no-recent-data" >
+                          <span> <%=link_to image_tag(current_student.diploma_certificate, size: '200x270'), current_student.diploma_certificate%></span>
+                        </div>
+                      <%elsif current_student.diploma_certificate.previewable?%>
+                        <div class= "preview-card text-center no-recent-data">
+                          <span> <%= link_to image_tag(current_student.diploma_certificate.preview(resize: '200x200')), current_student.diploma_certificate%></span> 
+                        </div>
+                      <%end%>
+                    <%else%>
+                      <div class= "text-center no-recent-data" >
+                        Document Not Uploaded Yet
+                      </div>
+                    <%end%>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Certificate Of Competency</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <% if current_student.coc.attached? %>
+                      <%if current_student.coc.variable?%>
+                        <div class= "preview-card text-center no-recent-data" >
+                          <span> <%=link_to image_tag(current_student.coc, size: '200x270'), current_student.coc%></span>
+                        </div>
+                      <%elsif current_student.coc.previewable?%>
+                        <div class= "preview-card text-center no-recent-data">
+                          <span> <%= link_to image_tag(current_student.coc.preview(resize: '200x200')), current_student.coc%></span> 
+                        </div>
+                      <%end%>
+                    <%else%>
+                      <div class= "text-center no-recent-data" >
+                        Document Not Uploaded Yet
+                      </div>
+                    <%end%>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </div>
           <!-- /.card-body -->
         </div>
@@ -46,3 +212,9 @@
     <!-- /.row -->
   </div><!-- /.container-fluid -->
 </section>
+
+<style type="text/css">
+  .card-title{
+    font-size: 1rem;
+  }
+</style>

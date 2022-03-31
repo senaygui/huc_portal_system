@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_08_131247) do
+ActiveRecord::Schema.define(version: 2022_03_29_120614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -434,11 +434,32 @@ ActiveRecord::Schema.define(version: 2022_03_08_131247) do
     t.integer "program_duration", null: false
     t.integer "program_semester", null: false
     t.decimal "total_tuition", default: "0.0"
+    t.boolean "entrance_exam_requirement_status", default: false
     t.string "created_by"
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["department_id"], name: "index_programs_on_department_id"
+  end
+
+  create_table "school_or_university_informations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "student_id"
+    t.string "college_or_university"
+    t.string "phone_number"
+    t.string "address"
+    t.string "field_of_specialization"
+    t.decimal "cgpa"
+    t.string "last_attended_high_school"
+    t.string "school_address"
+    t.decimal "grade_10_result"
+    t.datetime "grade_10_exam_taken_year"
+    t.decimal "grade_12_exam_result"
+    t.datetime "grade_12_exam_taken_year"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_id"], name: "index_school_or_university_informations_on_student_id"
   end
 
   create_table "sections", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -497,6 +518,25 @@ ActiveRecord::Schema.define(version: 2022_03_08_131247) do
     t.index ["student_id"], name: "index_student_addresses_on_student_id"
   end
 
+  create_table "student_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "student_id"
+    t.uuid "course_breakdown_id"
+    t.string "course_title", null: false
+    t.integer "semester", null: false
+    t.integer "year", null: false
+    t.integer "credit_hour", null: false
+    t.integer "ects", null: false
+    t.string "course_code", null: false
+    t.string "letter_grade"
+    t.decimal "grade_point"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_breakdown_id"], name: "index_student_courses_on_course_breakdown_id"
+    t.index ["student_id"], name: "index_student_courses_on_student_id"
+  end
+
   create_table "student_grades", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "course_registration_id"
     t.uuid "student_id"
@@ -543,11 +583,17 @@ ActiveRecord::Schema.define(version: 2022_03_08_131247) do
     t.string "current_occupation"
     t.string "student_password"
     t.boolean "tempo_status", default: false
+    t.string "current_location"
+    t.string "place_of_birth"
+    t.string "sponsorship_status"
+    t.string "entrance_exam_result_status"
+    t.boolean "student_id_taken_status", default: false
+    t.string "old_id_number"
+    t.string "curriculum_version"
     t.string "created_by", default: "self"
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "current_location"
     t.index ["email"], name: "index_students_on_email", unique: true
     t.index ["program_id"], name: "index_students_on_program_id"
     t.index ["reset_password_token"], name: "index_students_on_reset_password_token", unique: true

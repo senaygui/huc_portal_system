@@ -53,6 +53,13 @@ class DeviseCreateStudents < ActiveRecord::Migration[5.2]
       t.string :current_occupation
       t.string :student_password
       t.boolean :tempo_status, default: false
+      t.string :current_location
+      t.string :place_of_birth
+      t.string :sponsorship_status
+      t.string :entrance_exam_result_status
+      t.boolean :student_id_taken_status, default: false
+      t.string :old_id_number
+      t.string :curriculum_version
       ##created and updated by
       t.string :created_by, default: "self"
       t.string :last_updated_by
