@@ -2,7 +2,7 @@ class Student < ApplicationRecord
   ##callbacks
   before_save :department_assignment
   before_save :student_id_generator
-  # after_save :student_semester_registration
+  after_save :student_semester_registration
   before_create :assign_curriculum
   before_create :set_pwd
   before_save :student_course_assign
@@ -32,6 +32,7 @@ class Student < ApplicationRecord
   has_one_attached :photo, dependent: :destroy
   has_many :student_grades, dependent: :destroy
   has_many :grade_reports
+  has_many :course_registrations
   has_one :school_or_university_information, dependent: :destroy
   accepts_nested_attributes_for :school_or_university_information
   has_many :student_courses, dependent: :destroy
@@ -108,43 +109,26 @@ class Student < ApplicationRecord
     end
   end
 
-  # def student_semester_registration
-  #  if self.document_verification_status == "approved" && self.semester_registrations.last.nil? && self.year == 1
-  #   SemesterRegistration.create do |registration|
-  #     registration.student_id = self.id
-  #     registration.created_by = self.created_by
-  #     ## TODO: find the calender of student admission type and study level
-  #     registration.academic_calendar_id = AcademicCalendar.last.id
-  #     registration.year = self.year
-  #     registration.semester = self.semester
-  #     registration.program_name = self.program.program_name
-  #     registration.admission_type = self.admission_type
-  #     registration.study_level = self.study_level
-  #     # registration.registrar_approval_status ="approved"
-  #     registration.finance_approval_status ="approved"
-  #   end
-  #  end 
-  #  if self.document_verification_status == "approved" && self.year == 1 
-  #   self.program.curriculums.where(year: self.year, semester: self.semester).each do |co|
-  #     CourseRegistration.create do |course|
-  #       course.semester_registration_id = self.semester_registrations.last.id
-  #       course.curriculum_id = co.id
-  #       course.course_title = co.course.course_title
-  #       # course.course_title = co.course.course_title
-  #     end
-  #   end
-  #  end
-  # end
-  # def course_registration
-  #  if self.student_registrations.last.present? && self.year == 1
-  #   self.program.curriculums.where(year: self.year, semester: self.semester).each do |co|
-  #     CourseRegistration.create do |course|
-  #       course.student_registration_id = self.student_registrations.last.id
-  #       course.curriculum_id = co.id
-  #     end
-  #   end
-  #  end 
-  # end
+  def student_semester_registration
+   if self.document_verification_status == "approved" && self.semester_registrations.empty? && self.year == 1 && self.semester == 1
+    SemesterRegistration.create do |registration|
+      registration.student_id = self.id
+      registration.program_id = self.program.id
+      registration.student_full_name = "#{self.first_name.upcase} #{self.middle_name.upcase} #{self.last_name.upcase}"
+      registration.student_id_number = self.student_id
+      registration.created_by = self.created_by
+      ## TODO: find the calender of student admission type and study level
+      registration.academic_calendar_id = AcademicCalendar.where(admission_type: self.admission_type).where(study_level: self.study_level).last.id
+      registration.year = self.year
+      registration.semester = self.semester
+      registration.program_name = self.program.program_name
+      registration.admission_type = self.admission_type
+      registration.study_level = self.study_level
+      # registration.registrar_approval_status ="approved"
+      # registration.finance_approval_status ="approved"
+    end
+   end 
+  end
 
   def student_course_assign
     if self.student_courses.empty? && self.document_verification_status == "approved"  && self.program.entrance_exam_requirement_status == false
