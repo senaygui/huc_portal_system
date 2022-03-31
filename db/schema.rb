@@ -229,14 +229,21 @@ ActiveRecord::Schema.define(version: 2022_03_29_120614) do
   end
 
   create_table "course_registrations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "student_id"
     t.uuid "semester_registration_id"
-    t.uuid "curriculum_id"
+    t.uuid "course_breakdown_id"
+    t.uuid "academic_calendar_id"
+    t.string "student_full_name"
     t.string "enrollment_status", default: "pending"
     t.string "course_title"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["curriculum_id"], name: "index_course_registrations_on_curriculum_id"
+    t.index ["academic_calendar_id"], name: "index_course_registrations_on_academic_calendar_id"
+    t.index ["course_breakdown_id"], name: "index_course_registrations_on_course_breakdown_id"
     t.index ["semester_registration_id"], name: "index_course_registrations_on_semester_registration_id"
+    t.index ["student_id"], name: "index_course_registrations_on_student_id"
   end
 
   create_table "courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -477,6 +484,9 @@ ActiveRecord::Schema.define(version: 2022_03_29_120614) do
 
   create_table "semester_registrations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "student_id"
+    t.uuid "program_id"
+    t.string "student_full_name"
+    t.string "student_id_number"
     t.string "program_name"
     t.string "admission_type"
     t.string "study_level"
@@ -496,6 +506,7 @@ ActiveRecord::Schema.define(version: 2022_03_29_120614) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_semester_registrations_on_academic_calendar_id"
+    t.index ["program_id"], name: "index_semester_registrations_on_program_id"
     t.index ["student_id"], name: "index_semester_registrations_on_student_id"
   end
 

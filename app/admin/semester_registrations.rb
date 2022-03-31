@@ -1,6 +1,6 @@
 ActiveAdmin.register SemesterRegistration do
   menu priority: 9
-  permit_params :student_id,:total_price,:registration_fee,:late_registration_fee,:remaining_amount,:mode_of_payment,:semester,:year,:total_enrolled_course,:academic_calendar_id,:registrar_approval_status,:finance_approval_status,:created_by,:last_updated_by, curriculum_ids: []
+  permit_params :student_full_name,:student_id_number, :student_id,:total_price,:registration_fee,:late_registration_fee,:remaining_amount,:mode_of_payment,:semester,:year,:total_enrolled_course,:academic_calendar_id,:registrar_approval_status,:finance_approval_status,:created_by,:last_updated_by,course_registrations_attributes: [:id, :student_id,:semester_registration_id,:course_breakdown_id,:academic_calendar_id,:student_full_name,:enrollment_status,:course_title,:created_by,:updated_by, :_destroy]
   csv do
     column "username" do |username|
       username.student.student_id
@@ -54,20 +54,20 @@ ActiveAdmin.register SemesterRegistration do
       "student"
     end
   end
-  controller do
-    def create
-      super do |format|
-      if @CollegePayment.save
-        format.html { redirect_to edit_admin_semester_registration_path(@semester_registration), notice: 'student registration created successfully.' }
-        format.json { render :show, status: :created, location: @semester_registration }
-      else
-        format.html { render :new }
-        format.json { render json: @semester_registration.errors, status: :unprocessable_entity }
-      end
-    end
-      # super
-    end 
-  end 
+  # controller do
+  #   def create
+  #     super do |format|
+  #     if @CollegePayment.save
+  #       format.html { redirect_to edit_admin_semester_registration_path(@semester_registration), notice: 'student registration created successfully.' }
+  #       format.json { render :show, status: :created, location: @semester_registration }
+  #     else
+  #       format.html { render :new }
+  #       format.json { render json: @semester_registration.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  #     # super
+  #   end 
+  # end 
   member_action :generate_grade_report, method: :put do
     @semester_registration= SemesterRegistration.find(params[:id])
     @semester_registration.generate_grade_report
@@ -80,7 +80,7 @@ ActiveAdmin.register SemesterRegistration do
   index do
     selectable_column
     column "student name", sortable: true do |n|
-      n.student.name.full 
+      n.student_full_name
     end
     column :admission_type
     column :study_level
@@ -135,10 +135,10 @@ ActiveAdmin.register SemesterRegistration do
             #   span image_tag(pt.student.photo, size: '150x150', class: "img-corner")
             # end
             row "full name", sortable: true do |n|
-              n.student.name.full 
+              n.student_full_name 
             end
             row "Student ID" do |si|
-              si.student.student_id
+              si.student_id_number
             end
             row "Program" do |pr|
               link_to pr.student.program.program_name, admin_program_path(pr.student.program.id)
@@ -147,13 +147,16 @@ ActiveAdmin.register SemesterRegistration do
               si.student.department
             end
             row :admission_type do |si|
-              si.student.admission_type
+              si.admission_type
             end
             row :study_level do |si|
-              si.student.study_level
+              si.study_level
             end
             row :year do |si|
-              si.student.year
+              si.year
+            end
+            row :semester do |si|
+              si.semester
             end
             # row :department
             # row :admission_type
@@ -161,8 +164,21 @@ ActiveAdmin.register SemesterRegistration do
             # row :year
         end
       end
-      panel "course registrations information" do
-        f.input :curriculum_ids, as: :tags, :collection => Curriculum.where(program_id: semester_registration.student.program, year: semester_registration.student.year, semester: semester_registration.student.semester).all, display_name: :course_title, label: "Course Registration"
+      if f.object.course_registrations.empty?
+        f.object.course_registrations << CourseRegistration.new
+      end
+      panel "Course Registration" do
+        f.has_many :course_registrations, heading: " ",remote: true , allow_destroy: true, new_record: true do |a|
+          a.input :course_breakdown_id, as: :search_select, url: admin_course_breakdowns_path,
+            fields: [:course_title, :course_code], display_name: "course_title", minimum_input_length: 2,
+            order_by: 'created_at_asc'
+          a.input :student_id, as: :hidden, :input_html => { :value => semester_registration.student.id}
+          a.input :academic_calendar_id, as: :hidden, :input_html => { :value => semester_registration.academic_calendar_id}
+          a.input :student_full_name, as: :hidden, :input_html => { :value => semester_registration.student_full_name}
+          # a.input :course_title, as: :hidden, :input_html => { :value => semester_registration.course_title}
+          a.input :updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}        
+          a.label :_destroy
+        end
       end
     end
     f.inputs "Student registration information" do
@@ -172,6 +188,9 @@ ActiveAdmin.register SemesterRegistration do
           order_by: 'id_asc'
       f.input :academic_calendar_id, as: :search_select, url: admin_academic_calendars_path,
           fields: [:calender_year, :id], display_name: 'calender_year', minimum_input_length: 2,
+          order_by: 'id_asc'
+      f.input :program_id, as: :search_select, url: admin_programs_path,
+          fields: [:program_name, :id], display_name: 'program_name', minimum_input_length: 2,
           order_by: 'id_asc'
       f.input :semester , :collection => [1, 2,3,4], :include_blank => false
       f.input :year, :collection => [1, 2,3,4,5,6,7], :include_blank => false
@@ -226,22 +245,22 @@ ActiveAdmin.register SemesterRegistration do
     panel "Course Registration" do
       table_for semester_registration.course_registrations do
         column "Course title" do |pr|
-          link_to pr.curriculum.course.course_title, admin_courses_path(pr.curriculum.course.id)
+          link_to pr.course_title, admin_courses_path(pr.course_breakdown.course.id)
         end
         column "Course code" do |pr|
-          pr.curriculum.course.course_code
+          pr.course_breakdown.course.course_code
         end
         column "Course module" do |pr|
-          link_to pr.curriculum.course.course_module.module_code, admin_course_module_path(pr.curriculum.course.course_module.id) 
+          link_to pr.course_breakdown.course.course_module.module_code, admin_course_module_path(pr.course_breakdown.course.course_module.id) 
         end
         column "Credit hour" do |pr|
-          pr.curriculum.credit_hour
+          pr.course_breakdown.credit_hour
         end
         column "Semester" do |se|
-          se.curriculum.semester
+          se.course_breakdown.semester
         end
         column "Year" do |ye|
-          ye.curriculum.year
+          ye.course_breakdown.year
         end
       end
     end

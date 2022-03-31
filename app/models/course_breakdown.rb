@@ -13,7 +13,7 @@ class CourseBreakdown < ApplicationRecord
 	  belongs_to :curriculum
 	  has_many :student_courses, dependent: :destroy
 
-	  # has_many :course_registrations, dependent: :destroy
+	  has_many :course_registrations, dependent: :destroy
 
 	private
 
