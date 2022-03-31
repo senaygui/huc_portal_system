@@ -24,6 +24,7 @@ class Program < ApplicationRecord
     belongs_to :department
     has_many :students
     has_many :semester_registrations
+    has_many :course_registrations
     has_many :curriculums
     accepts_nested_attributes_for :curriculums, reject_if: :all_blank, allow_destroy: true
   

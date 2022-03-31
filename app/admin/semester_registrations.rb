@@ -82,14 +82,17 @@ ActiveAdmin.register SemesterRegistration do
     column "student name", sortable: true do |n|
       n.student_full_name
     end
-    column :admission_type
-    column :study_level
+    column :program_name
+    # column :study_level
     column "academic year", sortable: true do |n|
       link_to n.academic_calendar.calender_year, admin_academic_calendar_path(n.academic_calendar)
     end
     column :semester
     column :year
-    column "approval status", sortable: true do |c|
+    column "Finance status", sortable: true do |c|
+      status_tag c.finance_approval_status
+    end
+    column "Register status", sortable: true do |c|
       status_tag c.registrar_approval_status
     end
     # column :mode_of_payment
@@ -194,7 +197,7 @@ ActiveAdmin.register SemesterRegistration do
           order_by: 'id_asc'
       f.input :semester , :collection => [1, 2,3,4], :include_blank => false
       f.input :year, :collection => [1, 2,3,4,5,6,7], :include_blank => false
-      f.input :mode_of_payment, as: :select, :collection => [ "Monthly Payment", "Every Two Month Payment", "Every Three Month Payment","Full Semester Payment"]
+      f.input :mode_of_payment, as: :select, :collection => [ "Monthly Payment", "Half Semester Payment","Full Semester Payment"]
       # f.input :remark
       # if f.object.course_registrations.empty?
       #   f.object.course_registrations << CourseRegistration.new
