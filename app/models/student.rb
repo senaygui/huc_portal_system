@@ -33,6 +33,7 @@ class Student < ApplicationRecord
   has_many :student_grades, dependent: :destroy
   has_many :grade_reports
   has_many :course_registrations
+  has_many :student_attendances
   has_one :school_or_university_information, dependent: :destroy
   accepts_nested_attributes_for :school_or_university_information
   has_many :student_courses, dependent: :destroy

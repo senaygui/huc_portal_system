@@ -22,6 +22,7 @@ class Program < ApplicationRecord
   ##associations
     has_many :sections
     belongs_to :department
+    has_many :attendances
     has_many :students
     has_many :semester_registrations
     has_many :course_registrations

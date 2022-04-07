@@ -1,5 +1,6 @@
 /*
  *= require active_storage_drag_and_drop
+ 
  */
 
 @import 'activeadmin_addons/all';
@@ -24,7 +25,8 @@ $skinMainFirstColor: #113e58!default;
 $skinMainSecondColor: #A7CF48!default;
 $menu-arrow-dark-icon-url: 'active_admin/nested_menu_arrow_dark.gif' !default;
 @import "wigu/active_admin_theme";
-
+@import "active_admin_scoped_collection_actions";
+@import "active_admin_sidebar";
 .video-responsive iframe{
   width: 500px;
   height: 300px !important;
@@ -241,3 +243,103 @@ ul, ol{
 .row-account_verification_status th{
   width: 250px !important;
 }
+
+
+// ol .choice li { 
+//   border: 1px transparent solid !important; 
+//   display:inline-block !important;
+//   width:12em !important;
+// }
+
+ol .choice  { 
+  margin: 0 !important; 
+  padding: 0 !important; 
+  margin-left: 20px !important; 
+  list-style: none !important; 
+} 
+
+ol .choice  input { 
+  margin-right: .25em !important; 
+} 
+
+ol .choice  { 
+  border: 1px transparent solid !important; 
+  display:inline-block !important;
+  width:20em !important;
+} 
+
+ol .choice  label { 
+  margin-left: 0; 
+} 
+// ol .choice :hover, 
+// ol .choice .focus  { 
+//   background-color: lightyellow !important; 
+//   border: 1px gray solid !important; 
+//   width: 12em !important; 
+// } 
+
+
+
+
+/* active_admin.scss */
+
+.form-table {
+  margin: 0 10px;
+  width: calc(100% - 20px)
+}
+.form-table__row:nth-child(even) {
+  background: #fff;
+}
+.form-table__row:nth-child(odd) {
+  background: #e8e8e8;
+}
+.form-table__col {
+  text-align: center;
+  vertical-align: middle;
+}
+th.form-table__col {
+  background-color: #efefef;
+  background-image: linear-gradient(180deg, #efefef, #dfe1e2);
+  text-shadow: #fff 0 1px 0;
+  border: solid 1px #cdcdcd;
+  border-color: #d4d4d4;
+  border-top-color: #e6e6e6;
+  border-right-color: #d4d4d4;
+  border-bottom-color: #cdcdcd;
+  border-left-color: #d4d4d4;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 1px #FFF inset;
+  font-size: 1em;
+  font-weight: bold;
+  line-height: 18px;
+  margin-bottom: 0.5em;
+  color: #5E6469;
+  padding: 5px 10px 3px 10px;
+  border-right: none;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+td.form-table__col {
+  padding: 10px 0;
+}
+
+body.index.active_admin {
+  #wrapper {
+    display: block;
+  }
+  .index_content {
+    .index_as_table {
+      width: 100%;
+      overflow-x: auto;
+
+      table.index_table.index {
+        th {
+          white-space: nowrap;
+        }
+        td {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
+

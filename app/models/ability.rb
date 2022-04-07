@@ -10,7 +10,11 @@ class Ability
 
     case user.role
     when "admin"
+        can :manage, CourseRegistration
+        can :manage, Attendance
+        can :manage, Session
         can :manage, CourseBreakdown
+        can :manage, CourseSection
         can :manage, StudentGrade
         can :manage, GradeReport
         can :manage, GradeRule
@@ -59,6 +63,7 @@ class Ability
         can :read, SemesterRegistration
         can :manage, Invoice
     when "registrar"
+        can :manage, CourseSection
         can :manage, StudentGrade
         can :manage, GradeReport
         can :manage, GradeRule
@@ -78,6 +83,7 @@ class Ability
         can :manage, SemesterRegistration
         can :read, Invoice
     when "distance_registrar"
+        can :manage, CourseSection
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :manage, Student, admission_type: "distance"
         can :read, Program, admission_type: "distance"
@@ -88,6 +94,7 @@ class Ability
         can :manage, SemesterRegistration, admission_type: "distance"
         can :read, Invoice
     when "online_registrar"
+        can :manage, CourseSection
         can :read, StudentGrade
         can :read, GradeReport
         can :read, GradeRule
@@ -102,6 +109,7 @@ class Ability
         can :manage, SemesterRegistration, admission_type: "online"
         can :read, Invoice
     when "regular_registrar"
+        can :manage, CourseSection
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, AcademicCalendar, admission_type: "regular"
         can :manage, Student, admission_type: "regular"
@@ -112,6 +120,7 @@ class Ability
         can :manage, SemesterRegistration, admission_type: "regular"
         can :read, Invoice 
     when "extention_registrar"
+        can :manage, CourseSection
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :manage, Student, admission_type: "extention"
         can :read, AcademicCalendar, admission_type: "extention"

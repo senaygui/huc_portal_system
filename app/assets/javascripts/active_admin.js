@@ -3,6 +3,8 @@
 //= require activeadmin_addons/all
 //= require activestorage
 //= require active_storage_drag_and_drop
+//= require active_admin_scoped_collection_actions
+//= require active_admin_sidebar
 
 $(document).ready(function(){
 
@@ -32,6 +34,34 @@ $(document).ready(function(){
     }
     
   });
+
+  if ($('#purchase_type_of_supplier').val() == ""){
+    $('.grp1').hide();
+    $('.grp2').hide();
+  }else if($('#purchase_type_of_supplier').val() == 'International Supplier'){
+    $('.grp1').show();
+    $('.grp2').hide();
+  }else if($('#purchase_type_of_supplier').val() == 'Local Vender'){
+    $('.grp1').hide();
+    $('.grp2').show();
+  }
+  
+  
+  
+  $('#purchase_type_of_supplier').change( function() {
+    var value;
+    
+    value = $(this).val();
+    if (value === 'International Supplier') {
+      $('.grp1').show();
+      $('.grp2').hide();
+    } else if (value === 'Local Vender') {
+      $('.grp1').hide();
+      $('.grp2').show();
+    }
+  });
+
+
 
 
 

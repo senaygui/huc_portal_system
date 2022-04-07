@@ -25,4 +25,6 @@ class AcademicCalendar < ApplicationRecord
     has_many :semester_registrations
     has_many :course_registrations
     has_many :invoices
+    has_many :attendances
+    # has_many :sessions
 end
