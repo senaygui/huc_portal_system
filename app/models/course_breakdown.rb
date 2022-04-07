@@ -14,6 +14,8 @@ class CourseBreakdown < ApplicationRecord
 	  has_many :student_courses, dependent: :destroy
 
 	  has_many :course_registrations, dependent: :destroy
+	  has_many :course_sections, dependent: :destroy
+	  has_many :attendances, dependent: :destroy
 
 	private
 

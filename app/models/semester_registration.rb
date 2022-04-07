@@ -84,6 +84,7 @@ class SemesterRegistration < ApplicationRecord
 		  			course_registration.student_full_name = self.student_full_name
 		  			course_registration.course_breakdown_id = co.id
 		  			course_registration.course_title = co.course_title
+		  			# course_registration.course_section_id = CourseSection.first.id
 		  			course_registration.created_by = self.created_by
 				  end
 				end

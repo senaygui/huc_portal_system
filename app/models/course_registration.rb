@@ -9,6 +9,8 @@ class CourseRegistration < ApplicationRecord
 	  belongs_to :student
 		belongs_to :academic_calendar
 		belongs_to :program
+		belongs_to :course_section, optional: true
+		has_many :student_attendances
 
 
 	private

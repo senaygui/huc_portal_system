@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_29_120614) do
+ActiveRecord::Schema.define(version: 2022_04_01_051159) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -127,6 +127,25 @@ ActiveRecord::Schema.define(version: 2022_03_29_120614) do
     t.index ["student_grade_id"], name: "index_assessments_on_student_grade_id"
   end
 
+  create_table "attendances", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "program_id"
+    t.uuid "course_section_id"
+    t.uuid "course_breakdown_id"
+    t.uuid "academic_calendar_id"
+    t.string "course_title"
+    t.string "attendance_title"
+    t.integer "year"
+    t.integer "semester"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_attendances_on_academic_calendar_id"
+    t.index ["course_breakdown_id"], name: "index_attendances_on_course_breakdown_id"
+    t.index ["course_section_id"], name: "index_attendances_on_course_section_id"
+    t.index ["program_id"], name: "index_attendances_on_program_id"
+  end
+
   create_table "college_payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "study_level", null: false
     t.string "admission_type", null: false
@@ -234,6 +253,7 @@ ActiveRecord::Schema.define(version: 2022_03_29_120614) do
     t.uuid "semester_registration_id"
     t.uuid "course_breakdown_id"
     t.uuid "academic_calendar_id"
+    t.uuid "course_section_id"
     t.string "student_full_name"
     t.string "enrollment_status", default: "pending"
     t.string "course_title"
@@ -243,9 +263,24 @@ ActiveRecord::Schema.define(version: 2022_03_29_120614) do
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_course_registrations_on_academic_calendar_id"
     t.index ["course_breakdown_id"], name: "index_course_registrations_on_course_breakdown_id"
+    t.index ["course_section_id"], name: "index_course_registrations_on_course_section_id"
     t.index ["program_id"], name: "index_course_registrations_on_program_id"
     t.index ["semester_registration_id"], name: "index_course_registrations_on_semester_registration_id"
     t.index ["student_id"], name: "index_course_registrations_on_student_id"
+  end
+
+  create_table "course_sections", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "section_short_name", null: false
+    t.string "section_full_name", null: false
+    t.uuid "course_breakdown_id"
+    t.string "course_title"
+    t.string "program_name"
+    t.integer "total_capacity"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_breakdown_id"], name: "index_course_sections_on_course_breakdown_id"
   end
 
   create_table "courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -517,6 +552,18 @@ ActiveRecord::Schema.define(version: 2022_03_29_120614) do
     t.index ["student_id"], name: "index_semester_registrations_on_student_id"
   end
 
+  create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "attendance_id"
+    t.datetime "starting_date"
+    t.datetime "ending_date"
+    t.string "session_title"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attendance_id"], name: "index_sessions_on_attendance_id"
+  end
+
   create_table "student_addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "student_id"
     t.string "country", null: false
@@ -534,6 +581,23 @@ ActiveRecord::Schema.define(version: 2022_03_29_120614) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["student_id"], name: "index_student_addresses_on_student_id"
+  end
+
+  create_table "student_attendances", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "session_id"
+    t.uuid "student_id"
+    t.uuid "course_registration_id"
+    t.string "student_full_name"
+    t.boolean "present"
+    t.boolean "absent"
+    t.string "remark"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_registration_id"], name: "index_student_attendances_on_course_registration_id"
+    t.index ["session_id"], name: "index_student_attendances_on_session_id"
+    t.index ["student_id"], name: "index_student_attendances_on_student_id"
   end
 
   create_table "student_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

@@ -319,6 +319,10 @@ ActiveAdmin.setup do |config|
   #
   config.footer = "© #{Time.now.strftime("%Y")} Copyright: yesuitsolution.com"
 
+  config.before_action do
+    left_sidebar!(collapsed: true) if respond_to?(:left_sidebar!)
+  end
+
   # == Sorting
   #
   # By default ActiveAdmin::OrderClause is used for sorting logic
