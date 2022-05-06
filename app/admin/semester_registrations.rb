@@ -1,6 +1,6 @@
 ActiveAdmin.register SemesterRegistration do
   menu priority: 9
-  permit_params :student_full_name,:student_id_number, :student_id,:total_price,:registration_fee,:late_registration_fee,:remaining_amount,:mode_of_payment,:semester,:year,:total_enrolled_course,:academic_calendar_id,:registrar_approval_status,:finance_approval_status,:created_by,:last_updated_by,course_registrations_attributes: [:id, :student_id,:semester_registration_id,:course_breakdown_id,:academic_calendar_id,:student_full_name,:enrollment_status,:course_title,:created_by,:updated_by, :_destroy]
+  permit_params :student_full_name,:student_id_number, :student_id,:total_price,:registration_fee,:late_registration_fee,:remaining_amount,:mode_of_payment,:semester,:year,:total_enrolled_course,:academic_calendar_id,:registrar_approval_status,:finance_approval_status,:created_by,:last_updated_by,course_registrations_attributes: [:id, :student_id,:semester_registration_id,:course_id,:academic_calendar_id,:student_full_name,:enrollment_status,:course_title,:created_by,:updated_by, :_destroy]
   csv do
     column "username" do |username|
       username.student.student_id
@@ -18,37 +18,37 @@ ActiveAdmin.register SemesterRegistration do
       e.student.email
     end
     column "course1" do |e|
-      e.course_registrations[0].curriculum.course.course_code if e.course_registrations[0]
+      e.course_registrations[0].course.course_code if e.course_registrations[0]
     end
     column "role1" do |e|
       "student"
     end
     column "course2" do |e|
-       e.course_registrations[1].curriculum.course.course_code if e.course_registrations[1]
+       e.course_registrations[1].course.course_code if e.course_registrations[1]
     end
     column "role2" do |e|
       "student"
     end
     column "course3" do |e|
-       e.course_registrations[2].curriculum.course.course_code if e.course_registrations[2]
+       e.course_registrations[2].course.course_code if e.course_registrations[2]
     end
     column "role3" do |e|
       "student"
     end
     column "course4" do |e|
-       e.course_registrations[3].curriculum.course.course_code if e.course_registrations[3]
+       e.course_registrations[3].course.course_code if e.course_registrations[3]
     end
     column "role4" do |e|
       "student"
     end
     column "course5" do |e|
-       e.course_registrations[4].curriculum.course.course_code if e.course_registrations[4]
+       e.course_registrations[4].course.course_code if e.course_registrations[4]
     end
     column "role5" do |e|
       "student"
     end
     column "course6" do |e|
-       e.course_registrations[5].curriculum.course.course_code if e.course_registrations[5]
+       e.course_registrations[5].course.course_code if e.course_registrations[5]
     end
     column "role6" do |e|
       "student"
@@ -172,7 +172,7 @@ ActiveAdmin.register SemesterRegistration do
       end
       panel "Course Registration" do
         f.has_many :course_registrations, heading: " ",remote: true , allow_destroy: true, new_record: true do |a|
-          a.input :course_breakdown_id, as: :search_select, url: admin_course_breakdowns_path,
+          a.input :course_id, as: :search_select, url: admin_courses_path,
             fields: [:course_title, :course_code], display_name: "course_title", minimum_input_length: 2,
             order_by: 'created_at_asc'
           a.input :student_id, as: :hidden, :input_html => { :value => semester_registration.student.id}
@@ -248,22 +248,25 @@ ActiveAdmin.register SemesterRegistration do
     panel "Course Registration" do
       table_for semester_registration.course_registrations do
         column "Course title" do |pr|
-          link_to pr.course_title, admin_courses_path(pr.course_breakdown.course.id)
+          link_to pr.course_title, admin_course_path(pr.course)
         end
         column "Course code" do |pr|
-          pr.course_breakdown.course.course_code
+          pr.course.course_code
         end
         column "Course module" do |pr|
-          link_to pr.course_breakdown.course.course_module.module_code, admin_course_module_path(pr.course_breakdown.course.course_module.id) 
+          link_to pr.course.course_module.module_code, admin_course_module_path(pr.course.course_module.id) 
         end
         column "Credit hour" do |pr|
-          pr.course_breakdown.credit_hour
+          pr.course.credit_hour
+        end
+        column "Grade Point" do |pr|
+          pr.course.ects
         end
         column "Semester" do |se|
-          se.course_breakdown.semester
+          se.course.semester
         end
         column "Year" do |ye|
-          ye.course_breakdown.year
+          ye.course.year
         end
       end
     end

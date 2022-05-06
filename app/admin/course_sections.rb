@@ -1,11 +1,11 @@
 ActiveAdmin.register CourseSection do
 
-  permit_params :program_name, :section_short_name,:section_full_name,:course_breakdown_id,:course_title,:total_capacity,:created_by,:updated_by, course_registrations: []
+  permit_params :program_name, :section_short_name,:section_full_name,:course_id,:course_title,:total_capacity,:created_by,:updated_by, course_registrations: []
 
   index do
     selectable_column
     column "Course" do |c|
-      c.course_breakdown.course_title
+      c.course.course_title
     end
     column :program_name
     column :section_short_name
@@ -22,7 +22,7 @@ ActiveAdmin.register CourseSection do
       f.inputs "Section information" do
         f.input :section_short_name
         f.input :section_full_name
-        f.input :course_breakdown_id, as: :search_select, url: admin_course_breakdowns_path,
+        f.input :course_id, as: :search_select, url: admin_courses_path,
               fields: [:course_title, :id], display_name: 'course_title', minimum_input_length: 2,
               order_by: 'id_asc'
         f.input :total_capacity 
@@ -36,7 +36,7 @@ ActiveAdmin.register CourseSection do
     else
       if !f.object.new_record?
         f.inputs "Enrolled Students" do
-          f.input :course_registrations, :as => :check_boxes, :collection => CourseRegistration.where(course_breakdown_id: course_section.course_breakdown).all.order("student_full_name ASC").pluck(:student_full_name, :id)
+          f.input :course_registrations, :as => :check_boxes, :collection => CourseRegistration.where(course_id: course_section.course).all.order("student_full_name ASC").pluck(:student_full_name, :id)
         end
       end
     end
@@ -66,7 +66,7 @@ ActiveAdmin.register CourseSection do
       end
       column do
         panel "course section report" do
-          table_for AcademicCalendar.where(study_level: course_section.course_breakdown.curriculum.program.study_level, admission_type: course_section.course_breakdown.curriculum.program.admission_type) do
+          table_for AcademicCalendar.where(study_level: course_section.course.program.study_level, admission_type: course_section.course.curriculum.program.admission_type) do
               column "Academic calendar" do |item|
                 link_to item.calender_year, admin_course_registrations_path(:q => { :course_title_eq => "#{course_section.course_title}", academic_calendar_id_eq: item.id })
 
@@ -75,7 +75,7 @@ ActiveAdmin.register CourseSection do
                 course_section.course_registrations.where(academic_calendar_id: item.id).count
               end 
               column "Asign section", sortable: true do |item|
-                link_to "Asign", admin_course_registrations_path(:q => { :course_title_eq => "#{course_section.course_title}", academic_calendar_id_eq: item.id })  
+                link_to "Asign", admin_course_registrations_path(:q => { :course_id_eq => "#{course_section.course.id}", academic_calendar_id_eq: item.id })  
               end 
           end
         end 

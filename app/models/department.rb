@@ -5,4 +5,5 @@ class Department < ApplicationRecord
   belongs_to :faculty
   has_many :programs, dependent: :destroy
   has_many :course_modules, dependent: :destroy
+  has_many :grade_reports
 end

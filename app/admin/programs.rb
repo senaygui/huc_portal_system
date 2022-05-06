@@ -1,5 +1,5 @@
 ActiveAdmin.register Program do
-  menu priority: 6
+  menu priority: 5
   permit_params :entrance_exam_requirement_status,:program_semester,:department_id,:total_semester,:program_name,:program_code,:overview,:program_description,:created_by,:last_updated_by,:total_tuition,:study_level,:admission_type,:program_duration, curriculums_attributes: [:id, :curriculum_title,:curriculum_version,:total_course,:total_ects,:total_credit_hour,:active_status,:curriculum_active_date,:depreciation_date,:created_by,:last_updated_by, :_destroy]
 
   index do
@@ -11,7 +11,7 @@ ActiveAdmin.register Program do
     ## TODO: color label admission_type and study_level
     ## TODO: display number of currently admitted students in this program
     # column "courses" do |c|
-    #   c.curriculums.last.course_breakdowns.count
+    #   c.curriculums.last.courses.count
     # end
     column :study_level
     column :admission_type
@@ -181,13 +181,13 @@ ActiveAdmin.register Program do
             panel "ClassYear: Year #{i}" do
               (1..program.program_semester).map do |s|
                 panel "Semester: #{s}" do
-                  table_for program.curriculums.last.course_breakdowns.where(year: i, semester: s).order('year ASC','semester ASC') do
+                  table_for program.curriculums.last.courses.where(year: i, semester: s).order('year ASC','semester ASC') do
                     ## TODO: wordwrap titles and long texts
                     column "course title" do |item|
-                      link_to item.course.course_title, [ :admin, item.course] 
+                      link_to item.course_title, [ :admin, item] 
                     end
                     column "module code" do |item|
-                      item.course.course_module.module_code
+                      item.course_module.module_code
                     end
                     column "course code" do |item|
                       item.course_code

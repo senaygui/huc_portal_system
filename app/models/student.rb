@@ -5,7 +5,7 @@ class Student < ApplicationRecord
   after_save :student_semester_registration
   before_create :assign_curriculum
   before_create :set_pwd
-  before_save :student_course_assign
+  after_save :student_course_assign
 
   
   # after_save :course_registration
@@ -34,6 +34,7 @@ class Student < ApplicationRecord
   has_many :grade_reports
   has_many :course_registrations
   has_many :student_attendances
+  has_many :assessments
   has_one :school_or_university_information, dependent: :destroy
   accepts_nested_attributes_for :school_or_university_information
   has_many :student_courses, dependent: :destroy
@@ -48,19 +49,18 @@ class Student < ApplicationRecord
   validates :study_level, :presence => true
   validates :admission_type, :presence => true,:length => { :within => 2..10 }
   validates :photo, attached: true, content_type: ['image/gif', 'image/png', 'image/jpg', 'image/jpeg']
-  validates :highschool_transcript, attached: true
-  validates :grade_12_matric, attached: true
-  validates :diploma_certificate, attached: true, if: :grade_12_matric?
-  validates :coc, attached: true, if: :grade_12_matric?
+  # validates :highschool_transcript, attached: true
+  # validates :grade_12_matric, attached: true
+  # validates :diploma_certificate, attached: true, if: :grade_12_matric?
+  # validates :coc, attached: true, if: :grade_12_matric?
 
-  validates :degree_certificate, attached: true, if: :apply_graduate?
-
-  def apply_graduate?
-    self.study_level == "graduate" 
-  end
-  def grade_12_matric?
-    !self.grade_12_matric.attached?
-  end
+  # validates :degree_certificate, attached: true, if: :apply_graduate?
+  # /def apply_graduate?
+  #   self.study_level == "graduate" 
+  # end
+  # def grade_12_matric?
+  #   !self.grade_12_matric.attached?
+  # end
 
   def assign_curriculum
     self[:curriculum_version] = program.curriculums.where(active_status: "active").last.curriculum_version
@@ -125,6 +125,7 @@ class Student < ApplicationRecord
       registration.program_name = self.program.program_name
       registration.admission_type = self.admission_type
       registration.study_level = self.study_level
+      registration.created_by = self.last_updated_by
       # registration.registrar_approval_status ="approved"
       # registration.finance_approval_status ="approved"
     end
@@ -133,29 +134,30 @@ class Student < ApplicationRecord
 
   def student_course_assign
     if self.student_courses.empty? && self.document_verification_status == "approved"  && self.program.entrance_exam_requirement_status == false
-      self.program.curriculums.where(curriculum_version: self.curriculum_version).last.course_breakdowns.each do |course_breakdown|
-        StudentCourse.create do |course|
-          course.student_id = self.id
-          course.course_breakdown_id = course_breakdown.id
-          course.course_title = course.course_breakdown.course_title
-          course.semester = course.course_breakdown.semester
-          course.year = course.course_breakdown.year
-          course.credit_hour = course.course_breakdown.credit_hour
-          course.ects = course.course_breakdown.ects
-          course.course_code = course.course_breakdown.course_code
+      self.program.curriculums.where(curriculum_version: self.curriculum_version).last.courses.each do |course|
+        StudentCourse.create do |student_course|
+          student_course.student_id = self.id
+          student_course.course_id = course.id
+          student_course.course_title = course.course_title
+          student_course.semester = course.semester
+          student_course.year = course.year
+          student_course.credit_hour = course.credit_hour
+          student_course.ects = course.ects
+          student_course.course_code = course.course_code
+          student_course.created_by = self.created_by
         end
       end
     elsif self.student_courses.empty? && self.program.entrance_exam_requirement_status == true && self.document_verification_status == "approved" && self.entrance_exam_result_status == "Pass"
-      self.program.curriculums.where(curriculum_version: self.curriculum_version).last.course_breakdowns.each do |course_breakdown|
-        StudentCourse.create do |course|
-          course.student_id = self.id
-          course.course_breakdown_id = course_breakdown.id
-          course.course_title = course.course_breakdown.course_title
-          course.semester = course.course_breakdown.semester
-          course.year = course.course_breakdown.year
-          course.credit_hour = course.course_breakdown.credit_hour
-          course.ects = course.course_breakdown.ects
-          course.course_code = course.course_breakdown.course_code
+      self.program.curriculums.where(curriculum_version: self.curriculum_version).last.courses.each do |course|
+        StudentCourse.create do |student_course|
+          student_course.student_id = self.id
+          student_course.course_id = course.id
+          student_course.course_title = course.course_title
+          student_course.semester = course.semester
+          student_course.year = course.year
+          student_course.credit_hour = course.credit_hour
+          student_course.ects = course.ects
+          student_course.course_code = course.course_code
         end
       end
     end 

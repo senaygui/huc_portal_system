@@ -1,4 +1,5 @@
 ActiveAdmin.register Invoice do
+  menu priority: 10
   permit_params :semester_registration_id,:invoice_number,:total_price,:registration_fee,:late_registration_fee,:penalty,:daily_penalty,:invoice_status,:last_updated_by,:created_by,:due_date,payment_transaction_attributes: [:id,:invoice_id,:payment_method_id,:account_holder_fullname,:phone_number,:account_number,:transaction_reference,:finance_approval_status,:last_updated_by,:created_by, :receipt_image], inovice_item_ids: []
 
 
@@ -159,16 +160,16 @@ ActiveAdmin.register Invoice do
         panel "Invoice Item Information" do
           table_for invoice.invoice_items do
             column "Course title" do |pr|
-              link_to pr.course_registration.course_breakdown.course.course_title, admin_course_path(pr.course_registration.course_breakdown.course.id)
+              link_to pr.course_registration.course.course_title, admin_course_path(pr.course_registration.course.id)
             end
             column "Course code" do |pr|
-              pr.course_registration.course_breakdown.course.course_code
+              pr.course_registration.course.course_code
             end
             column "Course module" do |pr|
-              link_to pr.course_registration.course_breakdown.course.course_module.module_code, admin_course_module_path(pr.course_registration.course_breakdown.course.course_module.id) 
+              link_to pr.course_registration.course.course_module.module_code, admin_course_module_path(pr.course_registration.course.course_module.id) 
             end
             column "Credit hour" do |pr|
-              pr.course_registration.course_breakdown.credit_hour
+              pr.course_registration.course.credit_hour
             end
             number_column :price, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
           end

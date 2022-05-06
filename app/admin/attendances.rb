@@ -1,6 +1,6 @@
 ActiveAdmin.register Attendance do
 
-  permit_params :program_id,:course_section_id,:academic_calendar_id,:course_title,:attendance_title,:year,:semester,:created_by,:updated_by,:course_breakdown_id,sessions_attributes: [:id,:attendance_id,:starting_date,:ending_date,:session_title,:created_by,:updated_by, :_destroy]
+  permit_params :program_id,:course_section_id,:academic_calendar_id,:course_title,:attendance_title,:year,:semester,:created_by,:updated_by,:course_id,sessions_attributes: [:id,:attendance_id,:starting_date,:ending_date,:session_title,:created_by,:updated_by, :_destroy]
 
   index do
     selectable_column
@@ -27,7 +27,7 @@ ActiveAdmin.register Attendance do
       f.inputs "Attendance information" do
         f.input :attendance_title
         
-        f.input :course_breakdown_id, as: :search_select, url: admin_course_breakdowns_path,
+        f.input :course_id, as: :search_select, url: admin_courses_path,
               fields: [:course_title, :id], display_name: 'course_title', minimum_input_length: 2,lebel: "course title",
               order_by: 'id_asc'
         f.input :course_section_id, as: :search_select, url: admin_course_sections_path,
