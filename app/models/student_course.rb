@@ -1,7 +1,7 @@
 class StudentCourse < ApplicationRecord
 	##associations
   	belongs_to :student
-  	belongs_to :course_breakdown
+  	belongs_to :course
 	##valdation
 		validates :course_title, :presence => true
 		validates :semester, :presence => true

@@ -80,13 +80,13 @@
 						  </thead>
 
 						  <tbody>
-						    <% @semester_registration.course_registrations.each do |course| %>
+						    <% @semester_registration.course_registrations.each do |course_registration| %>
 						      <tr>
 						        
-						        <td><%= course.course_breakdown.course_title %></td>
-						        <td><%= course.course_breakdown.course.course_module.module_code %></td>
-						        <td><%= course.course_breakdown.course_code %></td>
-						        <td><%= course.course_breakdown.credit_hour %></td>
+						        <td><%= course_registration.course.course_title %></td>
+						        <td><%= course_registration.course.course_module.module_code %></td>
+						        <td><%= course_registration.course.course_code %></td>
+						        <td><%= course_registration.course.credit_hour %></td>
 						      </tr>
 						    <% end %>
 						  </tbody>

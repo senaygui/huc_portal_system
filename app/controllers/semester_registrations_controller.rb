@@ -20,7 +20,7 @@ class SemesterRegistrationsController < ApplicationController
     # @course_registrations = semester_registration.course_registrations.where(year: current_student.year, semester: current_student.semester)
 
     @registration_fee = CollegePayment.where(study_level: @semester_registration.study_level,admission_type: @semester_registration.admission_type).first.registration_fee 
-    @tution_fee = (@semester_registration.course_registrations.collect { |oi| oi.valid? ? (CollegePayment.where(study_level: @semester_registration.study_level,admission_type: @semester_registration.admission_type).first.tution_per_credit_hr * oi.course_breakdown.credit_hour) : 0 }.sum)
+    @tution_fee = (@semester_registration.course_registrations.collect { |oi| oi.valid? ? (CollegePayment.where(study_level: @semester_registration.study_level,admission_type: @semester_registration.admission_type).first.tution_per_credit_hr * oi.course.credit_hour) : 0 }.sum)
   end
 
   # POST /registrations or /registrations.json

@@ -3,6 +3,7 @@ class Section < ApplicationRecord
 	belongs_to :course
 	belongs_to :curriculum
 	belongs_to :program
+	has_many :grade_reports
 
 	def curriculum_id
 		curriculum = Curriculum.where(program_id: self.course_id).last.id

@@ -108,10 +108,10 @@
 									<% @invoice.semester_registration.course_registrations.each do |item| %>
 							      <tr>
 							        
-							        <td><%= item.course_breakdown.course.course_title %></td>
-							        <td><%= item.course_breakdown.course.course_module.module_code %></td>
-							        <td><%= item.course_breakdown.course.course_code %></td>
-							        <td><%= item.course_breakdown.credit_hour %></td>
+							        <td><%= item.course.course_title %></td>
+							        <td><%= item.course.course_module.module_code %></td>
+							        <td><%= item.course.course_code %></td>
+							        <td><%= item.course.credit_hour %></td>
 							  
 							      </tr>
 						    	<% end %>

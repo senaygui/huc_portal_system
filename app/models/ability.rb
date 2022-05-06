@@ -10,12 +10,17 @@ class Ability
 
     case user.role
     when "admin"
+        can :manage, GradeSystem
+
+        can :manage, AssessmentPlan
         can :manage, CourseRegistration
         can :manage, Attendance
         can :manage, Session
-        can :manage, CourseBreakdown
         can :manage, CourseSection
-        can :manage, StudentGrade
+        can :read, StudentGrade
+        can :update, StudentGrade
+        can :destroy, StudentGrade
+        cannot :create, StudentGrade
         can :manage, GradeReport
         can :manage, GradeRule
         can :manage, Grade

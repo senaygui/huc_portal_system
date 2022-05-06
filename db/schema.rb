@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_01_051159) do
+ActiveRecord::Schema.define(version: 2022_04_07_070814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -31,6 +31,18 @@ ActiveRecord::Schema.define(version: 2022_04_01_051159) do
     t.string "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "academic_statuses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "grade_system_id"
+    t.string "status"
+    t.decimal "min_value"
+    t.decimal "max_value"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grade_system_id"], name: "index_academic_statuses_on_grade_system_id"
   end
 
   create_table "active_admin_comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -118,19 +130,37 @@ ActiveRecord::Schema.define(version: 2022_04_01_051159) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "assessments", force: :cascade do |t|
-    t.uuid "student_grade_id"
-    t.string "assessment"
-    t.decimal "result"
+  create_table "assessment_plans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "course_id"
+    t.string "assessment_title", null: false
+    t.decimal "assessment_weight", null: false
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_assessment_plans_on_course_id"
+  end
+
+  create_table "assessments", force: :cascade do |t|
+    t.uuid "student_id"
+    t.uuid "course_id"
+    t.uuid "student_grade_id"
+    t.uuid "assessment_plan_id"
+    t.decimal "result"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assessment_plan_id"], name: "index_assessments_on_assessment_plan_id"
+    t.index ["course_id"], name: "index_assessments_on_course_id"
     t.index ["student_grade_id"], name: "index_assessments_on_student_grade_id"
+    t.index ["student_id"], name: "index_assessments_on_student_id"
   end
 
   create_table "attendances", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "program_id"
     t.uuid "course_section_id"
-    t.uuid "course_breakdown_id"
+    t.uuid "course_id"
     t.uuid "academic_calendar_id"
     t.string "course_title"
     t.string "attendance_title"
@@ -141,7 +171,7 @@ ActiveRecord::Schema.define(version: 2022_04_01_051159) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_attendances_on_academic_calendar_id"
-    t.index ["course_breakdown_id"], name: "index_attendances_on_course_breakdown_id"
+    t.index ["course_id"], name: "index_attendances_on_course_id"
     t.index ["course_section_id"], name: "index_attendances_on_course_section_id"
     t.index ["program_id"], name: "index_attendances_on_program_id"
   end
@@ -213,27 +243,6 @@ ActiveRecord::Schema.define(version: 2022_04_01_051159) do
     t.index ["curriculums_id"], name: "index_course_assessments_on_curriculums_id"
   end
 
-  create_table "course_breakdowns", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "course_id"
-    t.uuid "curriculum_id"
-    t.integer "semester", default: 1, null: false
-    t.datetime "course_starting_date"
-    t.datetime "course_ending_date"
-    t.integer "year", default: 1, null: false
-    t.integer "credit_hour", null: false
-    t.integer "lecture_hour", null: false
-    t.integer "lab_hour", default: 0
-    t.integer "ects", null: false
-    t.string "course_code"
-    t.string "course_title"
-    t.string "created_by"
-    t.string "last_updated_by"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["course_id"], name: "index_course_breakdowns_on_course_id"
-    t.index ["curriculum_id"], name: "index_course_breakdowns_on_curriculum_id"
-  end
-
   create_table "course_modules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "module_title", null: false
     t.uuid "department_id"
@@ -251,7 +260,7 @@ ActiveRecord::Schema.define(version: 2022_04_01_051159) do
     t.uuid "student_id"
     t.uuid "program_id"
     t.uuid "semester_registration_id"
-    t.uuid "course_breakdown_id"
+    t.uuid "course_id"
     t.uuid "academic_calendar_id"
     t.uuid "course_section_id"
     t.string "student_full_name"
@@ -262,7 +271,7 @@ ActiveRecord::Schema.define(version: 2022_04_01_051159) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_course_registrations_on_academic_calendar_id"
-    t.index ["course_breakdown_id"], name: "index_course_registrations_on_course_breakdown_id"
+    t.index ["course_id"], name: "index_course_registrations_on_course_id"
     t.index ["course_section_id"], name: "index_course_registrations_on_course_section_id"
     t.index ["program_id"], name: "index_course_registrations_on_program_id"
     t.index ["semester_registration_id"], name: "index_course_registrations_on_semester_registration_id"
@@ -272,7 +281,7 @@ ActiveRecord::Schema.define(version: 2022_04_01_051159) do
   create_table "course_sections", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "section_short_name", null: false
     t.string "section_full_name", null: false
-    t.uuid "course_breakdown_id"
+    t.uuid "course_id"
     t.string "course_title"
     t.string "program_name"
     t.integer "total_capacity"
@@ -280,19 +289,31 @@ ActiveRecord::Schema.define(version: 2022_04_01_051159) do
     t.string "updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["course_breakdown_id"], name: "index_course_sections_on_course_breakdown_id"
+    t.index ["course_id"], name: "index_course_sections_on_course_id"
   end
 
   create_table "courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "course_module_id"
+    t.uuid "curriculum_id"
+    t.uuid "program_id"
     t.string "course_title", null: false
     t.string "course_code", null: false
     t.text "course_description"
+    t.integer "year", default: 1, null: false
+    t.integer "semester", default: 1, null: false
+    t.datetime "course_starting_date"
+    t.datetime "course_ending_date"
+    t.integer "credit_hour", null: false
+    t.integer "lecture_hour", null: false
+    t.integer "lab_hour", default: 0
+    t.integer "ects", null: false
     t.string "created_by"
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["course_module_id"], name: "index_courses_on_course_module_id"
+    t.index ["curriculum_id"], name: "index_courses_on_curriculum_id"
+    t.index ["program_id"], name: "index_courses_on_program_id"
   end
 
   create_table "curriculums", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -375,14 +396,35 @@ ActiveRecord::Schema.define(version: 2022_04_01_051159) do
     t.uuid "semester_registration_id"
     t.uuid "student_id"
     t.uuid "academic_calendar_id"
-    t.decimal "cgpa"
-    t.decimal "sgpa"
-    t.integer "semester"
-    t.integer "year"
+    t.uuid "program_id"
+    t.uuid "department_id"
+    t.uuid "section_id"
+    t.string "admission_type", null: false
+    t.string "study_level", null: false
+    t.integer "total_course", null: false
+    t.decimal "total_credit_hour", null: false
+    t.decimal "total_grade_point", null: false
+    t.decimal "cumulative_total_credit_hour", null: false
+    t.decimal "cumulative_total_grade_point", null: false
+    t.decimal "cgpa", null: false
+    t.decimal "sgpa", null: false
+    t.integer "semester", null: false
+    t.integer "year", null: false
     t.string "academic_status"
+    t.string "registrar_approval", default: "pending"
+    t.string "registrar_name"
+    t.string "dean_approval", default: "pending"
+    t.string "dean_name"
+    t.string "department_approval", default: "pending"
+    t.string "department_head_name"
+    t.string "updated_by"
+    t.string "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_grade_reports_on_academic_calendar_id"
+    t.index ["department_id"], name: "index_grade_reports_on_department_id"
+    t.index ["program_id"], name: "index_grade_reports_on_program_id"
+    t.index ["section_id"], name: "index_grade_reports_on_section_id"
     t.index ["semester_registration_id"], name: "index_grade_reports_on_semester_registration_id"
     t.index ["student_id"], name: "index_grade_reports_on_student_id"
   end
@@ -395,15 +437,31 @@ ActiveRecord::Schema.define(version: 2022_04_01_051159) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "grades", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "grade_rule_id"
-    t.string "grade"
-    t.integer "min_value"
-    t.integer "max_value"
-    t.integer "grade_value"
+  create_table "grade_systems", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "program_id"
+    t.uuid "curriculum_id"
+    t.decimal "min_cgpa_value_to_pass"
+    t.decimal "min_cgpa_value_to_graduate"
+    t.string "remark"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["grade_rule_id"], name: "index_grades_on_grade_rule_id"
+    t.index ["curriculum_id"], name: "index_grade_systems_on_curriculum_id"
+    t.index ["program_id"], name: "index_grade_systems_on_program_id"
+  end
+
+  create_table "grades", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "grade_system_id"
+    t.string "letter_grade", null: false
+    t.decimal "grade_point", null: false
+    t.integer "min_row_mark", null: false
+    t.integer "max_row_mark", null: false
+    t.string "updated_by"
+    t.string "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grade_system_id"], name: "index_grades_on_grade_system_id"
   end
 
   create_table "invoice_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -602,7 +660,7 @@ ActiveRecord::Schema.define(version: 2022_04_01_051159) do
 
   create_table "student_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "student_id"
-    t.uuid "course_breakdown_id"
+    t.uuid "course_id"
     t.string "course_title", null: false
     t.integer "semester", null: false
     t.integer "year", null: false
@@ -615,18 +673,19 @@ ActiveRecord::Schema.define(version: 2022_04_01_051159) do
     t.string "updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["course_breakdown_id"], name: "index_student_courses_on_course_breakdown_id"
+    t.index ["course_id"], name: "index_student_courses_on_course_id"
     t.index ["student_id"], name: "index_student_courses_on_student_id"
   end
 
   create_table "student_grades", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "course_registration_id"
     t.uuid "student_id"
-    t.string "grade_in_letter"
-    t.string "grade_in_number"
-    t.decimal "grade_letter_value"
+    t.uuid "course_id"
+    t.string "letter_grade"
+    t.decimal "assesment_total"
     t.decimal "grade_point"
-    t.bigint "course_id"
+    t.string "updated_by"
+    t.string "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_student_grades_on_course_id"

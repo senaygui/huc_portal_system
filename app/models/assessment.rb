@@ -1,3 +1,7 @@
 class Assessment < ApplicationRecord
-	belongs_to :student_grade
+	##associations
+		belongs_to :student_grade
+		belongs_to :student, optional: true
+		belongs_to :course , optional: true
+		belongs_to :assessment_plan, optional: true
 end

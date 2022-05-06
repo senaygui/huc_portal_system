@@ -1,6 +1,6 @@
 ActiveAdmin.register StudentGrade do
 
-  permit_params :course_registration_id,:student_id,:grade_in_letter,:grade_in_number,:course_id,assessments_attributes: [:id,:assessment,:result, :_destroy]
+  permit_params :course_registration_id,:student_id,:letter_grade,:grade_point,:assesment_total,:grade_point,:course_id,assessments_attributes: [:id,:student_grade_id,:assessment_plan_id,:student_id,:course_id,:result,:created_by,:updated_by, :_destroy]
 
 
   member_action :generate_grade, method: :put do
@@ -9,7 +9,14 @@ ActiveAdmin.register StudentGrade do
     redirect_back(fallback_location: admin_student_grade_path)
   end
   action_item :update, only: :show do
-    link_to 'generate grade', generate_grade_admin_student_grade_path(student_grade.id), method: :put, data: { confirm: 'Are you sure?' }        
+    link_to 'Generate Grade', generate_grade_admin_student_grade_path(student_grade.id), method: :put, data: { confirm: 'Are you sure?' }        
+  end
+
+  batch_action "Generate Grade for", method: :put, confirm: "Are you sure?" do |ids|
+    StudentGrade.find(ids).each do |student_grade|
+      student_grade.generate_grade
+    end
+    redirect_to collection_path, notice: "Grade Is Generated Successfully"
   end
   index do
     selectable_column
@@ -19,11 +26,15 @@ ActiveAdmin.register StudentGrade do
     column "Student ID" do |si|
       si.student.student_id
     end
+    column "Program" do |si|
+      si.student.program.program_name
+    end
     column "Course title" do |si|
       si.course.course_title
     end
-    column :grade_in_letter
-    column :grade_in_number
+    column :letter_grade
+    column :grade_point
+    column :assesment_total
     column "Created At", sortable: true do |c|
       c.created_at.strftime("%b %d, %Y")
     end
@@ -32,59 +43,116 @@ ActiveAdmin.register StudentGrade do
 
   filter :student_id, as: :search_select_filter, url: proc { admin_students_path },
          fields: [:student_id, :id], display_name: 'student_id', minimum_input_length: 2,
-         order_by: 'id_asc'
-  filter :grade_in_letter
-  filter :grade_in_number
+         order_by: 'created_at_asc'
+  filter :course_id, as: :search_select_filter, url: proc { admin_courses_path },
+         fields: [:course_title, :id], display_name: 'course_title', minimum_input_length: 2,
+         order_by: 'created_at_asc'
+  # filter :porgram_id, as: :search_select_filter, url: proc { admin_programs_path },
+  #        fields: [:program_name, :id], display_name: 'program_name', minimum_input_length: 2,
+  #        order_by: 'created_at_asc'
+  filter :letter_grade
+  filter :grade_point
+  filter :assesment_total
   filter :created_at
   filter :updated_at
-
+  filter :updated_by
+  filter :created_by
 
   
-  form do |f|
+  form :title => proc{|student| student.student.name.full } do |f|
     f.semantic_errors
-
-    if f.object.assessments.empty?
-      f.object.assessments << Assessment.new
+    
+    if object.new_record?
+      if f.object.assessments.empty?
+        f.object.assessments << Assessment.new
+      end
+      panel "Assessment" do
+        f.has_many :assessments,heading: " ", remote: true, allow_destroy: true do |a|
+          a.input :student_id, as: :search_select, url: proc { admin_students_path },
+             fields: [:student_id, :id], display_name: 'student_id', minimum_input_length: 2,
+             order_by: 'created_at_asc'
+          a.input :course_id, as: :search_select, url: proc { admin_courses_path },
+             fields: [:course_title, :id], display_name: 'course_title', minimum_input_length: 2,
+             order_by: 'created_at_asc'
+          a.input :assessment_plan_id, as: :search_select, url: proc { admin_assessment_plans_path },
+             fields: [:assessment_title, :id], display_name: 'assessment_title', minimum_input_length: 2,
+             order_by: 'created_at_asc'
+          a.input :assessment_plan_id, as: :search_select, url: proc { admin_assessment_plans_path },
+             fields: [:assessment_title, :id], display_name: 'assessment_title', minimum_input_length: 2,
+             order_by: 'created_at_asc',lebel: "Assessment Plan", :input_html => { :disabled => true } 
+          a.input :result
+          a.label :_destroy
+        end
+      end
     end
-    panel "Assessment" do
-      f.has_many :assessments,heading: " ", remote: true, allow_destroy: true, new_record: true do |a|
-        a.input :assessment
-        a.input :result
-        a.label :_destroy
+    inputs 'Student Assessment' do
+      table(class: 'form-table') do
+        tr do
+          th 'Assessment Plan', class: 'form-table__col'
+          th 'Assessment Weight', class: 'form-table__col'
+          th 'Result', class: 'form-table__col'
+        end
+        f.semantic_fields_for :assessments, f.object.assessments do |a|
+          render 'assessment', a: a
+          a.input :updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+        end
       end
     end
     f.actions
+    if f.object.new_record?
+      f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+    else
+      f.input :updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full} 
+    end 
   end
 
   show :title => proc{|student| student.student.name.full } do
-    panel "Grade information" do
-      attributes_table_for student_grade do
-        row "full name", sortable: true do |n|
-          n.student.name.full 
+    columns do
+      column do
+        panel "Grade information" do
+          attributes_table_for student_grade do
+            row "full name", sortable: true do |n|
+              n.student.name.full 
+            end
+            row "Student ID" do |si|
+              si.student.student_id
+            end
+            row "Course title" do |si|
+              si.course.course_title
+            end
+            row "Program" do |pr|
+              link_to pr.student.program.program_name, admin_program_path(pr.student.program.id)
+            end
+            row :letter_grade
+            row :grade_point
+            row :assesment_total
+            row :created_at
+            row :updated_at
+          end
         end
-        row "Student ID" do |si|
-          si.student.student_id
+      end
+      column do
+        panel "Assessments Information" do
+          table_for student_grade.assessments do
+            column :assessment_plan do |a|
+              a.assessment_plan.assessment_title
+            end
+            column :assessment_weight do |a|
+              a.assessment_plan.assessment_weight
+            end
+            column :result
+            column "Graded At", sortable: true do |c|
+              c.updated_at.strftime("%b %d, %Y")
+            end
+            column "Graded by", sortable: true do |c|
+              c.updated_by
+            end
+          end
         end
-        row "Course title" do |si|
-          si.course.course_title
-        end
-        row "Program" do |pr|
-          link_to pr.student.program.program_name, admin_program_path(pr.student.program.id)
-        end
-        row :grade_in_letter
-        row :grade_in_number
-        row :created_at
-        row :updated_at
       end
     end
-    panel "Assessments Information" do
-      table_for student_grade.assessments do
-        column :assessment
-        column :result
-        column :created_at
-        column :updated_at
-      end
-    end
+    
+    
   end 
   
 end

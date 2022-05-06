@@ -1,11 +1,11 @@
 class CourseRegistration < ApplicationRecord
 	# after_create :add_invoice_item
-	# after_create :add_grade
+	after_save :add_grade
 	##associations
 	  belongs_to :semester_registration
-	  belongs_to :course_breakdown
+	  belongs_to :course
 	  has_many :invoice_items
-	  # has_one :student_grade, dependent: :destroy
+	  has_one :student_grade, dependent: :destroy
 	  belongs_to :student
 		belongs_to :academic_calendar
 		belongs_to :program
@@ -32,11 +32,14 @@ class CourseRegistration < ApplicationRecord
 		# 	end
 		# end
 
-		# def add_grade
-		# 	StudentGrade.create do |student_grade|
-		# 			student_grade.course_registration_id = self.id
-		# 			student_grade.student_id = self.semester_registration.student.id 
-		# 			student_grade.course_id = self.curriculum.course.id
-		# 		end
-		# end
+		def add_grade
+			if self.course_section.present? && !self.student_grade.present?
+				StudentGrade.create do |student_grade|
+					student_grade.course_registration_id = self.id
+					student_grade.student_id = self.semester_registration.student.id 
+					student_grade.course_id = self.course.id
+					student_grade.created_by = self.course_section.created_by
+				end
+			end
+		end
 end

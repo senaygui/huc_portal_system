@@ -3,7 +3,7 @@ role :web, %w{deploy@164.90.217.19}
 role :db, %w{deploy@164.90.217.19}, :primary => true
 set :branch, "master"
 set :rails_env, "production"
-set :deploy_to, '/home/deploy/huc_portal_system'
+set :deploy_to, '/home/deploy/portal_system'
 
 # server-based syntax
 # ======================

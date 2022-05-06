@@ -27,6 +27,58 @@ $menu-arrow-dark-icon-url: 'active_admin/nested_menu_arrow_dark.gif' !default;
 @import "wigu/active_admin_theme";
 @import "active_admin_scoped_collection_actions";
 @import "active_admin_sidebar";
+
+
+body{
+  font-size: 0.75em !important;
+}
+#wrapper .sidebar_section.panel > h3{
+  color: #fff !important;
+  font-weight: bold;
+}
+.action_item a{
+  color: #fff !important;
+  font-weight: bold !important;
+}
+
+
+
+ .pending .table_tools_button{
+  background: #036899 !important; 
+  color: #fff !important;
+}
+.pending .table_tools_button > span{color: #fff !important;}
+.approved .table_tools_button{
+  background: #8daa92 !important; 
+  color: #fff !important;
+}
+.approved .table_tools_button > span{color: #fff !important;}
+
+.denied .table_tools_button{
+  background: #d45f53 !important; 
+  color: #fff !important;
+}
+.denied .table_tools_button > span{color: #fff !important;}
+
+.incomplete .table_tools_button{
+  background: #e29b20 !important; 
+  color: #fff !important;
+}
+.incomplete .table_tools_button > span{color: #fff !important;}
+
+.scope{
+  margin-right: 5px !important;
+  margin-bottom: 5px !important;
+}
+
+.table_tools_button{color: #fff !important;
+font-size: 1.1em !important;}
+.table_tools_button span{color: #fff !important;
+  font-size: 1.1em !important;}
+.current a{
+  color: #fff !important;
+  font-weight: bold;
+}
 .video-responsive iframe{
   width: 500px;
   height: 300px !important;
@@ -320,6 +372,13 @@ th.form-table__col {
 }
 td.form-table__col {
   padding: 10px 0;
+  border: solid 1px #cdcdcd;
+  border-color: #d4d4d4;
+  border-top-color: #e6e6e6;
+  border-right-color: #d4d4d4;
+  border-bottom-color: #cdcdcd;
+  border-left-color: #d4d4d4;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 1px #FFF inset;
 }
 
 body.index.active_admin {
@@ -342,4 +401,3 @@ body.index.active_admin {
     }
   }
 }
-

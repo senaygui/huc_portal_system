@@ -3,11 +3,13 @@ class CreateStudentGrades < ActiveRecord::Migration[5.2]
     create_table :student_grades, id: :uuid do |t|
       t.belongs_to :course_registration, index: true, type: :uuid
       t.belongs_to :student, index: true, type: :uuid
-      t.string :grade_in_letter
-      t.string :grade_in_number
-      t.decimal :grade_letter_value
+      t.belongs_to :course, index: true, type: :uuid
+      t.string :letter_grade
+      # t.string :grade_point
+      t.decimal :assesment_total
       t.decimal :grade_point
-      t.belongs_to :course, index: true
+      t.string :updated_by
+      t.string :created_by
 
       t.timestamps
     end
