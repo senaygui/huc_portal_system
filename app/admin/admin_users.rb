@@ -1,6 +1,6 @@
 ActiveAdmin.register AdminUser do
   menu priority: 2
-  permit_params :email, :password, :password_confirmation,:first_name,:last_name,:middle_name,:role,:username
+  permit_params :photo,:email, :password, :password_confirmation,:first_name,:last_name,:middle_name,:role,:username
   controller do
     def update_resource(object, attributes)
       update_method = attributes.first[:password].present? ? :update_attributes : :update_without_password
@@ -33,9 +33,18 @@ ActiveAdmin.register AdminUser do
   scope :recently_added
   scope :total_users
   scope :admins
+  
+  scope :president
+  scope :vice_presidents
+  scope :quality_assurances
+  scope :deans
+  scope :department_heads
+  scope :program_offices
+  scope :library
   scope :registrars
-  scope :department_head
-  scope :dean
+  scope :finances
+  
+  
 
   form do |f|
     f.inputs "Adminstration Account" do
@@ -44,14 +53,38 @@ ActiveAdmin.register AdminUser do
       f.input :middle_name
       f.input :username
       f.input :email
-      f.input :password
-      f.input :password_confirmation
       if !f.object.new_record?
         f.input :current_password
       end
-      f.input :role,  :as => :select, :collection => [["Admin","admin"],["Registrar","registrar"], ["Distance Registrar","distance_registrar"], ["Online Registrar","online_registrar"], ["Regular Registrar","regular_registrar"], ["Extention Registrar","extention_registrar"], ["Finance","finance"], ["Distance Finance","distance_finance"], ["Online Finance","online_finance"], ["Regular Finance","regular_finance"], ["Extention Finance","extention_finance"], ["Department head", "department head"],["Dean","dean"], ["teacher", "teacher"]], label: "Account Role", :include_blank => false
+      f.input :password
+      f.input :password_confirmation
+      
+      f.input :role,  :as => :select, :collection => [["President", "president"], ["Vice President", "vice president"], ["Quality Assurance", "quality assurance"],["Dean","dean"], ["Department head", "department head"], ["Program Office", "program office"], ["Library", "library"],["Admin","admin"],["Registrar Head","registrar head"], ["Distance Registrar","distance registrar"], ["Online Registrar","online registrar"], ["Regular Registrar","regular registrar"], ["Extention Registrar","extention registrar"], ["Finance Head","finance head"], ["Distance Finance","distance finance"], ["Online Finance","online finance"], ["Regular Finance","regular finance"], ["Extention Finance","extention finance"]], label: "Account Role", :include_blank => false
+      f.input :photo, as: :file
     end
     f.actions
   end
+
+  show :title => proc{|admin_user| admin_user.name.full }  do
+    panel "Instractor Information" do
+      attributes_table_for admin_user do
+        row "photo" do |pt|
+          span image_tag(pt.photo, size: '150x150', class: "img-corner") if pt.photo.attached?
+        end
+        row :first_name
+        row :last_name
+        row :middle_name
+        row :username
+        row :email
+        row :sign_in_count
+        row :current_sign_in_at
+        row :last_sign_in_at
+        row :current_sign_in_ip
+        row :last_sign_in_ip
+        row :created_at
+        row :updated_at
+      end
+    end
+  end 
 
 end

@@ -7,6 +7,8 @@ class CreateCourseRegistrations < ActiveRecord::Migration[5.2]
       t.belongs_to :course, index: true, type: :uuid
       t.belongs_to :academic_calendar, index: true, type: :uuid
       t.belongs_to :course_section, index: true, type: :uuid
+      t.integer :semester
+      t.integer :year
       t.string :student_full_name
       t.string :enrollment_status, default:"pending"
       t.string :course_title

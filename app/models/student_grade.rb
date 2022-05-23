@@ -10,6 +10,7 @@ class StudentGrade < ApplicationRecord
     belongs_to :course
     has_many :assessments, dependent: :destroy
   	accepts_nested_attributes_for :assessments, reject_if: :all_blank, allow_destroy: true
+    has_many :grade_changes
 
 	def assesment_total
     # assessments.collect { |oi| oi.valid? ? (oi.result) : 0 }.sum
@@ -29,13 +30,13 @@ class StudentGrade < ApplicationRecord
     end
   	# self[:grade_in_letter] = grade_in_letter
   end
-
-
-	private
-
   def update_subtotal
     self[:assesment_total] = assesment_total
   end
+
+	private
+
+  
 
   def generate_assessment
     self.course.assessment_plans.each do |plan|

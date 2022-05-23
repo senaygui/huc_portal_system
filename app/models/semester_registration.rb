@@ -1,5 +1,5 @@
 class SemesterRegistration < ApplicationRecord
-	
+	after_save :change_course_registration_status
 	after_create :course_registration
 	after_save :generate_invoice
 	##validations
@@ -16,12 +16,13 @@ class SemesterRegistration < ApplicationRecord
 	##associations
 	  belongs_to :student
 	  belongs_to :program
+	  belongs_to :section, optional: true
 	  belongs_to :academic_calendar
 	  has_many :course_registrations, dependent: :destroy
   	has_many :courses, through: :course_registrations, dependent: :destroy
   	accepts_nested_attributes_for :course_registrations, reject_if: :all_blank, allow_destroy: true
-  	has_many :invoices
-  	has_one :grade_reports, dependent: :destroy
+  	has_many :invoices, dependent: :destroy
+  	has_one :grade_report, dependent: :destroy
 
   	def generate_grade_report
   		GradeReport.create do |grade_report|
@@ -104,9 +105,17 @@ class SemesterRegistration < ApplicationRecord
 		  			course_registration.student_full_name = self.student_full_name
 		  			course_registration.course_id = co.id
 		  			course_registration.course_title = co.course_title
+		  			course_registration.semester = self.semester
+						course_registration.year = self.year
 		  			# course_registration.course_section_id = CourseSection.first.id
 		  			course_registration.created_by = self.created_by
 				  end
 				end
+	  	end
+
+	  	def change_course_registration_status
+	  		if self.registrar_approval_status == "approved"
+	  			self.course_registrations.map{|course| course.update_columns(enrollment_status: "enrolled")}
+	  		end
 	  	end
 end

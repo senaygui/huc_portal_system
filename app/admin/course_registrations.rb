@@ -8,6 +8,12 @@ ActiveAdmin.register CourseRegistration do
                                             
                                           }
                                         end
+
+  controller do
+    def scoped_collection
+      super.where(academic_calendar_id: AcademicCalendar.where("starting_date <= ? AND ending_date >= ?",Time.zone.now, Time.zone.now).order("created_at DESC").first).where(semester: Semester.where("starting_date <= ? AND ending_date >= ?",Time.zone.now, Time.zone.now).order("created_at DESC").first.semester).where("enrollment_status = ?", "enrolled")
+    end
+  end
   index do
     selectable_column
     column :student_full_name

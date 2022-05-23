@@ -36,7 +36,7 @@ ActiveAdmin.register CourseSection do
     else
       if !f.object.new_record?
         f.inputs "Enrolled Students" do
-          f.input :course_registrations, :as => :check_boxes, :collection => CourseRegistration.where(course_id: course_section.course).all.order("student_full_name ASC").pluck(:student_full_name, :id)
+          f.input :course_registrations, :as => :check_boxes, :collection => CourseRegistration.where(enrollment_status: "enrolled", course_id: course_section.course,academic_calendar_id: current_academic_calendar(course_section.course.program.study_level, course_section.course.program.admission_type), semester: current_semester(course_section.course.program.study_level, course_section.course.program.admission_type).semester).all.order("student_full_name ASC").pluck(:student_full_name, :id), lebel: "Select Students"
         end
       end
     end
@@ -63,28 +63,9 @@ ActiveAdmin.register CourseSection do
             row :updated_at
           end
         end
-      end
-      column do
-        panel "course section report" do
-          table_for AcademicCalendar.where(study_level: course_section.course.program.study_level, admission_type: course_section.course.curriculum.program.admission_type) do
-              column "Academic calendar" do |item|
-                link_to item.calender_year, admin_course_registrations_path(:q => { :course_title_eq => "#{course_section.course_title}", academic_calendar_id_eq: item.id })
 
-              end
-              column "Enrolled Students" do |item|
-                course_section.course_registrations.where(academic_calendar_id: item.id).count
-              end 
-              column "Asign section", sortable: true do |item|
-                link_to "Asign", admin_course_registrations_path(:q => { :course_id_eq => "#{course_section.course.id}", academic_calendar_id_eq: item.id })  
-              end 
-          end
-        end 
-      end 
-    end
-    columns do
-      column do
         panel "Currently enrolled students" do
-          table_for course_section.course_registrations do
+          table_for course_section.course_registrations.where(enrollment_status: "enrolled").where(academic_calendar_id: current_academic_calendar(course_section.course.program.study_level, course_section.course.program.admission_type)).where(semester: current_semester(course_section.course.program.study_level, course_section.course.program.admission_type).semester).order("student_full_name ASC") do
             column "Student Full Name" do |n|
               link_to n.student_full_name, admin_student_path(n.student)
             end
@@ -107,8 +88,42 @@ ActiveAdmin.register CourseSection do
           end
         end 
       end
+      
+      column do
+        panel "Section report" do
+            table(class: 'form-table') do
+              tr do
+                th 'Academic calendar', class: 'form-table__col'
+                th 'Enrolled Students', class: 'form-table__col'
+                th 'Semester', class: 'form-table__col'
+                th 'Asign section', class: 'form-table__col'
+              end
+              
+              AcademicCalendar.where(study_level: course_section.course.program.study_level, admission_type: course_section.course.program.admission_type).map do |item|
+                (1..course_section.course.program.program_semester).map do |ps|
+                  tr class: "form-table__row" do
+                    th class: 'form-table__col' do 
+                      link_to item.calender_year, admin_course_registrations_path(:q => { :course_title_eq => "#{course_section.course_title}", academic_calendar_id_eq: item.id })
+                    end
+                    th class: 'form-table__col' do 
+                      course_section.course_registrations.where(academic_calendar_id: item.id, semester: ps).count
+                    end
+                    th class: 'form-table__col' do 
+                      ps
+                    end
+                    th class: 'form-table__col' do 
+                      if item == current_academic_calendar(course_section.course.program.study_level, course_section.course.program.admission_type) && ps ==current_semester(course_section.course.program.study_level, course_section.course.program.admission_type).semester
+                        link_to "Asign", admin_course_registrations_path(:q => { :course_id_eq => "#{course_section.course.id}", academic_calendar_id_eq: item.id, semester_eq: ps }) 
+                      end
+                    end
+                  end
+                end
+              end
+            end
+        end 
+      end 
+      
     end
-    
   end
 
 end

@@ -35,6 +35,7 @@ class Student < ApplicationRecord
   has_many :course_registrations
   has_many :student_attendances
   has_many :assessments
+  has_many :grade_changes
   has_one :school_or_university_information, dependent: :destroy
   accepts_nested_attributes_for :school_or_university_information
   has_many :student_courses, dependent: :destroy
@@ -48,7 +49,7 @@ class Student < ApplicationRecord
   validates :date_of_birth , :presence => true
   validates :study_level, :presence => true
   validates :admission_type, :presence => true,:length => { :within => 2..10 }
-  validates :photo, attached: true, content_type: ['image/gif', 'image/png', 'image/jpg', 'image/jpeg']
+  # validates :photo, attached: true, content_type: ['image/gif', 'image/png', 'image/jpg', 'image/jpeg']
   # validates :highschool_transcript, attached: true
   # validates :grade_12_matric, attached: true
   # validates :diploma_certificate, attached: true, if: :grade_12_matric?
@@ -119,7 +120,7 @@ class Student < ApplicationRecord
       registration.student_id_number = self.student_id
       registration.created_by = self.created_by
       ## TODO: find the calender of student admission type and study level
-      registration.academic_calendar_id = AcademicCalendar.where(admission_type: self.admission_type).where(study_level: self.study_level).last.id
+      registration.academic_calendar_id = AcademicCalendar.where(admission_type: self.admission_type).where(study_level: self.study_level).order("created_at DESC").first.id
       registration.year = self.year
       registration.semester = self.semester
       registration.program_name = self.program.program_name

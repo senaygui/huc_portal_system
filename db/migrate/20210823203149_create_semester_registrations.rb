@@ -3,7 +3,7 @@ class CreateSemesterRegistrations < ActiveRecord::Migration[5.2]
     create_table :semester_registrations, id: :uuid do |t|
       t.belongs_to :student, index: true, type: :uuid
       t.belongs_to :program, index: true, type: :uuid
-      # t.belongs_to :section, index: true, type: :uuid
+      t.belongs_to :section, index: true, type: :uuid
       t.string :student_full_name
       t.string :student_id_number
       t.string :program_name

@@ -6,9 +6,16 @@ class CourseSection < ApplicationRecord
 		validates :section_full_name, :presence => true, uniqueness: true
 		
 	##associations
+    has_many :grade_changes
   	belongs_to :course
   	has_many :course_registrations
   	has_many :attendances, dependent: :destroy
+    has_many :course_instractors
+    accepts_nested_attributes_for :course_instractors, reject_if: :all_blank, allow_destroy: true
+
+  ##scope
+    scope :instractor_courses, -> (user_id) {CourseInstractor.where(admin_user_id: user_id).pluck(:course_section_id)}
+    scope :instractors, -> (user_id) {CourseInstractor.where(course_section_id: instractor_courses(user_id)).pluck(:course_id)}
   private
 
   def course_title_assign

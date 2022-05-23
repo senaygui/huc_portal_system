@@ -23,7 +23,7 @@ ActiveAdmin.register Attendance do
 
   form do |f|
     f.semantic_errors
-    if !(params[:page_name] == "add")
+    if !(params[:page_name] == "add") && !(current_admin_user.role == "instractor")
       f.inputs "Attendance information" do
         f.input :attendance_title
         
@@ -110,7 +110,7 @@ ActiveAdmin.register Attendance do
                 column :ending_date
                 column :created_at
                 column "links" do |c|
-                  "#{link_to("Take Attendance", edit_admin_session_path(c))}".html_safe
+                  "#{link_to("Take Attendance", edit_admin_session_path(c, page_name: "add"))}".html_safe
                 end
               end
             end 

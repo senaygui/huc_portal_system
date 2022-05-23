@@ -16,10 +16,10 @@ ActiveAdmin.register Session do
     column :course do |pd|
       pd.attendance.course_section.course_title
     end
-    column "academic year", sortable: true do |n|
+    column "Academic Year", sortable: true do |n|
       link_to n.attendance.academic_calendar.calender_year, admin_academic_calendar_path(n.attendance.academic_calendar)
     end
-    column "Created At", sortable: true do |c|
+    column "Session Date", sortable: true do |c|
       c.created_at.strftime("%b %d, %Y")
     end
     actions
@@ -27,48 +27,49 @@ ActiveAdmin.register Session do
 
   form do |f|
     f.semantic_errors
-    # if f.object.student_attendances.empty?
-    #   f.object.student_attendances << StudentAttendance.new
-    # end
-    # panel "Attendance Session Information" do
-    #   object.student_attendances.each do |st|
+    if !(params[:page_name] == "add") 
+      f.inputs "Session information" do
+        f.input :session_title
+        f.input :starting_date, as: :date_time_picker 
+        f.input :ending_date, as: :date_time_picker 
+        f.input :attendance_id, as: :search_select, url: admin_attendances_path,
+              fields: [:attendance_title, :id], display_name: 'attendance_title', minimum_input_length: 2,lebel: "attendance title",
+              order_by: 'id_asc'
+        if f.object.new_record?
+          f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+        else
+          f.input :last_updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+        end 
+      end
+    end
 
-    #     f.has_many :student_attendances,heading: " ", remote: true, allow_destroy: true, new_record: false do |a|
-    #       a.input :student_id, as: :text
-    #       a.input :present
-    #       a.input :absent
-    #       a.input :remark
-    #       if a.object.new_record?
-    #         a.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-    #       else
-    #         a.input :last_updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-    #       end 
-    #       a.label :_destroy
-    #     end
-    #   end
-    # end
-
-
-    inputs 'Student Attendances' do
-      table(class: 'form-table') do
-        tr do
-          th 'Student', class: 'form-table__col'
-          th 'present', class: 'form-table__col'
-          th 'absent', class: 'form-table__col'
-          th 'remark', class: 'form-table__col'
-          th 'destroy', class: 'form-table__col'
-        end
-        f.semantic_fields_for :student_attendances, f.object.student_attendances do |r|
-          render 'rate', r: r
+    if (params[:page_name] == "add") 
+      inputs 'Student Attendances' do
+        table(class: 'form-table') do
+          tr do
+            th 'Student', class: 'form-table__col'
+            th 'present', class: 'form-table__col'
+            th 'absent', class: 'form-table__col'
+            th 'remark', class: 'form-table__col'
+            if !(current_admin_user.role == "instractor")
+              th 'destroy', class: 'form-table__col'
+            end
+          end
+          f.semantic_fields_for :student_attendances, f.object.student_attendances do |r|
+            render 'rate', r: r
+          end
         end
       end
     end
     f.actions
   end
 
-  # action_item :edit, only: :show, priority: 0 do
-  #   link_to 'Add Session', edit_admin_attendance_path(attendance.id, page_name: "add")
-  # end
+  action_item :edit, only: :show, priority: 0 do
+    link_to 'Take Attendance', edit_admin_session_path(session.id, page_name: "add")
+  end
+  action_item :edit, only: :show, priority: 0 do
+    button_tag 'Print Attendance Sheet',onClick: "window.print()", class: "print-button"
+  end
 
   show title: :session_title do
     tabs do
@@ -103,6 +104,9 @@ ActiveAdmin.register Session do
             panel "Attendance Session" do
               table_for session.student_attendances do
                 column "student",:student_full_name
+                column "Sex" do |d|
+                  d.student.gender
+                end
                 column "Student ID" do |d|
                   d.student.student_id
                 end

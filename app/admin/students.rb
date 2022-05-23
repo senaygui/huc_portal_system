@@ -214,7 +214,7 @@ ActiveAdmin.register Student do
             panel "Student Main information" do
               attributes_table_for student do
                 row "photo" do |pt|
-                  span image_tag(pt.photo, size: '150x150', class: "img-corner")
+                  span image_tag(pt.photo, size: '150x150', class: "img-corner") if pt.photo.attached?
                 end
                 row "full name", sortable: true do |n|
                   "#{n.first_name.upcase} #{n.middle_name.upcase} #{n.last_name.upcase}"

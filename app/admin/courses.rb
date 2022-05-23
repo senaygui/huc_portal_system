@@ -1,7 +1,7 @@
 ActiveAdmin.register Course do
   menu priority: 7
   
-permit_params :course_module_id,:curriculum_id,:program_id,:course_title,:course_code,:course_description,:year,:semester,:course_starting_date,:course_ending_date,:credit_hour,:lecture_hour,:lab_hour,:ects,:created_by,:last_updated_by, assessment_plans_attributes: [:id,:course_id,:assessment_title,:assessment_weight, :created_by, :updated_by, :_destroy]
+permit_params :course_outline,:course_module_id,:curriculum_id,:program_id,:course_title,:course_code,:course_description,:year,:semester,:course_starting_date,:course_ending_date,:credit_hour,:lecture_hour,:lab_hour,:ects,:created_by,:last_updated_by, assessment_plans_attributes: [:id,:course_id,:assessment_title,:assessment_weight, :created_by, :updated_by, :_destroy], course_instractors_attributes: [:id ,:admin_user_id,:course_id,:academic_calendar_id,:course_section_id,:semester, :created_by, :updated_by, :_destroy]
 
   index do
     selectable_column
@@ -56,7 +56,7 @@ permit_params :course_module_id,:curriculum_id,:program_id,:course_title,:course
   
   form do |f|
     f.semantic_errors
-    if !(params[:page_name] == "add_assessment")
+    if !(params[:page_name] == "add_assessment") &&  !(params[:page_name] == "course_instractors") &&  !(current_admin_user.role == "instractor")
       f.inputs "Course information" do
         f.input :course_title
         f.input :course_code
@@ -101,10 +101,52 @@ permit_params :course_module_id,:curriculum_id,:program_id,:course_title,:course
         end
       end
     end
+
+    if (params[:page_name] == "course_instractors")
+      if f.object.course_instractors.empty?
+        f.object.course_instractors << CourseInstractor.new
+      end
+      panel "Course Instractors" do
+        f.has_many :course_instractors,heading: " ", remote: true, allow_destroy: true, new_record: true do |a|
+          a.input :admin_user_id, as: :search_select, url: proc { admin_instractors_path },
+           fields: [:username, :id], display_name: 'username', minimum_input_length: 2,
+           order_by: 'created_at_asc', label: "Instractor"
+          a.input :course_section_id, as: :select, :collection => course.course_sections.pluck(:section_full_name, :id), label: "Course Section" 
+          a.input :academic_calendar_id, as: :search_select, url: proc { admin_academic_calendars_path },
+           fields: [:calender_year, :id], display_name: 'calender_year', minimum_input_length: 2,
+           order_by: 'created_at_asc'
+          a.input :semester
+
+          if a.object.new_record?
+            a.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+          else
+            a.input :updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full} 
+          end 
+        end
+      end
+    end
+    if (params[:page_name] == "course_outlines")  || (current_admin_user.role == "instractor")
+      panel "Add Course Outline" do
+        f.inputs do
+          f.input :course_outline, as: :file
+        end
+      end
+    end
     f.actions
   end
   action_item :edit, only: :show, priority: 1  do
-    link_to 'Add Assessment Plan', edit_admin_course_path(course.id, page_name: "add_assessment")
+    if (current_admin_user.role == "department head") || (current_admin_user.role == "admin")
+      link_to 'Add Assessment Plan', edit_admin_course_path(course.id, page_name: "add_assessment") 
+    end
+  end
+  action_item :edit, only: :show, priority: 1  do
+    if (current_admin_user.role == "admin") || (current_admin_user.role == "department head")
+      link_to 'Add Instractor', edit_admin_course_path(course.id, page_name: "course_instractors")
+    end 
+  end
+
+  action_item :edit, only: :show, priority: 1  do
+    link_to 'Add Course Outline', edit_admin_course_path(course.id, page_name: "course_outlines") if current_admin_user.role == "instractor"
   end
 
   show title: :course_title do
@@ -124,6 +166,9 @@ permit_params :course_module_id,:curriculum_id,:program_id,:course_title,:course
              link_to m.curriculum.curriculum_version, [:admin, m.curriculum]
             end
             row :course_description
+            row "Course Outline" do |pr|
+              link_to "attachement", rails_blob_path(pr.course_outline, disposition: 'preview') if pr.course_outline.attached?
+            end
             row :credit_hour
             row :lecture_hour
             row :lab_hour
@@ -139,9 +184,43 @@ permit_params :course_module_id,:curriculum_id,:program_id,:course_title,:course
           end
         end
       end
-      tab "Course section" do
+      if (current_admin_user.role == "admin")
+        tab "Course section" do
+        end
       end
       tab "currently enrolled students" do
+        panel "currently enrolled students" do
+          table_for course.course_registrations.where(enrollment_status: "enrolled").where(academic_calendar_id: current_academic_calendar(course.program.study_level, course.program.admission_type)).where(semester: current_semester(course.program.study_level, course.program.admission_type).semester).order('created_at ASC') do
+            column "Student Full Name" do |n|
+              link_to n.student_full_name, admin_student_path(n.student)
+            end
+            column "Student ID" do |n|
+              n.student.student_id
+            end
+            column "Academic calendar" do |n|
+              n.academic_calendar.calender_year
+            end
+            column "Year" do |s|
+              s.year
+            end
+            column "Semester" do |n|
+              n.semester
+            end
+            column "Course Section" do |n|
+              n.course_section.section_short_name if n.course_section.present?
+            end
+            column "Program Section" do |n|
+              n.semester_registration.section.section_short_name if n.semester_registration.section.present?
+            end
+            column "Add At", sortable: true do |c|
+              c.created_at.strftime("%b %d, %Y")
+            end
+
+            # column "links", sortable: true do |c|
+            #     "#{link_to("View", admin_assessment_plan_path(c))} #{link_to "Edit", edit_admin_course_path(course.id, page_name: "add_assessment")}".html_safe     
+            # end
+          end
+        end
       end
       tab "Assessment Plan" do
         columns do
@@ -180,6 +259,27 @@ permit_params :course_module_id,:curriculum_id,:program_id,:course_title,:course
         end  
       end
       tab "Course Enrollement Report" do
+      end
+      tab "Instractors Information" do
+        panel "Assessment Plan Information" do
+          table_for course.course_instractors.order('created_at ASC') do
+            column "Instractor Name" do |c|
+              link_to c.admin_user.name.full, admin_instractor_path(c.admin_user)
+            end
+            column "Section" do |c|
+              link_to c.course_section.section_short_name, admin_course_section_path(c.course_section)
+            end
+            column "Academic Calendar" do |c|
+              link_to c.academic_calendar.calender_year, admin_academic_calendar_path(c.academic_calendar)
+            end
+            column :semester
+            column :created_by
+            column :updated_by 
+            column "Add At", sortable: true do |c|
+              c.created_at.strftime("%b %d, %Y")
+            end
+          end
+        end
       end
     end
   end 

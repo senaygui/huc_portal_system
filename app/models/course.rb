@@ -24,8 +24,17 @@ class Course < ApplicationRecord
 	  has_many :assessment_plans, dependent: :destroy
 		has_one_attached :course_outline, dependent: :destroy
 		accepts_nested_attributes_for :assessment_plans, reject_if: :all_blank, allow_destroy: true
+
+
+		has_many :course_instractors
+		accepts_nested_attributes_for :course_instractors, reject_if: :all_blank, allow_destroy: true
+
+		has_many :sessions
+
+		has_many :grade_changes
   ##scope
   	scope :recently_added, lambda { where('created_at >= ?', 1.week.ago)}
+  	scope :instractor_courses, -> (user_id) {CourseInstractor.where(admin_user_id: user_id).pluck(:course_id)}
 
 
   private
