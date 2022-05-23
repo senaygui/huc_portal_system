@@ -183,44 +183,48 @@ filter :updated_at
       end
       tab "Grade System" do
         columns do 
-          column do
-            panel "Grading system information" do
-              attributes_table_for curriculum.grade_system do
-                row "Program" do |c|
-                  link_to c.program.program_name, admin_program_path(c.program)
+          if curriculum.grade_system.present?
+            column do
+              panel "Grading system information" do
+                attributes_table_for curriculum.grade_system do
+                  row "Program" do |c|
+                    link_to c.program.program_name, admin_program_path(c.program)
+                  end
+                  row :admission_type do |c|
+                    c.program.admission_type
+                  end
+                  row :study_level do |c|
+                    c.program.study_level
+                  end
+                  row :curriculum do |c|
+                    c.curriculum.curriculum_version
+                  end
+                  row :min_cgpa_value_to_pass
+                  row :min_cgpa_value_to_graduate
+                  row :remark
+                  row :created_at
+                  row :updated_at
                 end
-                row :admission_type do |c|
-                  c.program.admission_type
-                end
-                row :study_level do |c|
-                  c.program.study_level
-                end
-                row :curriculum do |c|
-                  c.curriculum.curriculum_version
-                end
-                row :min_cgpa_value_to_pass
-                row :min_cgpa_value_to_graduate
-                row :remark
-                row :created_at
-                row :updated_at
               end
-            end
-            
-            panel "grade Information" do
-              table_for curriculum.grade_system.academic_statuses do
-                column :status
-                column :min_value
-                column :max_value
+              
+              panel "grade Information" do
+                table_for curriculum.grade_system.academic_statuses do
+                  column :status
+                  column :min_value
+                  column :max_value
+                end
               end
             end
           end
-          column do
-            panel "grade Information" do
-              table_for curriculum.grade_system.grades do
-                column :letter_grade
-                column :grade_point
-                column :min_row_mark
-                column :max_row_mark
+          if curriculum.grade_system.present?
+            column do
+              panel "grade Information" do
+                table_for curriculum.grade_system.grades do
+                  column :letter_grade
+                  column :grade_point
+                  column :min_row_mark
+                  column :max_row_mark
+                end
               end
             end
           end

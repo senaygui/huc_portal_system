@@ -13,6 +13,8 @@
   </td>
   <td class="form-table__col">
     <% r.input :id, as: :hidden, label: '', wrapper_html: { tag: false } %>
-    <% r.input :_destroy, as: :boolean, label: '', wrapper_html: { tag: false } %>
+    <% if !(current_admin_user.role == "instractor")%>
+      <% r.input :_destroy, as: :boolean, label: '', wrapper_html: { tag: false } %>
+    <%end%>
   </td>
 </tr>

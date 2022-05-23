@@ -1,6 +1,16 @@
 ActiveAdmin.register SemesterRegistration do
   menu priority: 9
-  permit_params :student_full_name,:student_id_number, :student_id,:total_price,:registration_fee,:late_registration_fee,:remaining_amount,:mode_of_payment,:semester,:year,:total_enrolled_course,:academic_calendar_id,:registrar_approval_status,:finance_approval_status,:created_by,:last_updated_by,course_registrations_attributes: [:id, :student_id,:semester_registration_id,:course_id,:academic_calendar_id,:student_full_name,:enrollment_status,:course_title,:created_by,:updated_by, :_destroy]
+  permit_params :section_id, :student_full_name,:student_id_number, :student_id,:total_price,:registration_fee,:late_registration_fee,:remaining_amount,:mode_of_payment,:semester,:year,:total_enrolled_course,:academic_calendar_id,:registrar_approval_status,:finance_approval_status,:created_by,:last_updated_by,course_registrations_attributes: [:id, :student_id,:semester_registration_id,:course_id,:academic_calendar_id,:student_full_name,:enrollment_status,:course_title,:created_by,:updated_by, :_destroy]
+  
+    scoped_collection_action :scoped_collection_update, title: 'Set Section', form: -> do
+                                         { 
+                                            section_id: Section.all.map { |section| [section.section_full_name, section.id] },
+                                            
+                                          }
+                                        end
+  batch_action :flag, form: {section_id: Section.pluck(:section_full_name, :id)} do |ids, inputs|
+    redirect_to collection_path, notice: [ids, inputs].to_s
+  end
   csv do
     column "username" do |username|
       username.student.student_id
@@ -68,6 +78,12 @@ ActiveAdmin.register SemesterRegistration do
   #     # super
   #   end 
   # end 
+
+  controller do
+    def scoped_collection
+      super.where(academic_calendar_id: AcademicCalendar.where("starting_date <= ? AND ending_date >= ?",Time.zone.now, Time.zone.now).order("created_at DESC").pluck(:id).first).where(semester: Semester.where("starting_date <= ? AND ending_date >= ?",Time.zone.now, Time.zone.now).order("created_at DESC").pluck(:semester).first)
+    end
+  end
   member_action :generate_grade_report, method: :put do
     @semester_registration= SemesterRegistration.find(params[:id])
     @semester_registration.generate_grade_report
@@ -84,7 +100,7 @@ ActiveAdmin.register SemesterRegistration do
     end
     column :program_name
     # column :study_level
-    column "academic year", sortable: true do |n|
+    column "Academic Year", sortable: true do |n|
       link_to n.academic_calendar.calender_year, admin_academic_calendar_path(n.academic_calendar)
     end
     column :semester
@@ -94,6 +110,9 @@ ActiveAdmin.register SemesterRegistration do
     end
     column "Register status", sortable: true do |c|
       status_tag c.registrar_approval_status
+    end
+    column "Section", sortable: true do |n|
+      link_to n.section.section_full_name, admin_program_section_path(n.section) if n.section.present?
     end
     # column :mode_of_payment
     column "Created At", sortable: true do |c|

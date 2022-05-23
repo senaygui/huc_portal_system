@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_07_070814) do
+ActiveRecord::Schema.define(version: 2022_05_16_143513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -141,7 +141,7 @@ ActiveRecord::Schema.define(version: 2022_04_07_070814) do
     t.index ["course_id"], name: "index_assessment_plans_on_course_id"
   end
 
-  create_table "assessments", force: :cascade do |t|
+  create_table "assessments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "student_id"
     t.uuid "course_id"
     t.uuid "student_grade_id"
@@ -243,6 +243,22 @@ ActiveRecord::Schema.define(version: 2022_04_07_070814) do
     t.index ["curriculums_id"], name: "index_course_assessments_on_curriculums_id"
   end
 
+  create_table "course_instractors", force: :cascade do |t|
+    t.uuid "admin_user_id"
+    t.uuid "course_id"
+    t.uuid "academic_calendar_id"
+    t.uuid "course_section_id"
+    t.integer "semester"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_course_instractors_on_academic_calendar_id"
+    t.index ["admin_user_id"], name: "index_course_instractors_on_admin_user_id"
+    t.index ["course_id"], name: "index_course_instractors_on_course_id"
+    t.index ["course_section_id"], name: "index_course_instractors_on_course_section_id"
+  end
+
   create_table "course_modules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "module_title", null: false
     t.uuid "department_id"
@@ -263,6 +279,8 @@ ActiveRecord::Schema.define(version: 2022_04_07_070814) do
     t.uuid "course_id"
     t.uuid "academic_calendar_id"
     t.uuid "course_section_id"
+    t.integer "semester"
+    t.integer "year"
     t.string "student_full_name"
     t.string "enrollment_status", default: "pending"
     t.string "course_title"
@@ -390,6 +408,54 @@ ActiveRecord::Schema.define(version: 2022_04_07_070814) do
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "grade_changes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "academic_calendar_id"
+    t.uuid "program_id"
+    t.uuid "department_id"
+    t.uuid "student_id"
+    t.uuid "course_id"
+    t.uuid "section_id"
+    t.uuid "course_section_id"
+    t.uuid "course_registration_id"
+    t.uuid "student_grade_id"
+    t.uuid "assessment_id"
+    t.integer "semester"
+    t.integer "year"
+    t.decimal "add_mark"
+    t.decimal "previous_result_total"
+    t.string "previous_letter_grade"
+    t.decimal "current_result_total"
+    t.string "current_letter_grade"
+    t.string "reason"
+    t.string "instractor_approval", default: "pending"
+    t.string "instractor_name"
+    t.datetime "instractor_date_of_response"
+    t.string "registrar_approval", default: "pending"
+    t.string "registrar_name"
+    t.datetime "registrar_date_of_response"
+    t.string "dean_approval", default: "pending"
+    t.string "dean_name"
+    t.datetime "dean_date_of_response"
+    t.string "department_approval", default: "pending"
+    t.string "department_head_name"
+    t.datetime "department_head_date_of_response"
+    t.string "academic_affair_approval", default: "pending"
+    t.string "academic_affair_name"
+    t.datetime "academic_affair_date_of_response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_grade_changes_on_academic_calendar_id"
+    t.index ["assessment_id"], name: "index_grade_changes_on_assessment_id"
+    t.index ["course_id"], name: "index_grade_changes_on_course_id"
+    t.index ["course_registration_id"], name: "index_grade_changes_on_course_registration_id"
+    t.index ["course_section_id"], name: "index_grade_changes_on_course_section_id"
+    t.index ["department_id"], name: "index_grade_changes_on_department_id"
+    t.index ["program_id"], name: "index_grade_changes_on_program_id"
+    t.index ["section_id"], name: "index_grade_changes_on_section_id"
+    t.index ["student_grade_id"], name: "index_grade_changes_on_student_grade_id"
+    t.index ["student_id"], name: "index_grade_changes_on_student_id"
   end
 
   create_table "grade_reports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -570,21 +636,23 @@ ActiveRecord::Schema.define(version: 2022_04_07_070814) do
   end
 
   create_table "sections", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "course_id"
-    t.uuid "curriculum_id"
     t.uuid "program_id"
-    t.string "section_name"
+    t.string "section_short_name", null: false
+    t.string "section_full_name", null: false
+    t.integer "semester", null: false
+    t.integer "year", null: false
     t.integer "total_capacity"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["course_id"], name: "index_sections_on_course_id"
-    t.index ["curriculum_id"], name: "index_sections_on_curriculum_id"
     t.index ["program_id"], name: "index_sections_on_program_id"
   end
 
   create_table "semester_registrations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "student_id"
     t.uuid "program_id"
+    t.uuid "section_id"
     t.string "student_full_name"
     t.string "student_id_number"
     t.string "program_name"
@@ -607,11 +675,23 @@ ActiveRecord::Schema.define(version: 2022_04_07_070814) do
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_semester_registrations_on_academic_calendar_id"
     t.index ["program_id"], name: "index_semester_registrations_on_program_id"
+    t.index ["section_id"], name: "index_semester_registrations_on_section_id"
     t.index ["student_id"], name: "index_semester_registrations_on_student_id"
+  end
+
+  create_table "semesters", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "academic_calendar_id"
+    t.integer "semester", null: false
+    t.datetime "starting_date", null: false
+    t.datetime "ending_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_semesters_on_academic_calendar_id"
   end
 
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "attendance_id"
+    t.uuid "course_id"
     t.datetime "starting_date"
     t.datetime "ending_date"
     t.string "session_title"
@@ -620,6 +700,7 @@ ActiveRecord::Schema.define(version: 2022_04_07_070814) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["attendance_id"], name: "index_sessions_on_attendance_id"
+    t.index ["course_id"], name: "index_sessions_on_course_id"
   end
 
   create_table "student_addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

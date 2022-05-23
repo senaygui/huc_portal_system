@@ -20,11 +20,15 @@ class AcademicCalendar < ApplicationRecord
   	
 	##associations
   	has_many :activities
-    has_many :grade_reports
-  	accepts_nested_attributes_for :activities, reject_if: :all_blank, allow_destroy: true
+    accepts_nested_attributes_for :activities, reject_if: :all_blank, allow_destroy: true
+    has_many :semesters, dependent: :destroy
+    accepts_nested_attributes_for :semesters, reject_if: :all_blank, allow_destroy: true
     has_many :semester_registrations
     has_many :course_registrations
     has_many :invoices
     has_many :attendances
+    has_many :course_instractors
+    has_many :grade_reports
+    has_many :grade_changes
     # has_many :sessions
 end

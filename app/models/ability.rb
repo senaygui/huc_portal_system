@@ -11,7 +11,7 @@ class Ability
     case user.role
     when "admin"
         can :manage, GradeSystem
-
+        can :manage, GradeChange        
         can :manage, AssessmentPlan
         can :manage, CourseRegistration
         can :manage, Attendance
@@ -44,14 +44,29 @@ class Ability
         can :manage, Invoice
         can :manage, Section
         can :manage, Almuni
-    when "teacher"
-        can :read, Student
-        can :read, SemesterRegistration
+    when "instractor"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
-        can :manage, StudentGrade
-        can :manage, GradeReport
-        can :manage, GradeRule
-        can :manage, Grade
+        can :read, AcademicCalendar
+        can :read, Course, id: Course.instractor_courses(user.id)
+        can :update, Course, id: Course.instractor_courses(user.id)
+        can :read, AssessmentPlan, course_id: Course.instractor_courses(user.id)
+        can :read, CourseRegistration, course_section_id: CourseSection.instractor_courses(user.id)
+        can :manage, StudentGrade, course_id: CourseSection.instractors(user.id)
+        cannot :destroy, StudentGrade
+        can :manage, Assessment
+        can :read, Attendance, course_section_id: CourseSection.instractor_courses(user.id)
+        can :update, Attendance, course_section_id: CourseSection.instractor_courses(user.id)
+
+        can :create, Session
+        can :read, Session, course_id: CourseSection.instractors(user.id)
+        can :update, Session, course_id: CourseSection.instractors(user.id)
+        cannot :destroy, Session, course_id: CourseSection.instractors(user.id)
+
+        can :read, GradeChange, course_id: CourseSection.instractors(user.id)
+        can :update, GradeChange , course_id: CourseSection.instractors(user.id)
+        
+        # can :manage, GradeRule
+        # can :manage, Grade
     when "finance"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, Program

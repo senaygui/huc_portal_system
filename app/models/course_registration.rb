@@ -10,7 +10,8 @@ class CourseRegistration < ApplicationRecord
 		belongs_to :academic_calendar
 		belongs_to :program
 		belongs_to :course_section, optional: true
-		has_many :student_attendances
+		has_many :student_attendances, dependent: :destroy
+		has_many :grade_changes, dependent: :destroy
 
 
 	private

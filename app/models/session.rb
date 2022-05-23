@@ -1,7 +1,9 @@
 class Session < ApplicationRecord
 	after_create :add_student_attendance
+  before_save :attribute_assignment
 	
   belongs_to :attendance
+  belongs_to :course, optional: true
   # belongs_to :academic_calendar
   has_many :student_attendances
   accepts_nested_attributes_for :student_attendances, reject_if: :all_blank, allow_destroy: true
@@ -25,5 +27,8 @@ class Session < ApplicationRecord
           item.created_by = self.attendance.created_by
         end
       end
+    end
+    def attribute_assignment
+      self[:course_id] = self.attendance.course.id
     end
   end
