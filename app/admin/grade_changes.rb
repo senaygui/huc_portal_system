@@ -1,6 +1,6 @@
 ActiveAdmin.register GradeChange do
-
-  permit_params :section_id, :academic_calendar_id,:student_id,:course_id,:program_section_id,:course_section_id,:semester,:previous_result_total,:previous_letter_grade,:current_result_total,:current_letter_grade,:reason,:instractor_approval,:instractor_name,:instractor_date_of_response,:registrar_approval,:registrar_name,:registrar_date_of_response,:dean_approval,:dean_name,:dean_date_of_response,:department_approval,:department_head_name,:department_head_date_of_response,:academic_affair_approval,:academic_affair_name,:academic_affair_date_of_response,:course_registration_id,:student_grade_id,:assessment_id, :add_mark, :course_section_id, :program_id, :department_id, :year
+  actions :all, :except => [:new]
+  permit_params :section_id, :academic_calendar_id,:student_id,:course_id,:section_id,:semester,:previous_result_total,:previous_letter_grade,:current_result_total,:current_letter_grade,:reason,:instractor_approval,:instractor_name,:instractor_date_of_response,:registrar_approval,:registrar_name,:registrar_date_of_response,:dean_approval,:dean_name,:dean_date_of_response,:department_approval,:department_head_name,:department_head_date_of_response,:academic_affair_approval,:academic_affair_name,:academic_affair_date_of_response,:course_registration_id,:student_grade_id,:assessment_id, :add_mark, :course_section_id, :program_id, :department_id, :year
 
   index do
     selectable_column
@@ -78,7 +78,7 @@ ActiveAdmin.register GradeChange do
         f.input :section_id, as: :hidden, :input_html => { :value => params[:section_id]} 
         f.input :course_registration_id, as: :hidden, :input_html => { :value => params[:course_registration_id]}
         f.input :student_grade_id, as: :hidden, :input_html => { :value => params[:student_grade_id]}
-        f.input :course_section_id, as: :hidden, :input_html => { :value => params[:course_section_id]}
+        # f.input :course_section_id, as: :hidden, :input_html => { :value => params[:course_section_id]}
         f.input :program_id, as: :hidden, :input_html => { :value => params[:program_id]}
         f.input :department_id, as: :hidden, :input_html => { :value => params[:department_id]}
         f.input :semester, as: :hidden, :input_html => { :value => params[:semester]} 

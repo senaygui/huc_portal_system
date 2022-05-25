@@ -68,6 +68,34 @@ permit_params :program_id, :section_short_name ,:section_full_name, :total_capac
             row :updated_at
           end
         end
+
+        panel "Currently registered students" do
+          table_for program_section.semester_registrations.where(academic_calendar_id: current_academic_calendar(program_section.program.study_level, program_section.program.admission_type)) do
+            column "Student Full Name" do |n|
+              link_to n.student_full_name, admin_student_path(n.student)
+            end
+            column "Student ID" do |n|
+              n.student.student_id
+            end
+            column "Academic calendar" do |n|
+              n.academic_calendar.calender_year
+            end
+            column "Year" do |n|
+              n.year
+            end
+            column "Semester" do |n|
+              n.semester
+            end
+            column "ccc" do |n|
+              current_academic_calendar(program_section.program.study_level, program_section.program.admission_type)
+            end
+            #TODO: add a remove btn first create a member action the delete section id from course registration
+            # column "Remove" do |n|
+            #   link_to 'Destroy', admin_course_registrations_path(n), data: {:confirm => 'Are you sure?'}, :method => :delete 
+            # end
+          end
+        end
+
       end
       column do
         panel "Section report" do
@@ -101,37 +129,6 @@ permit_params :program_id, :section_short_name ,:section_full_name, :total_capac
         end 
       end 
     end
-    columns do
-      column do
-        panel "Currently registered students" do
-          table_for program_section.semester_registrations.where(academic_calendar_id: current_academic_calendar(program_section.program.study_level, program_section.program.admission_type)) do
-            column "Student Full Name" do |n|
-              link_to n.student_full_name, admin_student_path(n.student)
-            end
-            column "Student ID" do |n|
-              n.student.student_id
-            end
-            column "Academic calendar" do |n|
-              n.academic_calendar.calender_year
-            end
-            column "Year" do |n|
-              n.year
-            end
-            column "Semester" do |n|
-              n.semester
-            end
-            column "ccc" do |n|
-              current_academic_calendar(program_section.program.study_level, program_section.program.admission_type)
-            end
-            #TODO: add a remove btn first create a member action the delete section id from course registration
-            # column "Remove" do |n|
-            #   link_to 'Destroy', admin_course_registrations_path(n), data: {:confirm => 'Are you sure?'}, :method => :delete 
-            # end
-          end
-        end 
-      end
-    end
-    
   end
   
 end

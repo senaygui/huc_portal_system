@@ -16,13 +16,13 @@ class Ability
         can :manage, CourseRegistration
         can :manage, Attendance
         can :manage, Session
-        can :manage, CourseSection
+        # can :manage, CourseSection
         can :read, StudentGrade
         can :update, StudentGrade
         can :destroy, StudentGrade
         cannot :create, StudentGrade
         can :manage, GradeReport
-        can :manage, GradeRule
+        # can :manage, GradeRule
         can :manage, Grade
         can :manage, AdminUser
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
@@ -50,23 +50,20 @@ class Ability
         can :read, Course, id: Course.instractor_courses(user.id)
         can :update, Course, id: Course.instractor_courses(user.id)
         can :read, AssessmentPlan, course_id: Course.instractor_courses(user.id)
-        can :read, CourseRegistration, course_section_id: CourseSection.instractor_courses(user.id)
-        can :manage, StudentGrade, course_id: CourseSection.instractors(user.id)
+        can :read, CourseRegistration, section_id: Section.instractor_courses(user.id)
+        can :manage, StudentGrade, course_id: Section.instractors(user.id)
         cannot :destroy, StudentGrade
         can :manage, Assessment
-        can :read, Attendance, course_section_id: CourseSection.instractor_courses(user.id)
-        can :update, Attendance, course_section_id: CourseSection.instractor_courses(user.id)
+        can :read, Attendance, section_id: Section.instractor_courses(user.id)
+        can :update, Attendance, section_id: Section.instractor_courses(user.id)
 
         can :create, Session
-        can :read, Session, course_id: CourseSection.instractors(user.id)
-        can :update, Session, course_id: CourseSection.instractors(user.id)
-        cannot :destroy, Session, course_id: CourseSection.instractors(user.id)
+        can :read, Session, course_id: Section.instractors(user.id)
+        can :update, Session, course_id: Section.instractors(user.id)
+        cannot :destroy, Session, course_id: Section.instractors(user.id)
 
-        can :read, GradeChange, course_id: CourseSection.instractors(user.id)
-        can :update, GradeChange , course_id: CourseSection.instractors(user.id)
-        
-        # can :manage, GradeRule
-        # can :manage, Grade
+        can :read, GradeChange, course_id: Section.instractors(user.id)
+        can :update, GradeChange , course_id: Section.instractors(user.id)
     when "finance"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, Program
@@ -82,26 +79,32 @@ class Ability
         can :manage, CollegePayment
         can :read, SemesterRegistration
         can :manage, Invoice
-    when "registrar"
-        can :manage, CourseSection
-        can :manage, StudentGrade
-        can :manage, GradeReport
-        can :manage, GradeRule
-        can :manage, Grade
+    when "registrar head"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
-        can :read, Program
-        #TODO: after one college created disable new action   
-        # cannot :destroy, College, id: 1
         can :manage, AcademicCalendar
+        can :manage, AdminUser, role: "instractor"
+        can :manage, Faculty
         can :manage, Department
         can :read, CourseModule
+        can :read, Program
+        can :read, Curriculum
         can :read, Course
+        can [:update, :read], GradeSystem
+        can :read, AssessmentPlan
+        can :manage, Section
         can :manage, Student
-        # can :read, PaymentMethod
-        can :manage, AcademicCalendar
-        # can :manage, CollegePayment
         can :manage, SemesterRegistration
+        can :manage, CourseRegistration
+        can :read, CollegePayment
+        can :read, PaymentMethod
         can :read, Invoice
+        can :manage, Attendance
+        can :manage, Session
+
+        cannot [:create, :read], GradeReport
+        cannot :destroy, GradeReport
+        can :read, StudentGrade
+        can :manage, GradeChange
     when "distance_registrar"
         can :manage, CourseSection
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
@@ -210,35 +213,26 @@ class Ability
         can :manage, CollegePayment, admission_type: "extention"
         can :read, SemesterRegistration, admission_type: "extention"
         can :manage, Invoice        
-    when "Stock Manager"
+    when "department head"
         can :read, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
-        can :manage, Product
-        can :manage, Supplier
-        can :manage, LocalVender
-        can :manage, Catagory
-        cannot :destroy, Catagory
-        can :manage, Sale
-        can :manage, ProductItem
-        can :manage, CustomerNotification
-        can :read, Customer
-        can :manage, Purchase
-        can :manage, PurchaseItem
-        can :read, Notification, notifiable_type: "Product"
-        can :read, Notification, notifiable_type: "PurchaseItem"
-    when "Engineer"
-        can :read, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
-        can :read, Product
-        can :read, Sale
-        can :manage, Supplier
-        can :manage, LocalVender
-        can :read, Catagory
-        can :manage, Customer
-        can :read, Notification, notification_status: "Maintenance"
-        # can :manage, Expense
-        # can :manage, ActiveAdmin::Comment, resource_type: "Vacancy"
-        # can :manage, ActiveAdmin::Comment, resource_type: "Order"
-        # can :manage, ActiveAdmin::Comment, resource_type: "Product"
-        # can :manage, ActiveAdmin::Comment, resource_type: "Advertisement"
+        can :manage, Department, department_id: user.department.id
+        can :manage, CourseModule, department_id: user.department.id
+        can :manage, Course, course_module: {department_id: user.department.id}
+        can :manage, AdminUser, role: "instractor"
+        can :manage, Program, department_id: user.department.id
+        can :manage, Curriculum, program: {department_id: user.department.id}
+        can :manage, GradeSystem, program: {department_id: user.department.id}
+        can :manage, AssessmentPlan, course: {program: {department_id: user.department.id}}
+        can :read, AcademicCalendar
+        can :read, Section, program: {department_id: user.department.id}
+        can :read, Student, department: user.department.department_name
+        can :read, CourseRegistration, department_id: user.department.id
+        can :read, SemesterRegistration, department_id: user.department.id
+        can :read, Attendance, program: {department_id: user.department.id}
+        can :read, Session, course: {program: {department_id: user.department.id}}
+        can :read, StudentGrade, department_id: user.department.id
+        can [:read, :update], GradeChange, department_id: user.department.id
+        can [:read, :update], GradeReport, department_id: user.department.id  
     end
   end
 end

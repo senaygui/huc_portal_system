@@ -13,7 +13,7 @@ class GradeChange < ApplicationRecord
 	  belongs_to :department
 	  belongs_to :section
 	  belongs_to :academic_calendar
-	  belongs_to :course_section, optional: true
+	  # belongs_to :course_section, optional: true
 	  belongs_to :student
 	  belongs_to :course_registration
 		belongs_to :student_grade

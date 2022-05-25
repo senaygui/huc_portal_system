@@ -4,15 +4,22 @@ ActiveAdmin.register CourseRegistration do
 
   scoped_collection_action :scoped_collection_update, title: 'Set Section', form: -> do
                                          { 
-                                            course_section_id: CourseSection.all.map { |section| [section.section_full_name, section.id] },
+                                            section_id: Section.all.map { |section| [section.section_full_name, section.id] },
                                             
                                           }
                                         end
 
   controller do
     def scoped_collection
-      super.where(academic_calendar_id: AcademicCalendar.where("starting_date <= ? AND ending_date >= ?",Time.zone.now, Time.zone.now).order("created_at DESC").first).where(semester: Semester.where("starting_date <= ? AND ending_date >= ?",Time.zone.now, Time.zone.now).order("created_at DESC").first.semester).where("enrollment_status = ?", "enrolled")
+      # super.where(academic_calendar_id: AcademicCalendar.where("starting_date <= ? AND ending_date >= ?",Time.zone.now, Time.zone.now).order("created_at DESC").first).where(semester: Semester.where("starting_date <= ? AND ending_date >= ?",Time.zone.now, Time.zone.now).order("created_at DESC").first.semester).where("enrollment_status = ?", "enrolled")
+      super.where("enrollment_status = ?", "enrolled")
     end
+  end
+  batch_action "Generate Grade Sheet", method: :put, confirm: "Are you sure?" do |ids|
+    CourseRegistration.find(ids).each do |course_registration|
+      course_registration.add_grade
+    end
+    redirect_to collection_path, notice: "Grade Sheet Is Generated Successfully"
   end
   index do
     selectable_column
@@ -25,7 +32,7 @@ ActiveAdmin.register CourseRegistration do
       c.program.program_name
     end
     column :section_name do |c|
-      c.course_section.section_short_name if c.course_section.present?
+      c.section.section_short_name if c.section.present?
     end
     column "Created At", sortable: true do |c|
       c.created_at.strftime("%b %d, %Y")

@@ -14,12 +14,11 @@ class Course < ApplicationRecord
   	belongs_to :program, optional: true
  		# has_many :programs, through: :curriculums, dependent: :destroy
  		has_many :student_grades, dependent: :destroy
- 		has_many :sections
 
  		has_many :student_courses, dependent: :destroy
  		has_many :assessments
 	  has_many :course_registrations, dependent: :destroy
-	  has_many :course_sections, dependent: :destroy
+	  # has_many :course_sections, dependent: :destroy
 	  has_many :attendances, dependent: :destroy
 	  has_many :assessment_plans, dependent: :destroy
 		has_one_attached :course_outline, dependent: :destroy

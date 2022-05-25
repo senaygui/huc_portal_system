@@ -1,7 +1,7 @@
 ActiveAdmin.register Course do
   menu priority: 7
   
-permit_params :course_outline,:course_module_id,:curriculum_id,:program_id,:course_title,:course_code,:course_description,:year,:semester,:course_starting_date,:course_ending_date,:credit_hour,:lecture_hour,:lab_hour,:ects,:created_by,:last_updated_by, assessment_plans_attributes: [:id,:course_id,:assessment_title,:assessment_weight, :created_by, :updated_by, :_destroy], course_instractors_attributes: [:id ,:admin_user_id,:course_id,:academic_calendar_id,:course_section_id,:semester, :created_by, :updated_by, :_destroy]
+permit_params :course_outline,:course_module_id,:curriculum_id,:program_id,:course_title,:course_code,:course_description,:year,:semester,:course_starting_date,:course_ending_date,:credit_hour,:lecture_hour,:lab_hour,:ects,:created_by,:last_updated_by, assessment_plans_attributes: [:id,:course_id,:assessment_title,:assessment_weight, :created_by, :updated_by, :_destroy], course_instractors_attributes: [:id ,:section_id,:year,:admin_user_id,:course_id,:academic_calendar_id,:semester, :created_by, :updated_by, :_destroy]
 
   index do
     selectable_column
@@ -111,10 +111,12 @@ permit_params :course_outline,:course_module_id,:curriculum_id,:program_id,:cour
           a.input :admin_user_id, as: :search_select, url: proc { admin_instractors_path },
            fields: [:username, :id], display_name: 'username', minimum_input_length: 2,
            order_by: 'created_at_asc', label: "Instractor"
-          a.input :course_section_id, as: :select, :collection => course.course_sections.pluck(:section_full_name, :id), label: "Course Section" 
+          # a.input :course_section_id, as: :select, :collection => course.course_sections.pluck(:section_full_name, :id), label: "Course Section" 
+          a.input :section_id, as: :select, :collection => course.program.sections.pluck(:section_full_name, :id), label: "Section" 
           a.input :academic_calendar_id, as: :search_select, url: proc { admin_academic_calendars_path },
            fields: [:calender_year, :id], display_name: 'calender_year', minimum_input_length: 2,
            order_by: 'created_at_asc'
+          a.input :year
           a.input :semester
 
           if a.object.new_record?
@@ -206,8 +208,8 @@ permit_params :course_outline,:course_module_id,:curriculum_id,:program_id,:cour
             column "Semester" do |n|
               n.semester
             end
-            column "Course Section" do |n|
-              n.course_section.section_short_name if n.course_section.present?
+            column "Section" do |n|
+              n.section.section_short_name if n.section.present?
             end
             column "Program Section" do |n|
               n.semester_registration.section.section_short_name if n.semester_registration.section.present?
@@ -266,12 +268,16 @@ permit_params :course_outline,:course_module_id,:curriculum_id,:program_id,:cour
             column "Instractor Name" do |c|
               link_to c.admin_user.name.full, admin_instractor_path(c.admin_user)
             end
+            # column "Section" do |c|
+            #   link_to c.course_section.section_short_name, admin_course_section_path(c.course_section)
+            # end
             column "Section" do |c|
-              link_to c.course_section.section_short_name, admin_course_section_path(c.course_section)
+              link_to c.section.section_short_name, admin_program_section_path(c.section)
             end
             column "Academic Calendar" do |c|
               link_to c.academic_calendar.calender_year, admin_academic_calendar_path(c.academic_calendar)
             end
+            column :year
             column :semester
             column :created_by
             column :updated_by 

@@ -30,5 +30,5 @@ class AcademicCalendar < ApplicationRecord
     has_many :course_instractors
     has_many :grade_reports
     has_many :grade_changes
-    # has_many :sessions
+    has_many :sessions
 end

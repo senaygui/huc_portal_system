@@ -111,8 +111,10 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.string "middle_name"
     t.string "role", default: "admin", null: false
     t.string "username"
+    t.uuid "department_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["department_id"], name: "index_admin_users_on_department_id"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
     t.index ["role"], name: "index_admin_users_on_role"
@@ -159,7 +161,7 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
 
   create_table "attendances", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "program_id"
-    t.uuid "course_section_id"
+    t.uuid "section_id"
     t.uuid "course_id"
     t.uuid "academic_calendar_id"
     t.string "course_title"
@@ -172,8 +174,8 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_attendances_on_academic_calendar_id"
     t.index ["course_id"], name: "index_attendances_on_course_id"
-    t.index ["course_section_id"], name: "index_attendances_on_course_section_id"
     t.index ["program_id"], name: "index_attendances_on_program_id"
+    t.index ["section_id"], name: "index_attendances_on_section_id"
   end
 
   create_table "college_payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -247,8 +249,9 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.uuid "admin_user_id"
     t.uuid "course_id"
     t.uuid "academic_calendar_id"
-    t.uuid "course_section_id"
+    t.uuid "section_id"
     t.integer "semester"
+    t.integer "year"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", null: false
@@ -256,7 +259,7 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.index ["academic_calendar_id"], name: "index_course_instractors_on_academic_calendar_id"
     t.index ["admin_user_id"], name: "index_course_instractors_on_admin_user_id"
     t.index ["course_id"], name: "index_course_instractors_on_course_id"
-    t.index ["course_section_id"], name: "index_course_instractors_on_course_section_id"
+    t.index ["section_id"], name: "index_course_instractors_on_section_id"
   end
 
   create_table "course_modules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -276,9 +279,10 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.uuid "student_id"
     t.uuid "program_id"
     t.uuid "semester_registration_id"
+    t.uuid "department_id"
     t.uuid "course_id"
     t.uuid "academic_calendar_id"
-    t.uuid "course_section_id"
+    t.uuid "section_id"
     t.integer "semester"
     t.integer "year"
     t.string "student_full_name"
@@ -290,8 +294,9 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_course_registrations_on_academic_calendar_id"
     t.index ["course_id"], name: "index_course_registrations_on_course_id"
-    t.index ["course_section_id"], name: "index_course_registrations_on_course_section_id"
+    t.index ["department_id"], name: "index_course_registrations_on_department_id"
     t.index ["program_id"], name: "index_course_registrations_on_program_id"
+    t.index ["section_id"], name: "index_course_registrations_on_section_id"
     t.index ["semester_registration_id"], name: "index_course_registrations_on_semester_registration_id"
     t.index ["student_id"], name: "index_course_registrations_on_student_id"
   end
@@ -417,7 +422,6 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.uuid "student_id"
     t.uuid "course_id"
     t.uuid "section_id"
-    t.uuid "course_section_id"
     t.uuid "course_registration_id"
     t.uuid "student_grade_id"
     t.uuid "assessment_id"
@@ -450,7 +454,6 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.index ["assessment_id"], name: "index_grade_changes_on_assessment_id"
     t.index ["course_id"], name: "index_grade_changes_on_course_id"
     t.index ["course_registration_id"], name: "index_grade_changes_on_course_registration_id"
-    t.index ["course_section_id"], name: "index_grade_changes_on_course_section_id"
     t.index ["department_id"], name: "index_grade_changes_on_department_id"
     t.index ["program_id"], name: "index_grade_changes_on_program_id"
     t.index ["section_id"], name: "index_grade_changes_on_section_id"
@@ -653,6 +656,7 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.uuid "student_id"
     t.uuid "program_id"
     t.uuid "section_id"
+    t.uuid "department_id"
     t.string "student_full_name"
     t.string "student_id_number"
     t.string "program_name"
@@ -674,6 +678,7 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_semester_registrations_on_academic_calendar_id"
+    t.index ["department_id"], name: "index_semester_registrations_on_department_id"
     t.index ["program_id"], name: "index_semester_registrations_on_program_id"
     t.index ["section_id"], name: "index_semester_registrations_on_section_id"
     t.index ["student_id"], name: "index_semester_registrations_on_student_id"
@@ -691,7 +696,10 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
 
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "attendance_id"
+    t.uuid "academic_calendar_id"
     t.uuid "course_id"
+    t.integer "semester"
+    t.integer "year"
     t.datetime "starting_date"
     t.datetime "ending_date"
     t.string "session_title"
@@ -699,6 +707,7 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.string "updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_sessions_on_academic_calendar_id"
     t.index ["attendance_id"], name: "index_sessions_on_attendance_id"
     t.index ["course_id"], name: "index_sessions_on_course_id"
   end
@@ -762,6 +771,8 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.uuid "course_registration_id"
     t.uuid "student_id"
     t.uuid "course_id"
+    t.uuid "department_id"
+    t.uuid "program_id"
     t.string "letter_grade"
     t.decimal "assesment_total"
     t.decimal "grade_point"
@@ -771,6 +782,8 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_student_grades_on_course_id"
     t.index ["course_registration_id"], name: "index_student_grades_on_course_registration_id"
+    t.index ["department_id"], name: "index_student_grades_on_department_id"
+    t.index ["program_id"], name: "index_student_grades_on_program_id"
     t.index ["student_id"], name: "index_student_grades_on_student_id"
   end
 
