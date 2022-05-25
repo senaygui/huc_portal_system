@@ -7,7 +7,7 @@ class CreateGradeChanges < ActiveRecord::Migration[5.2]
       t.belongs_to :student, index: true, type: :uuid
       t.belongs_to :course, index: true, type: :uuid
       t.belongs_to :section, index: true, type: :uuid
-      t.belongs_to :course_section, index: true, type: :uuid
+      # t.belongs_to :course_section, index: true, type: :uuid
       t.belongs_to :course_registration, index: true, type: :uuid
       t.belongs_to :student_grade, index: true, type: :uuid
       t.belongs_to :assessment, index: true, type: :uuid

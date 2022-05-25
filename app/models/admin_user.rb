@@ -11,7 +11,7 @@ class AdminUser < ApplicationRecord
     validates :first_name , :presence => true,:length => { :within => 2..50 }
     validates :last_name , :presence => true,:length => { :within => 1..50 }
     validates :role , :presence => true
-    validates :photo, attached: true, content_type: ['image/gif', 'image/png', 'image/jpg', 'image/jpeg']
+    # validates :photo, attached: true, content_type: ['image/gif', 'image/png', 'image/jpg', 'image/jpeg']
   ## scope
 
     scope :recently_added, lambda { where('created_at >= ?', 1.week.ago)}
@@ -29,4 +29,5 @@ class AdminUser < ApplicationRecord
 
     ## associations
       has_many :course_instractors
+      belongs_to :department, optional: true
 end

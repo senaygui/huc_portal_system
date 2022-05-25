@@ -20,9 +20,10 @@ class Program < ApplicationRecord
   	scope :extention, lambda { where(admission_type: "extention")}
   	scope :distance, lambda { where(admission_type: "distance")}
   ##associations
+    has_many :student_grades
     has_many :grade_changes
     has_many :grade_reports
-    has_many :sections
+    has_many :sections, dependent: :destroy
     has_many :courses
     belongs_to :department
     has_many :grade_systems, dependent: :destroy
@@ -30,7 +31,7 @@ class Program < ApplicationRecord
     has_many :students
     has_many :semester_registrations
     has_many :course_registrations
-    has_many :curriculums
+    has_many :curriculums, dependent: :destroy
     accepts_nested_attributes_for :curriculums, reject_if: :all_blank, allow_destroy: true
   
   # def total_tuition

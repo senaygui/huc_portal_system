@@ -1,5 +1,6 @@
 class SemesterRegistration < ApplicationRecord
 	after_save :change_course_registration_status
+	after_save :assign_section_to_course_registration
 	after_create :course_registration
 	after_save :generate_invoice
 	##validations
@@ -16,6 +17,7 @@ class SemesterRegistration < ApplicationRecord
 	##associations
 	  belongs_to :student
 	  belongs_to :program
+	  belongs_to :department
 	  belongs_to :section, optional: true
 	  belongs_to :academic_calendar
 	  has_many :course_registrations, dependent: :destroy
@@ -100,6 +102,7 @@ class SemesterRegistration < ApplicationRecord
 		  		CourseRegistration.create do |course_registration|
 		  			course_registration.semester_registration_id = self.id
 		  			course_registration.program_id = self.program.id
+		  			course_registration.department_id = self.department.id
 		  			course_registration.academic_calendar_id = self.academic_calendar_id
 		  			course_registration.student_id = self.student.id
 		  			course_registration.student_full_name = self.student_full_name
@@ -114,8 +117,14 @@ class SemesterRegistration < ApplicationRecord
 	  	end
 
 	  	def change_course_registration_status
-	  		if self.registrar_approval_status == "approved"
-	  			self.course_registrations.map{|course| course.update_columns(enrollment_status: "enrolled")}
+	  		if (self.registrar_approval_status == "approved")
+	  			self.course_registrations.where(enrollment_status: "pending").map{|course| course.update_columns(enrollment_status: "enrolled")}
+	  		end
+	  	end
+
+	  	def assign_section_to_course_registration
+	  		if (self.registrar_approval_status == "approved") && self.section.present? 
+	  			self.course_registrations.where(section_id: nil).map{|course| course.update(section_id: self.section_id)}
 	  		end
 	  	end
 end

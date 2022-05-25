@@ -1,4 +1,7 @@
 ActiveAdmin.register AdminUser do
+  if proc {current_admin_user.role == "admin"}
+    menu :if => false
+  end
   menu priority: 2
   permit_params :photo,:email, :password, :password_confirmation,:first_name,:last_name,:middle_name,:role,:username
   controller do

@@ -1,7 +1,7 @@
 ActiveAdmin.register Session do
   # before_action :left_sidebar!, collapsed: true
 
-   permit_params :attendance_id,:starting_date,:ending_date,:session_title,:created_by,:updated_by,student_attendances_attributes: [:id,:student_id,:course_registration_id,:present,:absent,:remark,:created_by,:updated_by, :_destroy]
+   permit_params :academic_calendar_id,:semester,:year,:attendance_id,:starting_date,:ending_date,:session_title,:created_by,:updated_by,student_attendances_attributes: [:id,:student_id,:course_registration_id,:present,:absent,:remark,:created_by,:updated_by, :_destroy]
 
   index do
     selectable_column
@@ -11,13 +11,13 @@ ActiveAdmin.register Session do
       pd.attendance.attendance_title
     end
     column :program do |pd|
-      pd.attendance.course_section.program_name
+      pd.attendance.program.program_name
     end
     column :course do |pd|
-      pd.attendance.course_section.course_title
+      pd.attendance.course_title
     end
     column "Academic Year", sortable: true do |n|
-      link_to n.attendance.academic_calendar.calender_year, admin_academic_calendar_path(n.attendance.academic_calendar)
+      link_to n.academic_calendar.calender_year, admin_academic_calendar_path(n.academic_calendar)
     end
     column "Session Date", sortable: true do |c|
       c.created_at.strftime("%b %d, %Y")
@@ -35,6 +35,7 @@ ActiveAdmin.register Session do
         f.input :attendance_id, as: :search_select, url: admin_attendances_path,
               fields: [:attendance_title, :id], display_name: 'attendance_title', minimum_input_length: 2,lebel: "attendance title",
               order_by: 'id_asc'
+
         if f.object.new_record?
           f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
         else
@@ -88,8 +89,8 @@ ActiveAdmin.register Session do
                 row :course do |pr|
                   pr.attendance.course_title
                 end
-                row :course_section do |pr|
-                  pr.attendance.course_section.section_short_name
+                row :section do |pr|
+                  pr.attendance.section.section_short_name
                 end
                 row :starting_date
                 row :ending_date

@@ -4,6 +4,8 @@ class Session < ApplicationRecord
 	
   belongs_to :attendance
   belongs_to :course, optional: true
+  belongs_to :academic_calendar, optional: true
+
   # belongs_to :academic_calendar
   has_many :student_attendances
   accepts_nested_attributes_for :student_attendances, reject_if: :all_blank, allow_destroy: true
@@ -17,7 +19,7 @@ class Session < ApplicationRecord
 
   private
     def add_student_attendance
-      self.attendance.course_section.course_registrations.where(academic_calendar_id: attendance.academic_calendar.id).each do |co|
+      self.attendance.section.course_registrations.where(academic_calendar_id: attendance.academic_calendar.id, course_id: self.course).each do |co|
         StudentAttendance.create do |item|
           item.course_registration_id = self.id
           item.session_id = self.id
@@ -30,5 +32,8 @@ class Session < ApplicationRecord
     end
     def attribute_assignment
       self[:course_id] = self.attendance.course.id
+      self[:academic_calendar_id] = self.attendance.academic_calendar.id
+      self[:year] = self.attendance.year
+      self[:semester] = self.attendance.semester
     end
   end

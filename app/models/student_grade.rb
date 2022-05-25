@@ -1,6 +1,6 @@
 class StudentGrade < ApplicationRecord
   after_create :generate_assessment
-  before_save :update_subtotal
+  after_save :update_subtotal
   after_save :generate_grade
   ##validation
 
@@ -8,14 +8,19 @@ class StudentGrade < ApplicationRecord
     belongs_to :course_registration
     belongs_to :student
     belongs_to :course
+    belongs_to :department
+    belongs_to :program
     has_many :assessments, dependent: :destroy
   	accepts_nested_attributes_for :assessments, reject_if: :all_blank, allow_destroy: true
     has_many :grade_changes
 
-	def assesment_total
-    # assessments.collect { |oi| oi.valid? ? (oi.result) : 0 }.sum
+	# def assesment_total
+ #    # assessments.collect { |oi| oi.valid? ? (oi.result) : 0 }.sum
 
-    assessments.sum(:result)
+ #    assessments.sum(:result)
+ #  end
+  def update_subtotal
+    self.update_columns(assesment_total: self.assessments.sum(:result))
   end
   def generate_grade
     if assessments.where(result: nil).empty?
@@ -29,9 +34,6 @@ class StudentGrade < ApplicationRecord
       self.update_columns(grade_point: 0)
     end
   	# self[:grade_in_letter] = grade_in_letter
-  end
-  def update_subtotal
-    self[:assesment_total] = assesment_total
   end
 
 	private

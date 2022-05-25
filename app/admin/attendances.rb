@@ -1,6 +1,6 @@
 ActiveAdmin.register Attendance do
 
-  permit_params :program_id,:course_section_id,:academic_calendar_id,:course_title,:attendance_title,:year,:semester,:created_by,:updated_by,:course_id,sessions_attributes: [:id,:attendance_id,:starting_date,:ending_date,:session_title,:created_by,:updated_by, :_destroy]
+  permit_params :program_id,:section_id,:academic_calendar_id,:course_title,:attendance_title,:year,:semester,:created_by,:updated_by,:course_id,sessions_attributes: [:id,:attendance_id,:starting_date,:ending_date,:academic_calendar_id,:semester,:year,:session_title,:created_by,:updated_by, :_destroy]
 
   index do
     selectable_column
@@ -30,7 +30,7 @@ ActiveAdmin.register Attendance do
         f.input :course_id, as: :search_select, url: admin_courses_path,
               fields: [:course_title, :id], display_name: 'course_title', minimum_input_length: 2,lebel: "course title",
               order_by: 'id_asc'
-        f.input :course_section_id, as: :search_select, url: admin_course_sections_path,
+        f.input :section_id, as: :search_select, url: admin_program_sections_path,
               fields: [:section_full_name, :id], display_name: 'section_full_name', minimum_input_length: 2,
               order_by: 'id_asc'
         f.input :academic_calendar_id, as: :search_select, url: admin_academic_calendars_path,
@@ -87,8 +87,8 @@ ActiveAdmin.register Attendance do
                   pr.program.program_name
                 end
                 row :course_title
-                row :course_section do |pr|
-                  pr.course_section.section_short_name
+                row :section do |pr|
+                  pr.section.section_short_name
                 end
                 row :academic_calendar do |pr|
                   pr.academic_calendar.calender_year
@@ -119,13 +119,13 @@ ActiveAdmin.register Attendance do
       end
       tab "Student List" do
         panel "Student List" do
-          table_for attendance.course_section.course_registrations.where(academic_calendar_id: attendance.academic_calendar) do
+          table_for attendance.section.course_registrations.where(academic_calendar_id: attendance.academic_calendar, course_id: attendance.course ) do
             column :student_full_name
             column "STUDENT ID" do |s|
               s.student.student_id
             end
-            column :section do |section|
-              section.course_section.section_short_name
+            column :section do |sec|
+              sec.section.section_short_name
             end
             column :total_session do |section|
               attendance.sessions.count

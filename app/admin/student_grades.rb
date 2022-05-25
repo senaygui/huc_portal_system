@@ -8,9 +8,9 @@ ActiveAdmin.register StudentGrade do
     @student_grade.generate_grade
     redirect_back(fallback_location: admin_student_grade_path)
   end
-  action_item :update, only: :show do
-    link_to 'Generate Grade', generate_grade_admin_student_grade_path(student_grade.id), method: :put, data: { confirm: 'Are you sure?' }        
-  end
+  # action_item :update, only: :show do
+  #   link_to 'Generate Grade', generate_grade_admin_student_grade_path(student_grade.id), method: :put, data: { confirm: 'Are you sure?' }        
+  # end
 
   batch_action "Generate Grade for", method: :put, confirm: "Are you sure?" do |ids|
     StudentGrade.find(ids).each do |student_grade|
@@ -47,9 +47,12 @@ ActiveAdmin.register StudentGrade do
   filter :course_id, as: :search_select_filter, url: proc { admin_courses_path },
          fields: [:course_title, :id], display_name: 'course_title', minimum_input_length: 2,
          order_by: 'created_at_asc'
-  # filter :porgram_id, as: :search_select_filter, url: proc { admin_programs_path },
-  #        fields: [:program_name, :id], display_name: 'program_name', minimum_input_length: 2,
-  #        order_by: 'created_at_asc'
+  filter :program_id, as: :search_select_filter, url: proc { admin_programs_path },
+         fields: [:program_name, :id], display_name: 'program_name', minimum_input_length: 2,
+         order_by: 'created_at_asc'
+  filter :department_id, as: :search_select_filter, url: proc { admin_departments_path },
+         fields: [:department_name, :id], display_name: 'department_name', minimum_input_length: 2,
+         order_by: 'created_at_asc'
   filter :letter_grade
   filter :grade_point
   filter :assesment_total
@@ -108,7 +111,7 @@ ActiveAdmin.register StudentGrade do
 
 
   action_item :new, only: :show, priority: 0 do
-    link_to 'Add Grade Change', new_admin_grade_change_path(course_id: "#{student_grade.course.id}", section_id: "#{student_grade.course_registration.semester_registration.section.id}", academic_calendar_id: "#{student_grade.course_registration.academic_calendar.id}", semester: "#{student_grade.course_registration.semester}", year: "#{student_grade.course_registration.year}", student_id: "#{student_grade.student.id}", course_registration_id: "#{student_grade.course_registration.id}", student_grade_id: "#{student_grade.id}", course_section_id: "#{student_grade.course_registration.course_section.id}", department_id: "#{student_grade.student.program.department.id}", program_id: "#{student_grade.student.program.id}")
+    # link_to 'Add Grade Change', new_admin_grade_change_path(course_id: "#{student_grade.course.id}", section_id: "#{student_grade.course_registration.semester_registration.section.id}", academic_calendar_id: "#{student_grade.course_registration.academic_calendar.id}", semester: "#{student_grade.course_registration.semester}", year: "#{student_grade.course_registration.year}", student_id: "#{student_grade.student.id}", course_registration_id: "#{student_grade.course_registration.id}", student_grade_id: "#{student_grade.id}", department_id: "#{student_grade.student.program.department.id}", program_id: "#{student_grade.student.program.id}")
   end
 
   show :title => proc{|student| student.student.name.full } do

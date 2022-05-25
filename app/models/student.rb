@@ -112,10 +112,11 @@ class Student < ApplicationRecord
   end
 
   def student_semester_registration
-   if self.document_verification_status == "approved" && self.semester_registrations.empty? && self.year == 1 && self.semester == 1
+   if self.document_verification_status == "approved" && self.semester_registrations.empty? && self.year == 1 && self.semester == 1 && self.program.entrance_exam_requirement_status == false
     SemesterRegistration.create do |registration|
       registration.student_id = self.id
       registration.program_id = self.program.id
+      registration.department_id = self.program.department.id
       registration.student_full_name = "#{self.first_name.upcase} #{self.middle_name.upcase} #{self.last_name.upcase}"
       registration.student_id_number = self.student_id
       registration.created_by = self.created_by
