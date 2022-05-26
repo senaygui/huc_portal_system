@@ -11,4 +11,5 @@ class Department < ApplicationRecord
   has_many :semester_registrations, dependent: :destroy
   has_many :course_registrations, dependent: :destroy
   has_many :admin_users
+  has_many :withdrawals
 end

@@ -7,6 +7,7 @@ class Section < ApplicationRecord
 	has_many :grade_changes
 	has_many :course_instractors
 	has_many :attendances, dependent: :destroy
+	has_many :withdrawals
 	##scope
     scope :instractor_courses, -> (user_id) {CourseInstractor.where(admin_user_id: user_id).pluck(:section_id)}
     scope :instractors, -> (user_id) {CourseInstractor.where(section_id: instractor_courses(user_id)).pluck(:course_id)}

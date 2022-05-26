@@ -44,6 +44,7 @@ class Ability
         can :manage, Invoice
         can :manage, Section
         can :manage, Almuni
+        can :manage, Withdrawal
     when "instractor"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, AcademicCalendar
@@ -105,6 +106,8 @@ class Ability
         cannot :destroy, GradeReport
         can :read, StudentGrade
         can :manage, GradeChange
+        can :manage, Withdrawal
+        can :destroy, Withdrawal, created_by: user.name.full
     when "distance_registrar"
         can :manage, CourseSection
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
@@ -153,6 +156,9 @@ class Ability
         can :read, Course
         can :manage, SemesterRegistration, admission_type: "extention"
         can :read, Invoice 
+    when "finance head"
+        can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
+        can [:read, :update], Withdrawal
     when "regular_finance"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, Program, admission_type: "regular"
@@ -233,6 +239,18 @@ class Ability
         can :read, StudentGrade, department_id: user.department.id
         can [:read, :update], GradeChange, department_id: user.department.id
         can [:read, :update], GradeReport, department_id: user.department.id  
+        can [:read, :update], Withdrawal
+    when "dean"
+        can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
+        can [:read, :update], Withdrawal
+        can [:read, :update], GradeReport
+        can [:read, :update], GradeChange
+    when "library head"
+        can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
+        can [:read, :update], Withdrawal
+    when "store head"
+        can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
+        can [:read, :update], Withdrawal
     end
   end
 end
