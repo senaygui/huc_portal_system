@@ -59,7 +59,7 @@ ActiveAdmin.register Program do
       f.input :study_level, as: :select, :collection => ["undergraduate", "graduate", "TPVT"], :include_blank => false
       f.input :admission_type, as: :select, :collection => ["online", "regular", "extention", "distance"], :include_blank => false
       f.input :program_duration, as: :select, :collection => [1, 2,3,4,5,6,7], :include_blank => false
-      f.input :program_semester , :collection => [1, 2,3,4], :include_blank => false
+      f.input :program_semester , as: :select, :collection => [1, 2,3,4], :include_blank => false
       # f.input :monthly_price
       # f.input :full_semester_price
       # f.input :two_monthly_price

@@ -93,7 +93,7 @@ permit_params :course_outline,:course_module_id,:curriculum_id,:program_id,:cour
           a.input :assessment_title
           a.input :assessment_weight,:input_html => { :min => 1, :max => 100  } 
 
-          if f.object.new_record?
+          if a.object.new_record?
             a.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
           else
             a.input :updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full} 

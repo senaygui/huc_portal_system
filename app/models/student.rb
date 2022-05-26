@@ -15,30 +15,31 @@ class Student < ApplicationRecord
          :recoverable, :rememberable, :validatable, :trackable
   has_person_name    
   ##associations
-  belongs_to :program
-  has_one :student_address, dependent: :destroy
-  accepts_nested_attributes_for :student_address
-  has_one :emergency_contact, dependent: :destroy
-  accepts_nested_attributes_for :emergency_contact
-  has_many :semester_registrations, dependent: :destroy
-  has_many :invoices, dependent: :destroy
-  has_one_attached :grade_10_matric, dependent: :destroy
-  has_one_attached :grade_12_matric, dependent: :destroy
-  has_one_attached :coc, dependent: :destroy
-  has_one_attached :highschool_transcript, dependent: :destroy
-  has_one_attached :diploma_certificate, dependent: :destroy 
-  has_one_attached :degree_certificate, dependent: :destroy 
-  has_one_attached :undergraduate_transcript, dependent: :destroy 
-  has_one_attached :photo, dependent: :destroy
-  has_many :student_grades, dependent: :destroy
-  has_many :grade_reports
-  has_many :course_registrations
-  has_many :student_attendances
-  has_many :assessments
-  has_many :grade_changes
-  has_one :school_or_university_information, dependent: :destroy
-  accepts_nested_attributes_for :school_or_university_information
-  has_many :student_courses, dependent: :destroy
+    belongs_to :program
+    has_one :student_address, dependent: :destroy
+    accepts_nested_attributes_for :student_address
+    has_one :emergency_contact, dependent: :destroy
+    accepts_nested_attributes_for :emergency_contact
+    has_many :semester_registrations, dependent: :destroy
+    has_many :invoices, dependent: :destroy
+    has_one_attached :grade_10_matric, dependent: :destroy
+    has_one_attached :grade_12_matric, dependent: :destroy
+    has_one_attached :coc, dependent: :destroy
+    has_one_attached :highschool_transcript, dependent: :destroy
+    has_one_attached :diploma_certificate, dependent: :destroy 
+    has_one_attached :degree_certificate, dependent: :destroy 
+    has_one_attached :undergraduate_transcript, dependent: :destroy 
+    has_one_attached :photo, dependent: :destroy
+    has_many :student_grades, dependent: :destroy
+    has_many :grade_reports
+    has_many :course_registrations
+    has_many :student_attendances
+    has_many :assessments
+    has_many :grade_changes
+    has_one :school_or_university_information, dependent: :destroy
+    accepts_nested_attributes_for :school_or_university_information
+    has_many :student_courses, dependent: :destroy
+    has_many :withdrawals
   ##validations
   validates :first_name , :presence => true,:length => { :within => 2..100 }
   validates :middle_name , :presence => true,:length => { :within => 2..100 }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_16_143513) do
+ActiveRecord::Schema.define(version: 2022_05_25_151029) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -832,6 +832,48 @@ ActiveRecord::Schema.define(version: 2022_05_16_143513) do
     t.index ["email"], name: "index_students_on_email", unique: true
     t.index ["program_id"], name: "index_students_on_program_id"
     t.index ["reset_password_token"], name: "index_students_on_reset_password_token", unique: true
+  end
+
+  create_table "withdrawals", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "program_id"
+    t.uuid "department_id"
+    t.uuid "student_id"
+    t.uuid "section_id"
+    t.uuid "academic_calendar_id"
+    t.string "student_id_number"
+    t.integer "semester", null: false
+    t.integer "year", null: false
+    t.string "fee_status", null: false
+    t.string "reason_for_withdrawal", null: false
+    t.string "other_reason"
+    t.datetime "last_class_attended", null: false
+    t.string "finance_head_approval", default: "pending"
+    t.string "finance_head_name"
+    t.datetime "finance_head_date_of_response"
+    t.string "registrar_approval", default: "pending"
+    t.string "registrar_name"
+    t.datetime "registrar_date_of_response"
+    t.string "dean_approval", default: "pending"
+    t.string "dean_name"
+    t.datetime "dean_date_of_response"
+    t.string "department_approval", default: "pending"
+    t.string "department_head_name"
+    t.datetime "department_head_date_of_response"
+    t.string "library_head_approval", default: "pending"
+    t.string "library_head_name"
+    t.datetime "library_head_date_of_response"
+    t.string "store_head_approval", default: "pending"
+    t.string "store_head_name"
+    t.datetime "store_head_date_of_response"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_withdrawals_on_academic_calendar_id"
+    t.index ["department_id"], name: "index_withdrawals_on_department_id"
+    t.index ["program_id"], name: "index_withdrawals_on_program_id"
+    t.index ["section_id"], name: "index_withdrawals_on_section_id"
+    t.index ["student_id"], name: "index_withdrawals_on_student_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
