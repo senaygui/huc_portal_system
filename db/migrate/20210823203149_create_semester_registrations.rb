@@ -15,6 +15,7 @@ class CreateSemesterRegistrations < ActiveRecord::Migration[5.2]
       t.decimal :registration_fee, default: 0.0
       t.decimal :late_registration_fee, default: 0.0
       t.decimal :remaining_amount, default: 0.0
+      t.decimal :penalty, default: 0.0
       t.string :mode_of_payment
       t.integer :semester, null: false
       t.integer :year, null: false

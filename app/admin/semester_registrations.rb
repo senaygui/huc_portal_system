@@ -281,8 +281,12 @@ ActiveAdmin.register SemesterRegistration do
 
         row :year 
         row :semester
-        row :remaining_amount
         row :mode_of_payment
+        number_row :registration_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if semester_registration.registration_fee > 0
+        number_row :late_registration_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if semester_registration.late_registration_fee > 0 
+        number_row :remaining_amount, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
+        number_row :total_price, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
+        
         row :created_by
         row :last_updated_by
         row :created_at

@@ -21,10 +21,27 @@
 set :output, "log/cron.log"
 env :PATH, ENV['PATH']
 #
-every 1.hour do
+every 1.month do
 	# command "echo 'you can use raw cron syntax too'"
  #  # command "/usr/bin/some_great_command"
   # runner "product_expired_notifications"
   rake "bill:monthly"
-  rake "bill:half"
+  # rake "bill:half"
 end
+every 2.month do
+	# command "echo 'you can use raw cron syntax too'"
+ #  # command "/usr/bin/some_great_command"
+  # runner "product_expired_notifications"
+  rake "bill:half_semester"
+  # rake "bill:half"
+end
+every :day, at: '12:00am' do
+	# command "echo 'you can use raw cron syntax too'"
+ #  # command "/usr/bin/some_great_command"
+  # runner "product_expired_notifications"
+  rake "bill:starting_penalty_fee"
+  rake "bill:daily_penalty_fee"
+  # rake "bill:half"
+end
+
+

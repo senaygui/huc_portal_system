@@ -12,4 +12,6 @@ class Department < ApplicationRecord
   has_many :course_registrations, dependent: :destroy
   has_many :admin_users
   has_many :withdrawals
+  has_many :invoices
+  has_many :recurring_payments
 end

@@ -1,7 +1,7 @@
 class CreateInvoiceItems < ActiveRecord::Migration[5.2]
   def change
     create_table :invoice_items, id: :uuid do |t|
-      t.belongs_to :invoice, index: true, type: :uuid
+      t.references :itemable, polymorphic: true, type: :uuid
       t.belongs_to :course_registration, index: true, type: :uuid
       t.decimal :price, default: 0
       t.string :last_updated_by

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_25_151029) do
+ActiveRecord::Schema.define(version: 2022_06_05_154136) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -534,7 +534,8 @@ ActiveRecord::Schema.define(version: 2022_05_25_151029) do
   end
 
   create_table "invoice_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "invoice_id"
+    t.string "itemable_type"
+    t.uuid "itemable_id"
     t.uuid "course_registration_id"
     t.decimal "price", default: "0.0"
     t.string "last_updated_by"
@@ -542,31 +543,65 @@ ActiveRecord::Schema.define(version: 2022_05_25_151029) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["course_registration_id"], name: "index_invoice_items_on_course_registration_id"
-    t.index ["invoice_id"], name: "index_invoice_items_on_invoice_id"
+    t.index ["itemable_type", "itemable_id"], name: "index_invoice_items_on_itemable_type_and_itemable_id"
   end
 
   create_table "invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "semester_registration_id"
     t.uuid "student_id"
     t.uuid "academic_calendar_id"
-    t.string "student_name"
-    t.string "department"
-    t.string "program"
+    t.uuid "department_id"
+    t.uuid "program_id"
+    t.integer "semester"
+    t.integer "year"
     t.string "student_full_name"
     t.string "student_id_number"
     t.string "invoice_number", null: false
     t.decimal "total_price"
     t.decimal "registration_fee", default: "0.0"
     t.decimal "late_registration_fee", default: "0.0"
-    t.string "invoice_status", default: "not submitted"
+    t.string "invoice_status", default: "unpaid"
     t.string "last_updated_by"
     t.string "created_by"
     t.datetime "due_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_invoices_on_academic_calendar_id"
+    t.index ["department_id"], name: "index_invoices_on_department_id"
+    t.index ["program_id"], name: "index_invoices_on_program_id"
     t.index ["semester_registration_id"], name: "index_invoices_on_semester_registration_id"
     t.index ["student_id"], name: "index_invoices_on_student_id"
+  end
+
+  create_table "other_payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "student_id"
+    t.uuid "academic_calendar_id"
+    t.uuid "semester_registration_id"
+    t.uuid "department_id"
+    t.uuid "program_id"
+    t.uuid "section_id"
+    t.integer "semester"
+    t.integer "year"
+    t.string "student_full_name"
+    t.string "student_id_number"
+    t.string "invoice_number", null: false
+    t.decimal "total_price"
+    t.string "invoice_status", default: "unpaid"
+    t.string "payment_type"
+    t.string "payable_type"
+    t.uuid "payable_id"
+    t.datetime "due_date"
+    t.string "last_updated_by"
+    t.string "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_other_payments_on_academic_calendar_id"
+    t.index ["department_id"], name: "index_other_payments_on_department_id"
+    t.index ["payable_type", "payable_id"], name: "index_other_payments_on_payable_type_and_payable_id"
+    t.index ["program_id"], name: "index_other_payments_on_program_id"
+    t.index ["section_id"], name: "index_other_payments_on_section_id"
+    t.index ["semester_registration_id"], name: "index_other_payments_on_semester_registration_id"
+    t.index ["student_id"], name: "index_other_payments_on_student_id"
   end
 
   create_table "payment_methods", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -583,7 +618,8 @@ ActiveRecord::Schema.define(version: 2022_05_25_151029) do
   end
 
   create_table "payment_transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "invoice_id"
+    t.string "invoiceable_type"
+    t.uuid "invoiceable_id"
     t.uuid "payment_method_id"
     t.string "account_holder_fullname", null: false
     t.string "phone_number"
@@ -594,7 +630,6 @@ ActiveRecord::Schema.define(version: 2022_05_25_151029) do
     t.string "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["invoice_id"], name: "index_payment_transactions_on_invoice_id"
     t.index ["payment_method_id"], name: "index_payment_transactions_on_payment_method_id"
   end
 
@@ -616,6 +651,36 @@ ActiveRecord::Schema.define(version: 2022_05_25_151029) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["department_id"], name: "index_programs_on_department_id"
+  end
+
+  create_table "recurring_payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "semester_registration_id"
+    t.uuid "student_id"
+    t.uuid "academic_calendar_id"
+    t.uuid "department_id"
+    t.uuid "program_id"
+    t.uuid "section_id"
+    t.integer "semester"
+    t.integer "year"
+    t.string "student_full_name"
+    t.string "student_id_number"
+    t.string "invoice_number", null: false
+    t.decimal "total_price"
+    t.decimal "penalty", default: "0.0"
+    t.decimal "daily_penalty", default: "0.0"
+    t.string "invoice_status", default: "unpaid"
+    t.string "mode_of_payment"
+    t.datetime "due_date"
+    t.string "last_updated_by"
+    t.string "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_recurring_payments_on_academic_calendar_id"
+    t.index ["department_id"], name: "index_recurring_payments_on_department_id"
+    t.index ["program_id"], name: "index_recurring_payments_on_program_id"
+    t.index ["section_id"], name: "index_recurring_payments_on_section_id"
+    t.index ["semester_registration_id"], name: "index_recurring_payments_on_semester_registration_id"
+    t.index ["student_id"], name: "index_recurring_payments_on_student_id"
   end
 
   create_table "school_or_university_informations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -667,6 +732,7 @@ ActiveRecord::Schema.define(version: 2022_05_25_151029) do
     t.decimal "registration_fee", default: "0.0"
     t.decimal "late_registration_fee", default: "0.0"
     t.decimal "remaining_amount", default: "0.0"
+    t.decimal "penalty", default: "0.0"
     t.string "mode_of_payment"
     t.integer "semester", null: false
     t.integer "year", null: false

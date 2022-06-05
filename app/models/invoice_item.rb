@@ -1,5 +1,5 @@
 class InvoiceItem < ApplicationRecord
   ##associations
-	  belongs_to :invoice
-	  belongs_to :course_registration
+	  belongs_to :itemable, polymorphic: true
+	  belongs_to :course_registration, optional: true
 end
