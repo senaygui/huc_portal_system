@@ -19,7 +19,7 @@ class AcademicCalendar < ApplicationRecord
 
   	
 	##associations
-  	has_many :activities
+  	has_many :activities, dependent: :destroy
     accepts_nested_attributes_for :activities, reject_if: :all_blank, allow_destroy: true
     has_many :semesters, dependent: :destroy
     accepts_nested_attributes_for :semesters, reject_if: :all_blank, allow_destroy: true
@@ -32,4 +32,5 @@ class AcademicCalendar < ApplicationRecord
     has_many :grade_changes
     has_many :sessions
     has_many :withdrawals
+    has_many :recurring_payments
 end

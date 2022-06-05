@@ -40,6 +40,7 @@ class Student < ApplicationRecord
     accepts_nested_attributes_for :school_or_university_information
     has_many :student_courses, dependent: :destroy
     has_many :withdrawals
+    has_many :recurring_payments
   ##validations
   validates :first_name , :presence => true,:length => { :within => 2..100 }
   validates :middle_name , :presence => true,:length => { :within => 2..100 }

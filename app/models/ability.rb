@@ -10,6 +10,7 @@ class Ability
 
     case user.role
     when "admin"
+        can :manage, RecurringPayment
         can :manage, GradeSystem
         can :manage, GradeChange        
         can :manage, AssessmentPlan
@@ -159,6 +160,8 @@ class Ability
     when "finance head"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can [:read, :update], Withdrawal
+        can :manage, Invoice
+        cannot :destroy, Invoice
     when "regular_finance"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, Program, admission_type: "regular"

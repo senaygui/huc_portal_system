@@ -20,6 +20,7 @@ class Program < ApplicationRecord
   	scope :extention, lambda { where(admission_type: "extention")}
   	scope :distance, lambda { where(admission_type: "distance")}
   ##associations
+    has_many :invoices
     has_many :withdrawals
     has_many :student_grades
     has_many :grade_changes
@@ -34,6 +35,7 @@ class Program < ApplicationRecord
     has_many :course_registrations
     has_many :curriculums, dependent: :destroy
     accepts_nested_attributes_for :curriculums, reject_if: :all_blank, allow_destroy: true
+    has_many :recurring_payments
   
   # def total_tuition
   #   curriculums.collect { |oi| oi.valid? ? (oi.full_course_price) : 0 }.sum

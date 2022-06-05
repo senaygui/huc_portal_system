@@ -1,8 +1,8 @@
-ActiveAdmin.register Invoice, as: "RegistrationPayment" do
+ActiveAdmin.register RecurringPayment do
   actions :all, :except => [:new]
   config.clear_action_items!
   menu priority: 10
-  permit_params :student_full_name,:student_id_number,:student_id, :department_id, :program_id, :academic_calendar_id,:semester_registration_id,:invoice_number,:total_price,:registration_fee,:late_registration_fee,:invoice_status,:last_updated_by,:created_by,:due_date,:semester, :year,payment_transaction_attributes: [:id,:invoice_id,:payment_method_id,:account_holder_fullname,:phone_number,:account_number,:transaction_reference,:finance_approval_status,:last_updated_by,:created_by, :receipt_image], inovice_item_ids: []
+  permit_params :penalty,:daily_penalty,:mode_of_payment,:student_full_name,:student_id_number,:student_id,:section_id, :department_id, :program_id, :academic_calendar_id,:semester_registration_id,:invoice_number,:total_price,:registration_fee,:late_registration_fee,:invoice_status,:last_updated_by,:created_by,:due_date,:semester, :year,payment_transaction_attributes: [:id,:invoice_id,:payment_method_id,:account_holder_fullname,:phone_number,:account_number,:transaction_reference,:finance_approval_status,:last_updated_by,:created_by, :receipt_image], inovice_item_ids: []
 
 
   index do
@@ -14,8 +14,16 @@ ActiveAdmin.register Invoice, as: "RegistrationPayment" do
     column "ID" do |s|
       s.student_id_number
     end
+    
+    column :invoice_status do |s|
+      status_tag s.invoice_status
+    end
+    column :mode_of_payment
+    column :due_date, sortable: true do |c|
+      c.due_date.strftime("%b %d, %Y")
+    end
     column "Program", sortable: true do |n|
-      n.program.program_name
+      link_to n.program.program_name, admin_programs_path(n.program)
     end
     column "Admission Type", sortable: true do |n|
       n.semester_registration.admission_type 
@@ -23,9 +31,7 @@ ActiveAdmin.register Invoice, as: "RegistrationPayment" do
     column "Study Level", sortable: true do |n|
       n.semester_registration.study_level 
     end
-    column :invoice_status do |s|
-      status_tag s.invoice_status
-    end
+    
     number_column :total_price, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
     column "Academic Year", sortable: true do |n|
       link_to n.academic_calendar.calender_year, admin_academic_calendar_path(n.academic_calendar)
@@ -50,10 +56,14 @@ ActiveAdmin.register Invoice, as: "RegistrationPayment" do
          order_by: 'id_asc'
   filter :year
   filter :semester
+  filter :section_id, as: :search_select_filter, url: proc { admin_program_sections_path },
+         fields: [:section_full_name, :id], display_name: 'section_full_name', minimum_input_length: 2,
+         order_by: 'id_asc'
   filter :invoice_number
   filter :total_price
-  filter :registration_fee
-  filter :late_registration_fee
+  filter :penalty
+  filter :daily_penalty
+  filter :mode_of_payment
   filter :invoice_status
   filter :due_date
   filter :last_updated_by
@@ -62,11 +72,11 @@ ActiveAdmin.register Invoice, as: "RegistrationPayment" do
   filter :updated_at
 
   scope :recently_added
+  scope :unpaid
   scope :pending
   scope :approved
   scope :denied
   scope :incomplete
-  scope :unpaid
   scope :due_date_passed
   # scope :undergraduate
   # scope :graduate
@@ -115,21 +125,21 @@ ActiveAdmin.register Invoice, as: "RegistrationPayment" do
   end
 
   action_item :edit, only: :show, priority: 1  do
-    if ((current_admin_user.role == "admin") || (current_admin_user.role == "finance head")) && !(registration_payment.payment_transaction.present?)
-      link_to 'Add Payment Information', edit_admin_registration_payment_path(registration_payment.id, page_name: "payment_transaction")
-    elsif ((current_admin_user.role == "admin") || (current_admin_user.role == "finance head")) && (registration_payment.payment_transaction.present?)
-      link_to 'Edit Payment Information', edit_admin_registration_payment_path(registration_payment.id, page_name: "payment_transaction")  
+    if ((current_admin_user.role == "admin") || (current_admin_user.role == "finance head")) && !(recurring_payment.payment_transaction.present?)
+      link_to 'Add Payment Information', edit_admin_recurring_payment_path(recurring_payment.id, page_name: "payment_transaction")
+    elsif ((current_admin_user.role == "admin") || (current_admin_user.role == "finance head")) && (recurring_payment.payment_transaction.present?)
+      link_to 'Edit Payment Information', edit_admin_recurring_payment_path(recurring_payment.id, page_name: "payment_transaction")  
     end 
   end
 
   action_item :delete, only: :show, priority: 1  do
     if (current_admin_user.role == "admin") || (current_admin_user.role == "finance head")
-      link_to "Delete Invoice", admin_registration_payment_path(registration_payment), method: :delete, 'data-confirm': 'Invoice will be deleted forever. Are You Sure?' 
+      link_to "Delete Payment", admin_recurring_payment_path(recurring_payment), method: :delete, 'data-confirm': 'Invoice will be deleted forever. Are You Sure?' 
     end 
   end
   action_item :delete, only: :show, priority: 1  do
     if (current_admin_user.role == "admin") || (current_admin_user.role == "finance head")
-      link_to "Approve Invoice", edit_admin_registration_payment_path(registration_payment) 
+      link_to "Approve Payment", edit_admin_recurring_payment_path(recurring_payment) 
     end 
   end
 
@@ -139,7 +149,7 @@ ActiveAdmin.register Invoice, as: "RegistrationPayment" do
     columns do
       column do
         panel "invoice summery" do
-          attributes_table_for registration_payment do
+          attributes_table_for recurring_payment do
             row :invoice_number
             row "registration academic year" do |s|
               link_to s.semester_registration.academic_calendar.calender_year, admin_semester_registration_path(s.semester_registration.id)
@@ -149,11 +159,11 @@ ActiveAdmin.register Invoice, as: "RegistrationPayment" do
             end
             
             row "payment mode", sortable: true do |n|
-              n.semester_registration.mode_of_payment
+              n.mode_of_payment
             end
-            row :due_date if registration_payment.due_date.present?
-            number_row :registration_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if registration_payment.registration_fee > 0
-            number_row :late_registration_fee, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if registration_payment.late_registration_fee > 0 
+            row :due_date if recurring_payment.due_date.present?
+            number_row :penalty, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if recurring_payment.penalty > 0
+            number_row :daily_penalty, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 if recurring_payment.daily_penalty > 0 
             number_row :total_price, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2
             row :created_by
             row :last_updated_by
@@ -164,7 +174,7 @@ ActiveAdmin.register Invoice, as: "RegistrationPayment" do
       end
       column do
         panel "Sender Information" do
-          attributes_table_for registration_payment.payment_transaction do
+          attributes_table_for recurring_payment.payment_transaction do
             row "account name" do |a|
               a.account_holder_fullname
             end 
@@ -194,7 +204,7 @@ ActiveAdmin.register Invoice, as: "RegistrationPayment" do
       end
       column do
         panel "Student Information" do
-          attributes_table_for registration_payment.semester_registration do
+          attributes_table_for recurring_payment.semester_registration do
             row "Student name", sortable: true do |n|
               n.student.name.full 
             end
@@ -224,7 +234,7 @@ ActiveAdmin.register Invoice, as: "RegistrationPayment" do
     columns do
       column do
         panel "Invoice Item Information" do
-          table_for registration_payment.invoice_items do
+          table_for recurring_payment.invoice_items do
             column "Course title" do |pr|
               link_to pr.course_registration.course.course_title, admin_course_path(pr.course_registration.course.id)
             end
