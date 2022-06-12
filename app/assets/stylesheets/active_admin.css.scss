@@ -369,7 +369,7 @@ th.form-table__col {
   margin-bottom: 0.5em;
   color: #5E6469;
   padding: 5px 10px 3px 10px;
-  border-right: none;
+  border-right: #d4d4d4 1px solid !important;
   padding-left: 12px;
   padding-right: 12px;
 }
@@ -382,6 +382,9 @@ td.form-table__col {
   border-bottom-color: #cdcdcd;
   border-left-color: #d4d4d4;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 1px #FFF inset;
+}
+.form-table__col li{
+  list-style: none;
 }
 
 body.index.active_admin {

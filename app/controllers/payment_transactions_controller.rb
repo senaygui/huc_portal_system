@@ -29,7 +29,7 @@ class PaymentTransactionsController < ApplicationController
 
     respond_to do |format|
       if @payment_transaction.save
-        format.html { redirect_to invoice_path(@payment_transaction.invoice_id), notice: "Payment transaction was successfully created." }
+        format.html { redirect_to invoice_path(@payment_transaction.invoiceable), notice: "Payment transaction was successfully created." }
         format.json { render :show, status: :created, location: @payment_transaction }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -68,6 +68,6 @@ class PaymentTransactionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def payment_transaction_params
-      params.fetch(:payment_transaction, {}).permit(:invoice_id,:payment_method_id,:account_holder_fullname,:phone_number,:account_number,:transaction_reference,:finance_approval_status,:last_updated_by,:created_by, :receipt_image)
+      params.fetch(:payment_transaction, {}).permit(:invoiceable_type, :invoiceable_id, :payment_method_id,:account_holder_fullname,:phone_number,:account_number,:transaction_reference,:finance_approval_status,:last_updated_by,:created_by, :receipt_image)
     end
 end

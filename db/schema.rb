@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_05_154136) do
+ActiveRecord::Schema.define(version: 2022_06_07_070646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -93,6 +93,51 @@ ActiveRecord::Schema.define(version: 2022_06_05_154136) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_activities_on_academic_calendar_id"
+  end
+
+  create_table "add_and_drop_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "add_and_drop_id"
+    t.uuid "course_id"
+    t.string "add_or_drop", null: false
+    t.string "advisor_approval", default: "pending"
+    t.string "advisor_name"
+    t.datetime "advisor_date_of_response"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["add_and_drop_id"], name: "index_add_and_drop_courses_on_add_and_drop_id"
+    t.index ["course_id"], name: "index_add_and_drop_courses_on_course_id"
+  end
+
+  create_table "add_and_drops", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "student_id"
+    t.uuid "academic_calendar_id"
+    t.uuid "semester_registration_id"
+    t.uuid "department_id"
+    t.uuid "program_id"
+    t.uuid "section_id"
+    t.integer "semester"
+    t.integer "year"
+    t.string "student_full_name"
+    t.string "student_id_number"
+    t.string "registrar_approval", default: "pending"
+    t.string "registrar_name"
+    t.datetime "registrar_date_of_response"
+    t.string "advisor_approval", default: "pending"
+    t.string "advisor_name"
+    t.datetime "advisor_date_of_response"
+    t.string "status", default: "pending"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_add_and_drops_on_academic_calendar_id"
+    t.index ["department_id"], name: "index_add_and_drops_on_department_id"
+    t.index ["program_id"], name: "index_add_and_drops_on_program_id"
+    t.index ["section_id"], name: "index_add_and_drops_on_section_id"
+    t.index ["semester_registration_id"], name: "index_add_and_drops_on_semester_registration_id"
+    t.index ["student_id"], name: "index_add_and_drops_on_student_id"
   end
 
   create_table "admin_users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -537,11 +582,14 @@ ActiveRecord::Schema.define(version: 2022_06_05_154136) do
     t.string "itemable_type"
     t.uuid "itemable_id"
     t.uuid "course_registration_id"
+    t.uuid "course_id"
+    t.string "item_title"
     t.decimal "price", default: "0.0"
     t.string "last_updated_by"
     t.string "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_invoice_items_on_course_id"
     t.index ["course_registration_id"], name: "index_invoice_items_on_course_registration_id"
     t.index ["itemable_type", "itemable_id"], name: "index_invoice_items_on_itemable_type_and_itemable_id"
   end

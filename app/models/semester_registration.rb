@@ -1,11 +1,11 @@
 class SemesterRegistration < ApplicationRecord
 	after_save :change_course_registration_status
 	after_save :assign_section_to_course_registration
-	after_create :course_registration
+	after_create :semester_course_registration
 	after_save :generate_invoice
 	##validations
-	  validates :semester, :presence => true
-		validates :year, :presence => true
+	  # validates :semester, :presence => true
+		# validates :year, :presence => true
 	##scope
   	scope :recently_added, lambda { where('created_at >= ?', 1.week.ago)}
   	scope :undergraduate, lambda { where(study_level: "undergraduate")}
@@ -26,6 +26,7 @@ class SemesterRegistration < ApplicationRecord
   	has_many :invoices, dependent: :destroy
   	has_one :grade_report, dependent: :destroy
   	has_many :recurring_payments, dependent: :destroy
+  	has_many :add_and_drops, dependent: :destroy
 
   	def generate_grade_report
   		GradeReport.create do |grade_report|
@@ -45,7 +46,7 @@ class SemesterRegistration < ApplicationRecord
 				if self.student.grade_reports.empty?
 					grade_report.total_course = self.course_registrations.count
 					grade_report.total_credit_hour = self.course_registrations.collect { |oi| oi.valid? ? (oi.course.credit_hour) : 0 }.sum 
-					grade_report.total_grade_point = self.course_registrations.collect { |oi| oi.valid? ? (oi.course.ects) : 0 }.sum 
+					grade_report.total_grade_point = self.course_registrations.collect { |oi| oi.valid? ? (oi.course.credit_hour * oi.student_grade.grade_point) : 0 }.sum 
 					grade_report.sgpa = (grade_report.total_grade_point / grade_report.total_credit_hour).round(2)
 
 					grade_report.cumulative_total_credit_hour = grade_report.total_credit_hour
@@ -55,7 +56,7 @@ class SemesterRegistration < ApplicationRecord
 				elsif self.student.grade_reports.present?
 					grade_report.total_course = self.course_registrations.count
 					grade_report.total_credit_hour = self.course_registrations.collect { |oi| oi.valid? ? (oi.course.credit_hour) : 0 }.sum 
-					grade_report.total_grade_point = self.course_registrations.collect { |oi| oi.valid? ? (oi.course.ects) : 0 }.sum 
+					grade_report.total_grade_point = self.course_registrations.collect { |oi| oi.valid? ? (oi.course.credit_hour * oi.student_grade.grade_point) : 0 }.sum 
 					grade_report.sgpa = grade_report.total_grade_point / grade_report.total_credit_hour
 					grade_report.cumulative_total_credit_hour = self.student.grade_reports.last.cumulative_total_credit_hour + grade_report.total_credit_hour
 					grade_report.cumulative_total_grade_point = self.student.grade_reports.last.cumulative_total_grade_point + grade_report.total_grade_point
@@ -80,7 +81,7 @@ class SemesterRegistration < ApplicationRecord
 		  			invoice.student_id_number = self.student_id_number
 		  			invoice.student_full_name = self.student_full_name
 	  				invoice.created_by = self.last_updated_by
-	  				invoice.due_date = self.created_at.day + 10.days 
+	  				invoice.due_date = self.created_at + 10.day 
 	  				invoice.invoice_status = "unpaid"
 						# invoice.registration_fee = CollegePayment.where(study_level: self.study_level,admission_type: self.admission_type).first.pluck(:registration_fee)
 
@@ -109,7 +110,7 @@ class SemesterRegistration < ApplicationRecord
 	  			end
 	  		end
 	  	end
-	  	def course_registration
+	  	def semester_course_registration
 		  	self.program.curriculums.where(curriculum_version: self.student.curriculum_version).last.courses.where(year: self.year, semester: self.semester).each do |co|
 		  		CourseRegistration.create do |course_registration|
 		  			course_registration.semester_registration_id = self.id
