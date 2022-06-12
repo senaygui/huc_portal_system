@@ -41,6 +41,7 @@ class Student < ApplicationRecord
     has_many :student_courses, dependent: :destroy
     has_many :withdrawals
     has_many :recurring_payments
+    has_many :add_and_drops, dependent: :destroy
   ##validations
   validates :first_name , :presence => true,:length => { :within => 2..100 }
   validates :middle_name , :presence => true,:length => { :within => 2..100 }
@@ -121,7 +122,7 @@ class Student < ApplicationRecord
       registration.department_id = self.program.department.id
       registration.student_full_name = "#{self.first_name.upcase} #{self.middle_name.upcase} #{self.last_name.upcase}"
       registration.student_id_number = self.student_id
-      registration.created_by = self.created_by
+      registration.created_by = "#{self.created_by}"
       ## TODO: find the calender of student admission type and study level
       registration.academic_calendar_id = AcademicCalendar.where(admission_type: self.admission_type).where(study_level: self.study_level).order("created_at DESC").first.id
       registration.year = self.year

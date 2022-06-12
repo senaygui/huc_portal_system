@@ -42,6 +42,7 @@ class Invoice < ApplicationRecord
 					invoice_item.itemable_id = self.id
 					invoice_item.itemable_type = "Invoice"
 					invoice_item.course_registration_id = course.id
+					invoice_item.course_id = course.course.id
 					invoice_item.created_by = self.created_by
 					if self.semester_registration.mode_of_payment == "Monthly Payment"
 						course_price =  CollegePayment.where(study_level: self.semester_registration.study_level,admission_type: self.semester_registration.admission_type).first.tution_per_credit_hr * course.course.credit_hour / 4

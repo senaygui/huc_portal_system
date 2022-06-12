@@ -46,10 +46,12 @@ permit_params :semester_registration_id,:student_id,:academic_calendar_id,:progr
       if (current_admin_user.role == "department head") || (current_admin_user.role == "admin")
         f.input :department_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
         f.input :department_head_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-      elsif (current_admin_user.role == "regular_registrar") || (current_admin_user.role == "extention_registrar") || (current_admin_user.role == "online_registrar") || (current_admin_user.role == "distance_registrar") || (current_admin_user.role == "admin")
+      end
+      if (current_admin_user.role == "regular_registrar") || (current_admin_user.role == "extention_registrar") || (current_admin_user.role == "online_registrar") || (current_admin_user.role == "distance_registrar") || (current_admin_user.role == "admin")
         f.input :registrar_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
         f.input :registrar_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-      elsif (current_admin_user.role == "dean") || (current_admin_user.role == "admin")
+      end
+      if (current_admin_user.role == "dean") || (current_admin_user.role == "admin")
         f.input :dean_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
         f.input :dean_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
       end 
@@ -96,6 +98,7 @@ permit_params :semester_registration_id,:student_id,:academic_calendar_id,:progr
             row :registrar_approval do |s|
               status_tag s.registrar_approval
             end
+            row :academic_status
             row "Issue Date", sortable: true do |c|
               c.created_at.strftime("%b %d, %Y")
             end

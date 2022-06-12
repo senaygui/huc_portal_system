@@ -33,4 +33,5 @@ class AcademicCalendar < ApplicationRecord
     has_many :sessions
     has_many :withdrawals
     has_many :recurring_payments
+    has_many :add_and_drops
 end

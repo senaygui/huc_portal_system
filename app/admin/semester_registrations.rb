@@ -232,8 +232,8 @@ ActiveAdmin.register SemesterRegistration do
           fields: [:calender_year, :id], display_name: 'calender_year', minimum_input_length: 2,
           order_by: 'id_asc'
 
-      f.input :semester , :collection => [1, 2,3,4], :include_blank => false
-      f.input :year, :collection => [1, 2,3,4,5,6,7], :include_blank => false
+      f.input :semester , as: :select,:collection => [1, 2,3,4], :include_blank => false
+      f.input :year, as: :select, :collection => [1, 2,3,4,5,6,7], :include_blank => false
       f.input :section_id, as: :search_select, url: admin_program_sections_path,
           fields: [:section_full_name, :id], display_name: 'section_full_name', minimum_input_length: 2,
           order_by: 'id_asc'
@@ -310,6 +310,7 @@ ActiveAdmin.register SemesterRegistration do
         column "Grade Point" do |pr|
           pr.course.ects
         end
+        column :enrollment_status
         column "Section" do |si|
           si.section.section_short_name if si.section.present?
         end

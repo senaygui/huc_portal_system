@@ -31,8 +31,9 @@
 							<%= simple_form_for(@payment_transaction) do |f| %>
 							  <%= f.error_notification %>
 							  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-							  <%=f.input :invoice_id, as: :hidden, :input_html => { :value => @invoice.id}%>
-                  <%=f.input :payment_method_id, as: :hidden, :input_html => { :value => @payment_method.id}%>
+							  <%=f.input :invoiceable_type, as: :hidden, :input_html => { :value => "Invoice"}%>
+							  <%=f.input :invoiceable_id, as: :hidden, :input_html => { :value => params[:invoice_id]}%>
+                  <%=f.input :payment_method_id, as: :hidden, :input_html => { :value => params[:payment_method_id]}%>
 								<div class="bs-stepper-content">
 									<!-- your steps content here -->
 									<div id="bi" class="content" role="tabpanel" aria-labelledby="bi-trigger">
@@ -48,17 +49,21 @@
 													</div>
 													<!-- /.card-header -->
 													<div class="card-body">
-														<p  class="text-center"><strong>Please, transfer <%=@invoice.total_price%> ETB to the account we provide you and fill the form with in your bank information.</strong></p>  
+														<p  class="text-center"><strong>Please, transfer <%=Invoice.find_by(id: params[:invoice_id]).total_price if Invoice.find_by(id: params[:invoice_id]).present?%> ETB to the account we provide you and fill the form with in your bank information.</strong></p>   
 														<hr>
 													</div>
 													<!-- /.card-body -->
 												</div>
 											</div>
+
+											<%if PaymentMethod.find_by(id: params[:payment_method_id]).present?%>
 											<div class="col-12 col-md-8">
 												<div class="card card-primary card-outline">
 						              <div class="card-body box-profile">
 						                <div class="text-center">
-						                  <%= image_tag(@payment_method.bank_logo, class: "profile-user-img img-fluid")%>
+						                	
+						                  	<%= image_tag(@payment_method.bank_logo, class: "profile-user-img img-fluid")%>
+						                  
 						                </div>
 
 						                <h3 class="profile-username text-center"><%= @payment_method.bank_name%></h3>
@@ -85,6 +90,7 @@
 						            </div>
 												
 											</div>
+											<%end%>
 											
 										</div>
 									</div>

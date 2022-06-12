@@ -46,6 +46,8 @@ class Ability
         can :manage, Section
         can :manage, Almuni
         can :manage, Withdrawal
+        can :manage, AddAndDrop
+        can :manage, OtherPayment
     when "instractor"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, AcademicCalendar
@@ -109,6 +111,9 @@ class Ability
         can :manage, GradeChange
         can :manage, Withdrawal
         can :destroy, Withdrawal, created_by: user.name.full
+
+        can :manage, AddAndDrop
+        cannot :destroy, AddAndDrop, created_by: "self"
     when "distance_registrar"
         can :manage, CourseSection
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
@@ -243,6 +248,7 @@ class Ability
         can [:read, :update], GradeChange, department_id: user.department.id
         can [:read, :update], GradeReport, department_id: user.department.id  
         can [:read, :update], Withdrawal
+        can [:read, :update], AddAndDrop
     when "dean"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can [:read, :update], Withdrawal
