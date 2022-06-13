@@ -15,6 +15,8 @@ class CourseRegistration < ApplicationRecord
 		belongs_to :section, optional: true
 		has_many :student_attendances, dependent: :destroy
 		has_many :grade_changes, dependent: :destroy
+		has_many :makeup_exams
+
 		
 		def add_grade
 			if self.section.present? && !self.student_grade.present?

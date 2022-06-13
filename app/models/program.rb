@@ -37,6 +37,7 @@ class Program < ApplicationRecord
     accepts_nested_attributes_for :curriculums, reject_if: :all_blank, allow_destroy: true
     has_many :recurring_payments
     has_many :add_and_drops
+    has_many :makeup_exams
   
   # def total_tuition
   #   curriculums.collect { |oi| oi.valid? ? (oi.full_course_price) : 0 }.sum

@@ -5,4 +5,5 @@ class Assessment < ApplicationRecord
 		belongs_to :course , optional: true
 		belongs_to :assessment_plan, optional: true
 		has_many :grade_changes
+		has_many :makeup_exams
 end

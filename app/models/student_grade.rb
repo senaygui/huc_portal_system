@@ -13,6 +13,7 @@ class StudentGrade < ApplicationRecord
     has_many :assessments, dependent: :destroy
   	accepts_nested_attributes_for :assessments, reject_if: :all_blank, allow_destroy: true
     has_many :grade_changes
+    has_many :makeup_exams
 
 	# def assesment_total
  #    # assessments.collect { |oi| oi.valid? ? (oi.result) : 0 }.sum

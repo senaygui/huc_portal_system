@@ -12,7 +12,8 @@ class Ability
     when "admin"
         can :manage, RecurringPayment
         can :manage, GradeSystem
-        can :manage, GradeChange        
+        can :manage, GradeChange    
+        can :manage, MakeupExam    
         can :manage, AssessmentPlan
         can :manage, CourseRegistration
         can :manage, Attendance

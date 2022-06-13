@@ -1,6 +1,6 @@
-ActiveAdmin.register GradeChange do
+ActiveAdmin.register MakeupExam do
   # actions :all, :except => [:new]
-  permit_params :section_id, :academic_calendar_id,:student_id,:course_id,:section_id,:semester,:previous_result_total,:previous_letter_grade,:current_result_total,:current_letter_grade,:reason,:instractor_approval,:instractor_name,:instractor_date_of_response,:registrar_approval,:registrar_name,:registrar_date_of_response,:dean_approval,:dean_name,:dean_date_of_response,:department_approval,:department_head_name,:department_head_date_of_response,:academic_affair_approval,:academic_affair_name,:academic_affair_date_of_response,:course_registration_id,:student_grade_id,:assessment_id, :add_mark, :course_section_id, :program_id, :department_id, :year
+  permit_params :updated_by,:created_by,:section_id, :academic_calendar_id,:student_id,:course_id,:section_id,:semester,:previous_result_total,:previous_letter_grade,:current_result_total,:current_letter_grade,:reason,:instractor_approval,:instractor_name,:instractor_date_of_response,:registrar_approval,:registrar_name,:registrar_date_of_response,:dean_approval,:dean_name,:dean_date_of_response,:department_approval,:department_head_name,:department_head_date_of_response,:academic_affair_approval,:academic_affair_name,:academic_affair_date_of_response,:course_registration_id,:student_grade_id,:assessment_id, :add_mark, :course_section_id, :program_id, :department_id, :year
 
   index do
     selectable_column
@@ -18,17 +18,14 @@ ActiveAdmin.register GradeChange do
     end
     column :year
     column :semester
+    column "Status" do |pd|
+      status_tag pd.status
+    end
     column "Program" do |pd|
       pd.program.program_name
     end
     column "Department" do |pd|
       pd.department.department_name
-    end
-    column :admission_type do |pd|
-      pd.program.admission_type
-    end
-    column :study_level do |pd|
-      pd.program.study_level
     end
     column "Created At", sortable: true do |c|
       c.created_at.strftime("%b %d, %Y")
@@ -60,17 +57,20 @@ ActiveAdmin.register GradeChange do
   filter :dean_approval
   filter :department_approval
   filter :academic_affair_approval
+  filter :status
   filter :created_at
   filter :updated_at
+  filter :created_by
+  filter :updated_by
 
-  form do |f|
+    form do |f|
     f.semantic_errors
-    f.inputs "Grade Change Request" do
+    f.inputs "Makeup Exam Request" do
       if f.object.new_record? && ((current_admin_user.role == "registrar head")) || (current_admin_user.role == "admin") && (params[:course_id].present?)
         
         f.input :assessment_id, as: :select, collection: Assessment.where(student_grade_id: params[:student_grade_id]).map {|assess| [assess.assessment_plan.assessment_title, assess.id]}
         f.input :reason, lebel: "Student Reason"
-        f.input :add_mark, lebel: "Mark Added"
+        # f.input :add_mark, lebel: "Mark Added"
 
         f.input :academic_calendar_id, as: :hidden, :input_html => { :value => params[:academic_calendar_id]}
         f.input :student_id, as: :hidden, :input_html => { :value => params[:student_id]}
@@ -85,8 +85,10 @@ ActiveAdmin.register GradeChange do
         f.input :year, as: :hidden, :input_html => { :value => params[:year]} 
         f.input :previous_result_total, as: :hidden, :input_html => { :value => StudentGrade.where(id: params[:student_grade_id]).pluck(:assesment_total)} 
         f.input :previous_letter_grade, as: :hidden, :input_html => { :value => StudentGrade.where(id: params[:student_grade_id]).pluck(:letter_grade)} 
+        f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
       end
       if !f.object.new_record?
+        f.input :updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
         if (current_admin_user.role == "department head") || (current_admin_user.role == "admin")
           f.input :department_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
           f.input :department_head_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
@@ -96,7 +98,7 @@ ActiveAdmin.register GradeChange do
           f.input :registrar_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
           f.input :registrar_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
           f.input :registrar_date_of_response, as: :hidden, :input_html => { :value => Time.zone.now}
-          f.input :add_mark, label: "Mark Added"
+          f.input :add_mark, label: "Result"
         end
         if (current_admin_user.role == "dean") || (current_admin_user.role == "admin")
           f.input :dean_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
@@ -119,11 +121,11 @@ ActiveAdmin.register GradeChange do
     f.actions
   end
 
-  show :title => proc{|grade_change| truncate("#{grade_change.student.first_name.upcase} #{grade_change.student.middle_name.upcase} #{grade_change.student.last_name.upcase}", length: 50) } do
+  show :title => proc{|makeup_exam| truncate("#{makeup_exam.student.first_name.upcase} #{makeup_exam.student.middle_name.upcase} #{makeup_exam.student.last_name.upcase}", length: 50) } do
     columns do
       column do
         panel "Student information" do
-          attributes_table_for grade_change do
+          attributes_table_for makeup_exam do
             row :student_name, sortable: true do |n|
               "#{n.student.first_name.upcase} #{n.student.middle_name.upcase} #{n.student.last_name.upcase}"
             end
@@ -153,13 +155,16 @@ ActiveAdmin.register GradeChange do
             row "Section" do |pd|
               pd.section.section_short_name
             end
+            row "Status" do |pd|
+              status_tag pd.status
+            end
           end
         end
       end
 
       column do
         panel "Grading Change Request information" do
-          attributes_table_for grade_change do
+          attributes_table_for makeup_exam do
             row "Course" do |pd|
               pd.course.course_title
             end
@@ -169,19 +174,21 @@ ActiveAdmin.register GradeChange do
             row "Assessment" do |m|
               m.assessment.assessment_plan.assessment_title
             end 
-            row "Added Mark" do |m|
+            row "Result" do |m|
               m.add_mark
             end
             row :current_result_total
             row :current_letter_grade
             row :created_at
             row :updated_at
+            row :created_by
+            row :updated_by
           end
         end
       end
       column do
-        panel "Grading Change Request Approval Status" do
-          attributes_table_for grade_change do
+        panel "Makeup Exam Request Approval Status" do
+          attributes_table_for makeup_exam do
             row :department_approval do |c|
               status_tag c.department_approval
             end
@@ -221,6 +228,5 @@ ActiveAdmin.register GradeChange do
     #   end
     # end
   end
-
   
 end

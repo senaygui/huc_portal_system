@@ -10,6 +10,7 @@ class Section < ApplicationRecord
 	has_many :withdrawals
 	has_many :recurring_payments
 	has_many :add_and_drops
+	has_many :makeup_exams
 	##scope
     scope :instractor_courses, -> (user_id) {CourseInstractor.where(admin_user_id: user_id).pluck(:section_id)}
     scope :instractors, -> (user_id) {CourseInstractor.where(section_id: instractor_courses(user_id)).pluck(:course_id)}

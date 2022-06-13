@@ -2,6 +2,9 @@ class OtherPayment < ApplicationRecord
   after_create :add_invoice_item_for_add_and_drop
   after_save :add_and_drop_update_status
 
+  after_create :add_invoice_item_for_makeup_exam
+  after_save :makeup_exam_update_status
+
   ##validations
     validates :invoice_number , :presence => true
     validates :semester, :presence => true
@@ -29,6 +32,39 @@ class OtherPayment < ApplicationRecord
 
 
 	  private
+
+	  def add_invoice_item_for_makeup_exam
+  		if self.payable_type == "MakeupExam"
+				InvoiceItem.create do |invoice_item|
+						invoice_item.itemable_id = self.id
+						invoice_item.itemable_type = "OtherPayment"
+						invoice_item.course_id = self.payable.course_id
+						invoice_item.course_registration_id = self.payable.course_registration_id
+						invoice_item.created_by = self.created_by
+						invoice_item.item_title = "#{self.payable.course.course_title} Makeup Exam"
+						invoice_item.price = CollegePayment.where(study_level: self.student.study_level,admission_type: self.student.admission_type).first.makeup_exam_fee	
+				end
+			end
+		end
+
+		def makeup_exam_update_status
+			if (self.payable_type == "MakeupExam") && (self.payment_transaction.present?) && (self.payment_transaction.finance_approval_status == "approved") && (self.invoice_status == "approved") && (self.payable.status == "pending")
+				self.payable.assessment.update_columns(result: self.payable.add_mark)
+		  	self.payable.assessment.touch
+		  	self.payable.student_grade.update_columns(assesment_total: self.payable.student_grade.assessments.sum(:result))
+		  	self.payable.student_grade.touch
+
+		  	grade_in_letter = self.payable.student.program.grade_systems.last.grades.where("min_row_mark <= ?", self.payable.student_grade.assesment_total).where("max_row_mark >= ?", self.payable.student_grade.assesment_total).last.letter_grade
+	      grade_letter_value = self.payable.student.program.grade_systems.last.grades.where("min_row_mark <= ?", self.payable.student_grade.assesment_total).where("max_row_mark >= ?", self.payable.student_grade.assesment_total).last.grade_point
+		  			
+	      self.payable.student_grade.update_columns(letter_grade: grade_in_letter)
+	      self.payable.student_grade.update_columns(grade_point: grade_letter_value)
+
+		  	self.payable.update_columns(current_result_total: self.payable.student_grade.assesment_total)
+		  	self.payable.update_columns(current_letter_grade: grade_in_letter)
+				self.payable.update_columns(status: "approved")
+    	end
+		end
 
   	def add_invoice_item_for_add_and_drop
   		if self.payable_type == "AddAndDrop"

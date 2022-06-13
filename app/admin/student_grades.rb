@@ -111,7 +111,15 @@ ActiveAdmin.register StudentGrade do
 
 
   action_item :new, only: :show, priority: 0 do
-    # link_to 'Add Grade Change', new_admin_grade_change_path(course_id: "#{student_grade.course.id}", section_id: "#{student_grade.course_registration.semester_registration.section.id}", academic_calendar_id: "#{student_grade.course_registration.academic_calendar.id}", semester: "#{student_grade.course_registration.semester}", year: "#{student_grade.course_registration.year}", student_id: "#{student_grade.student.id}", course_registration_id: "#{student_grade.course_registration.id}", student_grade_id: "#{student_grade.id}", department_id: "#{student_grade.student.program.department.id}", program_id: "#{student_grade.student.program.id}")
+    if (current_admin_user.role == "registrar head") || (current_admin_user.role == "admin")
+      link_to 'Add Grade Change', new_admin_grade_change_path(course_id: "#{student_grade.course.id}", section_id: "#{student_grade.course_registration.semester_registration.section.id}", academic_calendar_id: "#{student_grade.course_registration.academic_calendar.id}", semester: "#{student_grade.course_registration.semester}", year: "#{student_grade.course_registration.year}", student_id: "#{student_grade.student.id}", course_registration_id: "#{student_grade.course_registration.id}", student_grade_id: "#{student_grade.id}", department_id: "#{student_grade.student.program.department.id}", program_id: "#{student_grade.student.program.id}")
+    end
+  end
+
+  action_item :new, only: :show, priority: 0 do
+    if (current_admin_user.role == "registrar head") || (current_admin_user.role == "admin")
+      link_to 'Add Makeup exam', new_admin_makeup_exam_path(course_id: "#{student_grade.course.id}", section_id: "#{student_grade.course_registration.semester_registration.section.id}", academic_calendar_id: "#{student_grade.course_registration.academic_calendar.id}", semester: "#{student_grade.course_registration.semester}", year: "#{student_grade.course_registration.year}", student_id: "#{student_grade.student.id}", course_registration_id: "#{student_grade.course_registration.id}", student_grade_id: "#{student_grade.id}", department_id: "#{student_grade.student.program.department.id}", program_id: "#{student_grade.student.program.id}")
+    end
   end
 
   show :title => proc{|student| student.student.name.full } do
