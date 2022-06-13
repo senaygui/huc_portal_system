@@ -228,8 +228,12 @@ actions :all, :except => [:new]
       column do
         panel "Invoice Item Information" do
           table_for other_payment.invoice_items do
-            column "Course title" do |pr|
-              link_to pr.course.course_title, admin_course_path(pr.course.id)
+            if other_payment.payable_type == "AddAndDrop"
+              column "Course title" do |pr|
+                link_to pr.course.course_title, admin_course_path(pr.course.id)
+              end
+            else 
+              column :item_title
             end
             column "Course code" do |pr|
               pr.course.course_code

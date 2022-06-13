@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_07_070646) do
+ActiveRecord::Schema.define(version: 2022_06_12_204126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -619,6 +619,55 @@ ActiveRecord::Schema.define(version: 2022_06_07_070646) do
     t.index ["program_id"], name: "index_invoices_on_program_id"
     t.index ["semester_registration_id"], name: "index_invoices_on_semester_registration_id"
     t.index ["student_id"], name: "index_invoices_on_student_id"
+  end
+
+  create_table "makeup_exams", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "academic_calendar_id"
+    t.uuid "program_id"
+    t.uuid "department_id"
+    t.uuid "student_id"
+    t.uuid "course_id"
+    t.uuid "section_id"
+    t.uuid "course_registration_id"
+    t.uuid "student_grade_id"
+    t.uuid "assessment_id"
+    t.integer "semester"
+    t.integer "year"
+    t.decimal "add_mark"
+    t.decimal "previous_result_total"
+    t.string "previous_letter_grade"
+    t.decimal "current_result_total"
+    t.string "current_letter_grade"
+    t.string "reason"
+    t.string "instractor_approval", default: "pending"
+    t.string "instractor_name"
+    t.datetime "instractor_date_of_response"
+    t.string "registrar_approval", default: "pending"
+    t.string "registrar_name"
+    t.datetime "registrar_date_of_response"
+    t.string "dean_approval", default: "pending"
+    t.string "dean_name"
+    t.datetime "dean_date_of_response"
+    t.string "department_approval", default: "pending"
+    t.string "department_head_name"
+    t.datetime "department_head_date_of_response"
+    t.string "academic_affair_approval", default: "pending"
+    t.string "academic_affair_name"
+    t.datetime "academic_affair_date_of_response"
+    t.string "status", default: "pending"
+    t.string "updated_by"
+    t.string "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_makeup_exams_on_academic_calendar_id"
+    t.index ["assessment_id"], name: "index_makeup_exams_on_assessment_id"
+    t.index ["course_id"], name: "index_makeup_exams_on_course_id"
+    t.index ["course_registration_id"], name: "index_makeup_exams_on_course_registration_id"
+    t.index ["department_id"], name: "index_makeup_exams_on_department_id"
+    t.index ["program_id"], name: "index_makeup_exams_on_program_id"
+    t.index ["section_id"], name: "index_makeup_exams_on_section_id"
+    t.index ["student_grade_id"], name: "index_makeup_exams_on_student_grade_id"
+    t.index ["student_id"], name: "index_makeup_exams_on_student_id"
   end
 
   create_table "other_payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

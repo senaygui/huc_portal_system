@@ -15,4 +15,5 @@ class Department < ApplicationRecord
   has_many :invoices
   has_many :recurring_payments
   has_many :add_and_drops
+  has_many :makeup_exams
 end

@@ -32,6 +32,7 @@ class Course < ApplicationRecord
 		has_many :sessions
 
 		has_many :grade_changes
+		has_many :makeup_exams
 		has_many :add_and_drop_courses
   ##scope
   	scope :recently_added, lambda { where('created_at >= ?', 1.week.ago)}
