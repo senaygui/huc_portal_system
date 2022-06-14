@@ -19,6 +19,7 @@ class AcademicCalendar < ApplicationRecord
 
   	
 	##associations
+    has_many :students
   	has_many :activities, dependent: :destroy
     accepts_nested_attributes_for :activities, reject_if: :all_blank, allow_destroy: true
     has_many :semesters, dependent: :destroy

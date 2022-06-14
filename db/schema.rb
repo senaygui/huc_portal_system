@@ -793,6 +793,8 @@ ActiveRecord::Schema.define(version: 2022_06_12_204126) do
     t.datetime "grade_10_exam_taken_year"
     t.decimal "grade_12_exam_result"
     t.datetime "grade_12_exam_taken_year"
+    t.string "level"
+    t.datetime "coc_attendance_date"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", null: false
@@ -878,15 +880,16 @@ ActiveRecord::Schema.define(version: 2022_06_12_204126) do
   create_table "student_addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "student_id"
     t.string "country", null: false
-    t.string "city", null: false
+    t.string "city"
     t.string "region"
-    t.string "zone", null: false
+    t.string "zone"
     t.string "sub_city"
+    t.string "woreda"
+    t.string "special_location"
     t.string "house_number"
-    t.string "cell_phone", null: false
-    t.string "house_phone"
+    t.string "moblie_number", null: false
+    t.string "telephone_number"
     t.string "pobox"
-    t.string "woreda", null: false
     t.string "created_by", default: "self"
     t.string "last_updated_by"
     t.datetime "created_at", null: false
@@ -968,33 +971,41 @@ ActiveRecord::Schema.define(version: 2022_06_12_204126) do
     t.string "last_name", null: false
     t.string "middle_name"
     t.string "gender", null: false
-    t.string "student_id"
     t.datetime "date_of_birth", null: false
+    t.string "place_of_birth"
+    t.string "marital_status"
+    t.string "nationality", null: false
+    t.string "current_occupation"
+    t.string "student_id"
+    t.string "old_id_number"
+    t.string "student_password"
+    t.boolean "student_id_taken_status", default: false
     t.uuid "program_id"
-    t.string "department"
+    t.uuid "department_id"
+    t.uuid "academic_calendar_id"
     t.string "admission_type", null: false
     t.string "study_level", null: false
-    t.string "marital_status"
     t.integer "year", default: 1
     t.integer "semester", default: 1
     t.string "account_verification_status", default: "pending"
     t.string "document_verification_status", default: "pending"
+    t.boolean "tempo_status", default: false
+    t.string "curriculum_version"
+    t.string "entrance_exam_result_status"
+    t.string "batch"
     t.string "account_status", default: "active"
     t.string "graduation_status"
-    t.string "current_occupation"
-    t.string "student_password"
-    t.boolean "tempo_status", default: false
-    t.string "current_location"
-    t.string "place_of_birth"
     t.string "sponsorship_status"
-    t.string "entrance_exam_result_status"
-    t.boolean "student_id_taken_status", default: false
-    t.string "old_id_number"
-    t.string "curriculum_version"
+    t.string "institution_transfer_status"
+    t.string "program_transfer_status"
+    t.string "previous_program"
+    t.string "previous_department"
     t.string "created_by", default: "self"
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_students_on_academic_calendar_id"
+    t.index ["department_id"], name: "index_students_on_department_id"
     t.index ["email"], name: "index_students_on_email", unique: true
     t.index ["program_id"], name: "index_students_on_program_id"
     t.index ["reset_password_token"], name: "index_students_on_reset_password_token", unique: true

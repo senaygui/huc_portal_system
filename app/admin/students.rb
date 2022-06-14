@@ -1,7 +1,7 @@
 ActiveAdmin.register Student do
 
   menu priority: 7
-  permit_params :undergraduate_transcript,:highschool_transcript, :grade_10_matric,:grade_12_matric,:coc,:diploma_certificate,:degree_certificate,:place_of_birth,:sponsorship_status,:entrance_exam_result_status,:student_id_taken_status,:old_id_number,:curriculum_version,:current_location,:current_occupation,:tempo_status,:created_by,:last_updated_by,:photo,:email,:password,:first_name,:last_name,:middle_name,:gender,:student_id,:date_of_birth,:program_id,:department,:admission_type,:study_level,:marital_status,:year,:semester,:account_verification_status,:document_verification_status,:account_status,:graduation_status,student_address_attributes: [:id,:country,:city,:region,:zone,:sub_city,:house_number,:cell_phone,:house_phone,:pobox,:woreda,:created_by,:last_updated_by],emergency_contact_attributes: [:id,:full_name,:relationship,:cell_phone,:email,:current_occupation,:name_of_current_employer,:pobox,:email_of_employer,:office_phone_number,:created_by,:last_updated_by],school_or_university_information_attributes: [:id, :college_or_university,:phone_number,:address,:field_of_specialization,:cgpa,:last_attended_high_school,:school_address,:grade_10_result,:grade_10_exam_taken_year,:grade_12_exam_result,:grade_12_exam_taken_year,:created_by,:updated_by]
+  permit_params :batch, :nationality,:undergraduate_transcript,:highschool_transcript, :grade_10_matric,:grade_12_matric,:coc,:diploma_certificate,:degree_certificate,:place_of_birth,:sponsorship_status,:entrance_exam_result_status,:student_id_taken_status,:old_id_number,:curriculum_version,:current_occupation,:tempo_status,:created_by,:last_updated_by,:photo,:email,:password,:first_name,:last_name,:middle_name,:gender,:student_id,:date_of_birth,:program_id,:department,:admission_type,:study_level,:marital_status,:year,:semester,:account_verification_status,:document_verification_status,:account_status,:graduation_status,student_address_attributes: [:id,:country,:city,:region,:zone,:sub_city,:house_number,:special_location,:moblie_number,:telephone_number,:pobox,:woreda,:created_by,:last_updated_by],emergency_contact_attributes: [:id,:full_name,:relationship,:cell_phone,:email,:current_occupation,:name_of_current_employer,:pobox,:email_of_employer,:office_phone_number,:created_by,:last_updated_by],school_or_university_information_attributes: [:id,:level,:coc_attendance_date, :college_or_university,:phone_number,:address,:field_of_specialization,:cgpa,:last_attended_high_school,:school_address,:grade_10_result,:grade_10_exam_taken_year,:grade_12_exam_result,:grade_12_exam_taken_year,:created_by,:updated_by]
   
 
       active_admin_import :validate => false,
@@ -57,9 +57,10 @@ ActiveAdmin.register Student do
   filter :department   
   filter :year
   filter :semester
+  filter :batch
   filter :current_occupation
-  filter :current_location
-
+  filter :nationality
+  
   filter :account_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"]
   filter :document_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"]
   filter :entrance_exam_result_status
@@ -89,7 +90,7 @@ ActiveAdmin.register Student do
   form do |f|
     f.semantic_errors
     f.semantic_errors *f.object.errors.keys
-    if f.object.new_record? || current_admin_user.role == "registrar"
+    if f.object.new_record? || current_admin_user.role == "registrar head"
       f.inputs "Student basic information" do
         div class: "avatar-upload" do
           div class: "avatar-edit" do
@@ -107,6 +108,7 @@ ActiveAdmin.register Student do
         f.input :last_name
         f.input :middle_name
         f.input :gender, as: :select, :collection => ["Male", "Female"], :include_blank => false
+        f.input :nationality, as: :country, selected: 'ET', priority_countries: ["ET", "US"], include_blank: "select country"
         f.input :date_of_birth, as: :date_time_picker
         f.input :place_of_birth
         f.input :marital_status, as: :select, :collection => ["Single", "Married", "Widowed","Separated","Divorced"], :include_blank => false
@@ -124,7 +126,7 @@ ActiveAdmin.register Student do
         f.input :current_occupation   
       end
       f.inputs "Student admission information" do
-        f.input :study_level, as: :select, :collection => ["undergraduate", "graduate", "TPVT"], :include_blank => false
+        f.input :study_level, as: :select, :collection => ["undergraduate", "graduate"], :include_blank => false
         f.input :admission_type, as: :select, :collection => ["online", "regular", "extention", "distance"], :include_blank => false
         f.input :program_id, as: :search_select, url: admin_programs_path,
             fields: [:program_name, :id], display_name: 'program_name', minimum_input_length: 2,
@@ -139,8 +141,9 @@ ActiveAdmin.register Student do
         a.input :zone
         a.input :woreda
         a.input :house_number
-        a.input :cell_phone
-        a.input :house_phone
+        a.input :special_location
+        a.input :moblie_number
+        a.input :telephone_number
         a.input :pobox
       end
       f.inputs "Student emergency contact person information", :for => [:emergency_contact, f.object.emergency_contact || EmergencyContact.new ] do |a|
@@ -167,6 +170,8 @@ ActiveAdmin.register Student do
         a.input :phone_number
         a.input :address
         a.input :field_of_specialization
+        a.input :level
+        a.input :coc_attendance_date, as: :date_time_picker
         a.input :cgpa
       end
 
@@ -253,6 +258,7 @@ ActiveAdmin.register Student do
                 row :date_of_birth, sortable: true do |c|
                   c.date_of_birth.strftime("%b %d, %Y")
                 end
+                row :nationality
                 row :place_of_birth
                 row :marital_status
                 row :current_occupation
@@ -304,6 +310,8 @@ ActiveAdmin.register Student do
                 row :phone_number
                 row :address
                 row :field_of_specialization
+                row :level
+                row :coc_attendance_date
                 row :cgpa
               end
             end
@@ -455,8 +463,9 @@ ActiveAdmin.register Student do
                 row :zone
                 row :sub_city
                 row :house_number
-                row :cell_phone
-                row :house_phone
+                row :special_location
+                row :moblie_number
+                row :telephone_number
                 row :pobox
                 row :woreda
               end
