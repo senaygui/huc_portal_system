@@ -13,6 +13,8 @@ class CreateSchoolOrUniversityInformations < ActiveRecord::Migration[5.2]
       t.datetime :grade_10_exam_taken_year
       t.decimal :grade_12_exam_result
       t.datetime :grade_12_exam_taken_year
+      t.string :level
+      t.datetime :coc_attendance_date
       t.string :created_by
       t.string :updated_by
       t.timestamps

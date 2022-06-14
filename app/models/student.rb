@@ -1,9 +1,9 @@
 class Student < ApplicationRecord
   ##callbacks
-  before_save :department_assignment
+  before_save :attributies_assignment
   before_save :student_id_generator
   after_save :student_semester_registration
-  before_create :assign_curriculum
+  # before_create :assign_curriculum
   before_create :set_pwd
   after_save :student_course_assign
 
@@ -15,7 +15,9 @@ class Student < ApplicationRecord
          :recoverable, :rememberable, :validatable, :trackable
   has_person_name    
   ##associations
+    belongs_to :department, optional: true
     belongs_to :program
+    belongs_to :academic_calendar, optional: true
     has_one :student_address, dependent: :destroy
     accepts_nested_attributes_for :student_address
     has_one :emergency_contact, dependent: :destroy
@@ -44,32 +46,33 @@ class Student < ApplicationRecord
     has_many :add_and_drops, dependent: :destroy
     has_many :makeup_exams, dependent: :destroy
   ##validations
-  validates :first_name , :presence => true,:length => { :within => 2..100 }
-  validates :middle_name , :presence => true,:length => { :within => 2..100 }
-  # validates :current_location , :presence => true,:length => { :within => 2..100 }
-  validates :last_name , :presence => true,:length => { :within => 2..100 }
-  # validates :student_id , uniqueness: true
-  validates :gender, :presence => true
-  validates :date_of_birth , :presence => true
-  validates :study_level, :presence => true
-  validates :admission_type, :presence => true,:length => { :within => 2..10 }
-  # validates :photo, attached: true, content_type: ['image/gif', 'image/png', 'image/jpg', 'image/jpeg']
-  # validates :highschool_transcript, attached: true
-  # validates :grade_12_matric, attached: true
-  # validates :diploma_certificate, attached: true, if: :grade_12_matric?
-  # validates :coc, attached: true, if: :grade_12_matric?
+    validates :first_name , :presence => true,:length => { :within => 2..100 }
+    validates :middle_name , :presence => true,:length => { :within => 2..100 }
+    # validates :current_location , :presence => true,:length => { :within => 2..100 }
+    validates :last_name , :presence => true,:length => { :within => 2..100 }
+    # validates :student_id , uniqueness: true
+    validates :gender, :presence => true
+    validates :date_of_birth , :presence => true
+    validates :study_level, :presence => true
+    validates :admission_type, :presence => true,:length => { :within => 2..10 }
+    validates :nationality, :presence => true
+    # validates :photo, attached: true, content_type: ['image/gif', 'image/png', 'image/jpg', 'image/jpeg']
+    # validates :highschool_transcript, attached: true
+    # validates :grade_12_matric, attached: true
+    # validates :diploma_certificate, attached: true, if: :grade_12_matric?
+    # validates :coc, attached: true, if: :grade_12_matric?
 
-  # validates :degree_certificate, attached: true, if: :apply_graduate?
-  # /def apply_graduate?
-  #   self.study_level == "graduate" 
-  # end
-  # def grade_12_matric?
-  #   !self.grade_12_matric.attached?
-  # end
+    # validates :degree_certificate, attached: true, if: :apply_graduate?
+    # /def apply_graduate?
+    #   self.study_level == "graduate" 
+    # end
+    # def grade_12_matric?
+    #   !self.grade_12_matric.attached?
+    # end
 
-  def assign_curriculum
-    self[:curriculum_version] = program.curriculums.where(active_status: "active").last.curriculum_version
-  end
+  # def assign_curriculum
+  #   self[:curriculum_version] = program.curriculums.where(active_status: "active").last.curriculum_version
+  # end
   
   validate :password_complexity
   def password_complexity
@@ -92,20 +95,18 @@ class Student < ApplicationRecord
     scope :denied, lambda { where(document_verification_status: "denied")}
     scope :incomplete, lambda { where(document_verification_status: "incomplete")}
 
-    # def with_student_address
-    #   build_student_address if student_address.nil?
-    # end
-    
-  # def approve_student
-  #   self[:document_verification_status] = "approved"
-  # end
   private
   ## callback methods
   def set_pwd
     self[:student_password] = self.password
   end
-  def department_assignment
-    self[:department] = program.department.department_name
+  def attributies_assignment
+    if (self.document_verification_status == "approved") && (self.academic_calendar_id.empty?)
+      self[:department_id] = program.department_id
+      self[:academic_calendar_id] = AcademicCalendar.where(study_level: self.study_level).where(admission_type: self.admission_type).("created_at DESC").first
+      self[:batch] = AcademicCalendar.where(study_level: self.study_level).where(admission_type: self.admission_type).("created_at DESC").first.pluck(:calender_year_in_gc)
+      self[:curriculum_version] = program.curriculums.where(active_status: "active").last.curriculum_version
+    end
   end
   def student_id_generator
     if self.document_verification_status == "approved" && !(self.student_id.present?)

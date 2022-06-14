@@ -45,6 +45,9 @@
       <%= f.hint "when you pick your birth date select GC"%>
     </div>
     <div class="col-12 col-md-6 form-group">
+      <%= f.input :nationality, as: :country, selected: 'ET', priority_countries: ["ET", "US"], input_html: {class: "form-control custom-select"},include_blank: "select nationality"%>
+    </div>
+    <div class="col-12 col-md-6 form-group">
       <%= f.input :place_of_birth, input_html: { class: 'form-control', autocomplete: "place_of_birth" },placeholder: "Place of birth", label: "Place of birth", required: true %>
     </div>
     <div class="col-12 col-md-6 form-group">
