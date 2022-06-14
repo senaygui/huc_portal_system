@@ -8,9 +8,6 @@ ActiveAdmin.register SemesterRegistration do
                                             
                                           }
                                         end
-  batch_action :flag, form: {section_id: Section.pluck(:section_full_name, :id)} do |ids, inputs|
-    redirect_to collection_path, notice: [ids, inputs].to_s
-  end
   csv do
     column "username" do |username|
       username.student.student_id
@@ -88,6 +85,12 @@ ActiveAdmin.register SemesterRegistration do
     @semester_registration= SemesterRegistration.find(params[:id])
     @semester_registration.generate_grade_report
     redirect_back(fallback_location: admin_student_grade_path)
+  end
+  batch_action "Generate grade report for", if: proc{ current_admin_user.role == "registrar head" }, method: :put, confirm: "Are you sure?" do |ids|
+    SemesterRegistration.find(ids).each do |sm|
+      sm.generate_grade_report
+    end
+    redirect_to collection_path, notice: "Grade Report Is Generated Successfully"
   end
   action_item :update, only: :show do
     link_to 'generate grade report', generate_grade_report_admin_semester_registration_path(semester_registration.id), method: :put, data: { confirm: 'Are you sure?' }        
