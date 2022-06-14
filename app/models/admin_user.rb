@@ -28,6 +28,6 @@ class AdminUser < ApplicationRecord
     scope :program_offices, lambda { where(:role => "program office") }
 
     ## associations
-      has_many :course_instractors
+      has_many :course_instructors
       belongs_to :department, optional: true
 end

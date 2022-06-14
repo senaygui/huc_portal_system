@@ -23,7 +23,7 @@ ActiveAdmin.register Attendance do
 
   form do |f|
     f.semantic_errors
-    if !(params[:page_name] == "add") && !(current_admin_user.role == "instractor")
+    if !(params[:page_name] == "add") && !(current_admin_user.role == "instructor")
       f.inputs "Attendance information" do
         f.input :attendance_title
         

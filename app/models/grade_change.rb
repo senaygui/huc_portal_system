@@ -23,7 +23,7 @@ class GradeChange < ApplicationRecord
 		private
 
 			def current_grade
-				if (self.department_approval == "approved") && (self.registrar_approval == "approved") && (self.dean_approval == "approved") && (self.instractor_approval== "approved") && (self.academic_affair_approval== "approved")
+				if (self.department_approval == "approved") && (self.registrar_approval == "approved") && (self.dean_approval == "approved") && (self.instructor_approval == "approved") && (self.academic_affair_approval== "approved")
 	  			self.assessment.update_columns(result: self.add_mark)
 	  			self.assessment.touch
 	  			self.student_grade.update_columns(assesment_total: self.student_grade.assessments.sum(:result))

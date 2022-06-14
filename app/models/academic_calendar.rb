@@ -28,7 +28,7 @@ class AcademicCalendar < ApplicationRecord
     has_many :course_registrations
     has_many :invoices
     has_many :attendances
-    has_many :course_instractors
+    has_many :course_instructors
     has_many :grade_reports
     has_many :grade_changes
     has_many :sessions

@@ -26,17 +26,20 @@ class Course < ApplicationRecord
 		accepts_nested_attributes_for :assessment_plans, reject_if: :all_blank, allow_destroy: true
 
 
-		has_many :course_instractors
-		accepts_nested_attributes_for :course_instractors, reject_if: :all_blank, allow_destroy: true
+		has_many :course_instructors
+		accepts_nested_attributes_for :course_instructors, reject_if: :all_blank, allow_destroy: true
 
 		has_many :sessions
 
 		has_many :grade_changes
 		has_many :makeup_exams
 		has_many :add_and_drop_courses
+		has_many :course_prerequisites, class_name: "Prerequisite"
+  	has_many :prerequisites, through: :course_prerequisites, source: :prerequisite
+  	accepts_nested_attributes_for :course_prerequisites, reject_if: :all_blank, allow_destroy: true
   ##scope
   	scope :recently_added, lambda { where('created_at >= ?', 1.week.ago)}
-  	scope :instractor_courses, -> (user_id) {CourseInstractor.where(admin_user_id: user_id).pluck(:course_id)}
+  	scope :instructor_courses, -> (user_id) {CourseInstructor.where(admin_user_id: user_id).pluck(:course_id)}
 
 
   private

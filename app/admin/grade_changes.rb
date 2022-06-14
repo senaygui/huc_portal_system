@@ -1,6 +1,6 @@
 ActiveAdmin.register GradeChange do
   # actions :all, :except => [:new]
-  permit_params :section_id, :academic_calendar_id,:student_id,:course_id,:section_id,:semester,:previous_result_total,:previous_letter_grade,:current_result_total,:current_letter_grade,:reason,:instractor_approval,:instractor_name,:instractor_date_of_response,:registrar_approval,:registrar_name,:registrar_date_of_response,:dean_approval,:dean_name,:dean_date_of_response,:department_approval,:department_head_name,:department_head_date_of_response,:academic_affair_approval,:academic_affair_name,:academic_affair_date_of_response,:course_registration_id,:student_grade_id,:assessment_id, :add_mark, :course_section_id, :program_id, :department_id, :year
+  permit_params :section_id, :academic_calendar_id,:student_id,:course_id,:section_id,:semester,:previous_result_total,:previous_letter_grade,:current_result_total,:current_letter_grade,:reason,:instructor_approval,:instructor_name,:instructor_date_of_response,:registrar_approval,:registrar_name,:registrar_date_of_response,:dean_approval,:dean_name,:dean_date_of_response,:department_approval,:department_head_name,:department_head_date_of_response,:academic_affair_approval,:academic_affair_name,:academic_affair_date_of_response,:course_registration_id,:student_grade_id,:assessment_id, :add_mark, :course_section_id, :program_id, :department_id, :year
 
   index do
     selectable_column
@@ -55,7 +55,7 @@ ActiveAdmin.register GradeChange do
   filter :section_id, as: :search_select_filter, url: proc { admin_program_sections_path },
          fields: [:section_full_name, :id], display_name: 'section_full_name', minimum_input_length: 2,
          order_by: 'created_at_asc' 
-  filter :instractor_approval
+  filter :instructor_approval
   filter :registrar_approval
   filter :dean_approval
   filter :department_approval
@@ -103,10 +103,10 @@ ActiveAdmin.register GradeChange do
           f.input :dean_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
           f.input :dean_date_of_response, as: :hidden, :input_html => { :value => Time.zone.now}
         end
-        if (current_admin_user.role == "instractor") || (current_admin_user.role == "admin")
-          f.input :instractor_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
-          f.input :instractor_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-          f.input :instractor_date_of_response, as: :hidden, :input_html => { :value => Time.zone.now}
+        if (current_admin_user.role == "instructor") || (current_admin_user.role == "admin")
+          f.input :instructor_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
+          f.input :instructor_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+          f.input :instructor_date_of_response, as: :hidden, :input_html => { :value => Time.zone.now}
           # f.input :add_mark, lebel: "Mark Added"
         end  
         if (current_admin_user.role == "academic affair") || (current_admin_user.role == "admin")
@@ -197,11 +197,11 @@ ActiveAdmin.register GradeChange do
             end
             row :dean_name
             row :dean_date_of_response
-            row :instractor_approval do |c|
-              status_tag c.instractor_approval
+            row :instructor_approval do |c|
+              status_tag c.instructor_approval
             end
-            row :instractor_name
-            row :instractor_date_of_response
+            row :instructor_name
+            row :instructor_date_of_response
             row :academic_affair_approval do |c|
               status_tag c.academic_affair_approval
             end
