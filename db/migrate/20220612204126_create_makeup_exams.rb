@@ -22,9 +22,9 @@ class CreateMakeupExams < ActiveRecord::Migration[5.2]
 
       t.string :reason 
 
-      t.string :instractor_approval, default: "pending"
-      t.string :instractor_name
-      t.datetime :instractor_date_of_response
+      t.string :instructor_approval, default: "pending"
+      t.string :instructor_name
+      t.datetime :instructor_date_of_response
 
       t.string :registrar_approval, default: "pending"
       t.string :registrar_name

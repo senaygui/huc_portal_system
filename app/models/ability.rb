@@ -49,26 +49,26 @@ class Ability
         can :manage, Withdrawal
         can :manage, AddAndDrop
         can :manage, OtherPayment
-    when "instractor"
+    when "instructor"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, AcademicCalendar
-        can :read, Course, id: Course.instractor_courses(user.id)
-        can :update, Course, id: Course.instractor_courses(user.id)
-        can :read, AssessmentPlan, course_id: Course.instractor_courses(user.id)
-        can :read, CourseRegistration, section_id: Section.instractor_courses(user.id)
-        can :manage, StudentGrade, course_id: Section.instractors(user.id)
+        can :read, Course, id: Course.instructor_courses(user.id)
+        can :update, Course, id: Course.instructor_courses(user.id)
+        can :read, AssessmentPlan, course_id: Course.instructor_courses(user.id)
+        can :read, CourseRegistration, section_id: Section.instructor_courses(user.id)
+        can :manage, StudentGrade, course_id: Section.instructors(user.id)
         cannot :destroy, StudentGrade
         can :manage, Assessment
-        can :read, Attendance, section_id: Section.instractor_courses(user.id)
-        can :update, Attendance, section_id: Section.instractor_courses(user.id)
+        can :read, Attendance, section_id: Section.instructor_courses(user.id)
+        can :update, Attendance, section_id: Section.instructor_courses(user.id)
 
         can :create, Session
-        can :read, Session, course_id: Section.instractors(user.id)
-        can :update, Session, course_id: Section.instractors(user.id)
-        cannot :destroy, Session, course_id: Section.instractors(user.id)
+        can :read, Session, course_id: Section.instructors(user.id)
+        can :update, Session, course_id: Section.instructors(user.id)
+        cannot :destroy, Session, course_id: Section.instructors(user.id)
 
-        can :read, GradeChange, course_id: Section.instractors(user.id)
-        can :update, GradeChange , course_id: Section.instractors(user.id)
+        can :read, GradeChange, course_id: Section.instructors(user.id)
+        can :update, GradeChange , course_id: Section.instructors(user.id)
     when "finance"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, Program
@@ -87,7 +87,7 @@ class Ability
     when "registrar head"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :manage, AcademicCalendar
-        can :manage, AdminUser, role: "instractor"
+        can :manage, AdminUser, role: "instructor"
         can :manage, Faculty
         can :manage, Department
         can :read, CourseModule
@@ -233,7 +233,7 @@ class Ability
         can :manage, Department, department_id: user.department.id
         can :manage, CourseModule, department_id: user.department.id
         can :manage, Course, course_module: {department_id: user.department.id}
-        can :manage, AdminUser, role: "instractor"
+        can :manage, AdminUser, role: "instructor"
         can :manage, Program, department_id: user.department.id
         can :manage, Curriculum, program: {department_id: user.department.id}
         can :manage, GradeSystem, program: {department_id: user.department.id}

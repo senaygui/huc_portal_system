@@ -1,4 +1,4 @@
-class CourseInstractor < ApplicationRecord
+class CourseInstructor < ApplicationRecord
 	##associations
 	  belongs_to :admin_user
 	  belongs_to :course

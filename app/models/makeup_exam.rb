@@ -22,7 +22,7 @@ class MakeupExam < ApplicationRecord
 	private
 
 	# def current_grade
-	# 	if (self.department_approval == "approved") && (self.registrar_approval == "approved") && (self.dean_approval == "approved") && (self.instractor_approval== "approved") && (self.academic_affair_approval== "approved")
+	# 	if (self.department_approval == "approved") && (self.registrar_approval == "approved") && (self.dean_approval == "approved") && (self.instructor_approval== "approved") && (self.academic_affair_approval== "approved")
 	#   	self.assessment.update_columns(result: self.add_mark)
 	#   	self.assessment.touch
 	#   	self.student_grade.update_columns(assesment_total: self.student_grade.assessments.sum(:result))
@@ -40,7 +40,7 @@ class MakeupExam < ApplicationRecord
 	# end
 
 	def generate_invoice_for_makeup_exam
-		if (self.department_approval == "approved") && (self.registrar_approval == "approved") && (self.dean_approval == "approved") && (self.instractor_approval== "approved") && (self.academic_affair_approval== "approved") && (!self.other_payment.present?)
+		if (self.department_approval == "approved") && (self.registrar_approval == "approved") && (self.dean_approval == "approved") && (self.instructor_approval== "approved") && (self.academic_affair_approval== "approved") && (!self.other_payment.present?)
 			OtherPayment.create do |invoice|
 				invoice.student_id = self.student.id
 				invoice.academic_calendar_id = self.academic_calendar_id

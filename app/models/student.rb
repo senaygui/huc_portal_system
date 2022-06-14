@@ -101,11 +101,11 @@ class Student < ApplicationRecord
     self[:student_password] = self.password
   end
   def attributies_assignment
-    if (self.document_verification_status == "approved") && (self.academic_calendar_id.empty?)
-      self[:department_id] = program.department_id
-      self[:academic_calendar_id] = AcademicCalendar.where(study_level: self.study_level).where(admission_type: self.admission_type).("created_at DESC").first
-      self[:batch] = AcademicCalendar.where(study_level: self.study_level).where(admission_type: self.admission_type).("created_at DESC").first.pluck(:calender_year_in_gc)
-      self[:curriculum_version] = program.curriculums.where(active_status: "active").last.curriculum_version
+    if (self.document_verification_status == "approved") && (!self.academic_calendar.present?)
+      self.update_columns(academic_calendar_id: AcademicCalendar.where(study_level: self.study_level, admission_type: self.admission_type).order("created_at DESC").first.id)
+      self.update_columns(department_id: program.department_id)
+      self.update_columns(curriculum_version: program.curriculums.where(active_status: "active").last.curriculum_version)
+      self.update_columns(batch: AcademicCalendar.where(study_level: self.study_level).where(admission_type: self.admission_type).order("created_at DESC").first.calender_year_in_gc)
     end
   end
   def student_id_generator

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_12_204126) do
+ActiveRecord::Schema.define(version: 2022_06_14_112942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -290,7 +290,7 @@ ActiveRecord::Schema.define(version: 2022_06_12_204126) do
     t.index ["curriculums_id"], name: "index_course_assessments_on_curriculums_id"
   end
 
-  create_table "course_instractors", force: :cascade do |t|
+  create_table "course_instructors", force: :cascade do |t|
     t.uuid "admin_user_id"
     t.uuid "course_id"
     t.uuid "academic_calendar_id"
@@ -301,10 +301,10 @@ ActiveRecord::Schema.define(version: 2022_06_12_204126) do
     t.string "updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["academic_calendar_id"], name: "index_course_instractors_on_academic_calendar_id"
-    t.index ["admin_user_id"], name: "index_course_instractors_on_admin_user_id"
-    t.index ["course_id"], name: "index_course_instractors_on_course_id"
-    t.index ["section_id"], name: "index_course_instractors_on_section_id"
+    t.index ["academic_calendar_id"], name: "index_course_instructors_on_academic_calendar_id"
+    t.index ["admin_user_id"], name: "index_course_instructors_on_admin_user_id"
+    t.index ["course_id"], name: "index_course_instructors_on_course_id"
+    t.index ["section_id"], name: "index_course_instructors_on_section_id"
   end
 
   create_table "course_modules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -478,9 +478,9 @@ ActiveRecord::Schema.define(version: 2022_06_12_204126) do
     t.decimal "current_result_total"
     t.string "current_letter_grade"
     t.string "reason"
-    t.string "instractor_approval", default: "pending"
-    t.string "instractor_name"
-    t.datetime "instractor_date_of_response"
+    t.string "instructor_approval", default: "pending"
+    t.string "instructor_name"
+    t.datetime "instructor_date_of_response"
     t.string "registrar_approval", default: "pending"
     t.string "registrar_name"
     t.datetime "registrar_date_of_response"
@@ -493,6 +493,7 @@ ActiveRecord::Schema.define(version: 2022_06_12_204126) do
     t.string "academic_affair_approval", default: "pending"
     t.string "academic_affair_name"
     t.datetime "academic_affair_date_of_response"
+    t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["academic_calendar_id"], name: "index_grade_changes_on_academic_calendar_id"
@@ -639,9 +640,9 @@ ActiveRecord::Schema.define(version: 2022_06_12_204126) do
     t.decimal "current_result_total"
     t.string "current_letter_grade"
     t.string "reason"
-    t.string "instractor_approval", default: "pending"
-    t.string "instractor_name"
-    t.datetime "instractor_date_of_response"
+    t.string "instructor_approval", default: "pending"
+    t.string "instructor_name"
+    t.datetime "instructor_date_of_response"
     t.string "registrar_approval", default: "pending"
     t.string "registrar_name"
     t.datetime "registrar_date_of_response"
@@ -728,6 +729,17 @@ ActiveRecord::Schema.define(version: 2022_06_12_204126) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["payment_method_id"], name: "index_payment_transactions_on_payment_method_id"
+  end
+
+  create_table "prerequisites", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "course_id"
+    t.uuid "prerequisite_id"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_prerequisites_on_course_id"
+    t.index ["prerequisite_id"], name: "index_prerequisites_on_prerequisite_id"
   end
 
   create_table "programs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

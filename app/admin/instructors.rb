@@ -1,9 +1,9 @@
-ActiveAdmin.register AdminUser, as: "Instractor"  do
+ActiveAdmin.register AdminUser, as: "instructor"  do
   menu priority: 2
   permit_params :photo, :email, :password, :password_confirmation,:first_name,:last_name,:middle_name,:role,:username
   controller do
     def scoped_collection
-      super.where("role = ?", "instractor")
+      super.where("role = ?", "instructor")
     end
     def update_resource(object, attributes)
       update_method = attributes.first[:password].present? ? :update_attributes : :update_without_password
@@ -35,7 +35,7 @@ ActiveAdmin.register AdminUser, as: "Instractor"  do
   filter :created_at
 
   form do |f|
-    f.inputs "Instractor Account" do
+    f.inputs "Instructor Account" do
       f.input :first_name
       f.input :last_name
       f.input :middle_name
@@ -44,7 +44,7 @@ ActiveAdmin.register AdminUser, as: "Instractor"  do
       if !f.object.new_record?
         f.input :current_password
       else
-        f.input :role, as: :hidden, :input_html => { :value => "instractor"}
+        f.input :role, as: :hidden, :input_html => { :value => "instructor"}
       end
       f.input :password
       f.input :password_confirmation
@@ -53,9 +53,9 @@ ActiveAdmin.register AdminUser, as: "Instractor"  do
     f.actions
   end
 
-  show :title => proc{|instractor| instractor.name.full }  do
-    panel "Instractor Information" do
-      attributes_table_for instractor do
+  show :title => proc{|instructor| instructor.name.full }  do
+    panel "Instructor Information" do
+      attributes_table_for instructor do
         row "photo" do |pt|
           span image_tag(pt.photo, size: '150x150', class: "img-corner") if pt.photo.attached?
         end

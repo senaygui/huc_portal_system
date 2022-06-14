@@ -231,11 +231,18 @@ ActiveAdmin.register Student do
                   link_to pr.program.program_name, admin_program_path(pr.program.id)
                 end
                 row :curriculum_version
-                row :department
+                
+                row "Department" do |pr|
+                  link_to(pr.department.department_name, admin_department_path(pr.department.id)) if pr.department.present?
+                end
                 row :admission_type
                 row :study_level
+                row "Academic year" do |si|
+                  link_to(si.academic_calendar.calender_year_in_gc, admin_academic_calendar_path(si.academic_calendar)) if si.academic_calendar.present?
+                end
                 row :year
                 row :semester
+                row :batch
                 row :account_verification_status do |s|
                   status_tag s.account_verification_status
                 end

@@ -110,7 +110,7 @@ ActiveAdmin.register StudentGrade do
         end
       end
     end
-    if (current_admin_user.role == "instractor") || (current_admin_user.role == "admin")
+    if (current_admin_user.role == "instructor") || (current_admin_user.role == "admin")
       inputs 'Student Assessment' do
         f.input :updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
         table(class: 'form-table') do

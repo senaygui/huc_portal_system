@@ -52,7 +52,7 @@ ActiveAdmin.register Session do
             th 'present', class: 'form-table__col'
             th 'absent', class: 'form-table__col'
             th 'remark', class: 'form-table__col'
-            if !(current_admin_user.role == "instractor")
+            if !(current_admin_user.role == "instructor")
               th 'destroy', class: 'form-table__col'
             end
           end

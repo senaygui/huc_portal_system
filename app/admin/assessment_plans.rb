@@ -2,6 +2,13 @@ ActiveAdmin.register AssessmentPlan do
 
   permit_params :course_id,:assessment_title,:assessment_weight, :created_by, :updated_by
 
+  controller do
+    def create
+      super do |success,failure|
+        success.html { redirect_to admin_course_path(@assessment_plan.course_id) }
+      end
+    end
+  end
   index do
     selectable_column
     column :assessment_title
@@ -34,8 +41,12 @@ ActiveAdmin.register AssessmentPlan do
   form do |f|
     f.semantic_errors
     f.inputs "Assessment Plan" do
-      f.input :course_id, as: :search_select, url: admin_courses_path,
+      if params[:course_id].present?
+        f.input :course_id, as: :hidden, :input_html => { :value => params[:course_id]}
+      else
+        f.input :course_id, as: :search_select, url: admin_courses_path,
         fields: [:course_title, :id], display_name: 'course_title', minimum_input_length: 2, order_by: 'created_at_asc'
+      end
       f.input :assessment_title
       f.input :assessment_weight,:input_html => { :min => 1, :max => 100  } 
 
