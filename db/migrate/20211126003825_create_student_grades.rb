@@ -12,6 +12,9 @@ class CreateStudentGrades < ActiveRecord::Migration[5.2]
       t.decimal :grade_point
       t.string :updated_by
       t.string :created_by
+      t.string :department_approval, default: "pending"
+      t.string :department_head_name
+      t.datetime :department_head_date_of_response
 
       t.timestamps
     end

@@ -941,6 +941,9 @@ ActiveRecord::Schema.define(version: 2022_06_12_204126) do
     t.decimal "grade_point"
     t.string "updated_by"
     t.string "created_by"
+    t.string "department_approval", default: "pending"
+    t.string "department_head_name"
+    t.datetime "department_head_date_of_response"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_student_grades_on_course_id"

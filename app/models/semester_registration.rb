@@ -45,23 +45,51 @@ class SemesterRegistration < ApplicationRecord
 
 				if self.student.grade_reports.empty?
 					grade_report.total_course = self.course_registrations.count
-					grade_report.total_credit_hour = self.course_registrations.collect { |oi| oi.valid? ? (oi.course.credit_hour) : 0 }.sum 
-					grade_report.total_grade_point = self.course_registrations.collect { |oi| oi.valid? ? (oi.course.credit_hour * oi.student_grade.grade_point) : 0 }.sum 
+					grade_report.total_credit_hour = self.course_registrations.where(enrollment_status: "enrolled").collect { |oi| oi.student_grade.letter_grade != "I" ? (oi.course.credit_hour) : 0 }.sum 
+					grade_report.total_grade_point = self.course_registrations.where(enrollment_status: "enrolled").collect { |oi| oi.student_grade.letter_grade != "I" ? (oi.course.credit_hour * oi.student_grade.grade_point) : 0 }.sum 
 					grade_report.sgpa = (grade_report.total_grade_point / grade_report.total_credit_hour).round(2)
 
 					grade_report.cumulative_total_credit_hour = grade_report.total_credit_hour
 					grade_report.cumulative_total_grade_point = grade_report.total_grade_point
 					grade_report.cgpa = (grade_report.cumulative_total_grade_point / grade_report.cumulative_total_credit_hour).round(2)
-					grade_report.academic_status = self.student.program.grade_systems.last.academic_statuses.where("min_value <= ?", grade_report.cgpa).where("max_value >= ?", grade_report.cgpa).last.status
+					if self.course_registrations.joins(:student_grade).pluck(:letter_grade).include?("I")
+						grade_report.academic_status = "Incomplete"
+					else
+						grade_report.academic_status = self.student.program.grade_systems.last.academic_statuses.where("min_value <= ?", grade_report.cgpa).where("max_value >= ?", grade_report.cgpa).last.status
+						if grade_report.academic_status != "Dismissal"
+							if self.program.program_semester > self.student.semester
+								promoted_semester = self.student.semester + 1
+								self.student.update_columns(semester: promoted_semester)
+							elsif (self.program.program_semester == self.student.semester) && (self.program.program_duration > self.student.year)
+								promoted_year = self.student.year + 1
+								self.student.update_columns(semester: 1)
+								self.student.update_columns(year: promoted_year)
+							end
+						end
+					end
 				elsif self.student.grade_reports.present?
 					grade_report.total_course = self.course_registrations.count
-					grade_report.total_credit_hour = self.course_registrations.collect { |oi| oi.valid? ? (oi.course.credit_hour) : 0 }.sum 
-					grade_report.total_grade_point = self.course_registrations.collect { |oi| oi.valid? ? (oi.course.credit_hour * oi.student_grade.grade_point) : 0 }.sum 
+					grade_report.total_credit_hour = self.course_registrations.collect { |oi| oi.student_grade.letter_grade != "I" ? (oi.course.credit_hour) : 0 }.sum 
+					grade_report.total_grade_point = self.course_registrations.collect { |oi| oi.student_grade.letter_grade != "I" ? (oi.course.credit_hour * oi.student_grade.grade_point) : 0 }.sum 
 					grade_report.sgpa = grade_report.total_grade_point / grade_report.total_credit_hour
-					grade_report.cumulative_total_credit_hour = self.student.grade_reports.last.cumulative_total_credit_hour + grade_report.total_credit_hour
-					grade_report.cumulative_total_grade_point = self.student.grade_reports.last.cumulative_total_grade_point + grade_report.total_grade_point
+					grade_report.cumulative_total_credit_hour = self.student.grade_reports.order("created_at DESC").first.cumulative_total_credit_hour + grade_report.total_credit_hour
+					grade_report.cumulative_total_grade_point = self.student.grade_reports.order("created_at DESC").first.cumulative_total_grade_point + grade_report.total_grade_point
 					grade_report.cgpa = grade_report.cumulative_total_grade_point / grade_report.cumulative_total_credit_hour
-					grade_report.academic_status = self.program.grade_systems.last.academic_statuses.where("min_value <= ?", grade_report.cgpa).where("max_value >= ?", grade_report.cgpa).last.status
+					if self.course_registrations.joins(:student_grade).pluck(:letter_grade).include?("I")
+						grade_report.academic_status = "Incomplete"
+					else
+						grade_report.academic_status = self.student.program.grade_systems.last.academic_statuses.where("min_value <= ?", grade_report.cgpa).where("max_value >= ?", grade_report.cgpa).last.status
+						if grade_report.academic_status != "Dismissal"
+							if self.program.program_semester > self.student.semester
+								promoted_semester = self.student.semester + 1
+								self.student.update_columns(semester: promoted_semester)
+							elsif (self.program.program_semester == self.student.semester) && (self.program.program_duration > self.student.year)
+								promoted_year = self.student.year + 1
+								self.student.update_columns(semester: 1)
+								self.student.update_columns(year: promoted_year)
+							end
+						end
+					end
 				end
 				
 				grade_report.created_by = self.created_by			

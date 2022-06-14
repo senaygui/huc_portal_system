@@ -10,17 +10,17 @@ ActiveAdmin.register Program do
     end
     ## TODO: color label admission_type and study_level
     ## TODO: display number of currently admitted students in this program
-    # column "courses" do |c|
-    #   c.curriculums.last.courses.count
-    # end
+    column "courses" do |c|
+      c.courses.count
+    end
     column :study_level
     column :admission_type
     column "duration",:program_duration
     column :entrance_exam_requirement_status
     # number_column "Tuition",:total_tuition, as: :currency, unit: "ETB",  format: "%n %u" ,delimiter: ",", precision: 2 
-    # column "Created At", sortable: true do |c|
-    #   c.created_at.strftime("%b %d, %Y")
-    # end
+    column "Created At", sortable: true do |c|
+      c.created_at.strftime("%b %d, %Y")
+    end
     actions
   end
 

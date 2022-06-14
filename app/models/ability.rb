@@ -106,7 +106,7 @@ class Ability
         can :manage, Attendance
         can :manage, Session
 
-        cannot [:create, :read], GradeReport
+        can [:update, :read], GradeReport
         cannot :destroy, GradeReport
         can :read, StudentGrade
         can :manage, GradeChange
@@ -245,11 +245,12 @@ class Ability
         can :read, SemesterRegistration, department_id: user.department.id
         can :read, Attendance, program: {department_id: user.department.id}
         can :read, Session, course: {program: {department_id: user.department.id}}
-        can :read, StudentGrade, department_id: user.department.id
+        can [:read, :update], StudentGrade, department_id: user.department.id
         can [:read, :update], GradeChange, department_id: user.department.id
         can [:read, :update], GradeReport, department_id: user.department.id  
-        can [:read, :update], Withdrawal
-        can [:read, :update], AddAndDrop
+        can [:read, :update], Withdrawal, department_id: user.department.id
+        can [:read, :update], AddAndDrop, department_id: user.department.id
+        can [:read, :update], MakeupExam, department_id: user.department.id
     when "dean"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can [:read, :update], Withdrawal
