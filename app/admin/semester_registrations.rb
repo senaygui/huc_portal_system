@@ -1,13 +1,6 @@
 ActiveAdmin.register SemesterRegistration do
   menu priority: 9
   permit_params :department_id, :section_id, :student_full_name,:student_id_number, :student_id,:total_price,:registration_fee,:late_registration_fee,:remaining_amount,:mode_of_payment,:semester,:year,:total_enrolled_course,:academic_calendar_id,:registrar_approval_status,:finance_approval_status,:created_by,:last_updated_by,course_registrations_attributes: [:id, :student_id,:semester_registration_id,:course_id,:academic_calendar_id,:student_full_name,:enrollment_status,:course_title,:department_id, :program_id, :section_id, :year, :semester, :created_by,:updated_by, :_destroy]
-  
-    scoped_collection_action :scoped_collection_update, title: 'Set Section', form: -> do
-                                         { 
-                                            section_id: Section.all.map { |section| [section.section_full_name, section.id] },
-                                            
-                                          }
-                                        end
 
       active_admin_import validate: true,
                       headers_rewrites: { 'ID': :student_id },
@@ -20,6 +13,7 @@ ActiveAdmin.register SemesterRegistration do
                       }
       scoped_collection_action :scoped_collection_update, title: 'Batch Action', form: -> do
                                          { 
+                                           section_id: Section.all.map { |section| [section.section_full_name, section.id] },
                                           registrar_approval_status: ["pending","approved", "denied", "incomplete"],
                                           mode_of_payment: [ "Monthly Payment", "Half Semester Payment","Full Semester Payment"]
                                             
