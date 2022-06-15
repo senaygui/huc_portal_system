@@ -2,6 +2,7 @@ class StudentGrade < ApplicationRecord
   after_create :generate_assessment
   after_save :update_subtotal
   after_save :generate_grade
+  after_save :add_course_registration
   ##validation
 
   ##assocations
@@ -15,6 +16,10 @@ class StudentGrade < ApplicationRecord
     has_many :grade_changes
     has_many :makeup_exams
 
+  def add_course_registration
+    cr = CourseRegistration.where(student_id: self.student.id, course_id: self.course.id).id
+    self.update_columns(course_registration_id: cr)
+  end
 	# def assesment_total
  #    # assessments.collect { |oi| oi.valid? ? (oi.result) : 0 }.sum
 
