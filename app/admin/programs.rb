@@ -181,36 +181,38 @@ ActiveAdmin.register Program do
             panel "ClassYear: Year #{i}" do
               (1..program.program_semester).map do |s|
                 panel "Semester: #{s}" do
-                  table_for program.curriculums.where(active_status: "active").courses.where(year: i, semester: s).order('year ASC','semester ASC') do
-                    ## TODO: wordwrap titles and long texts
-                    column "course title" do |item|
-                      link_to item.course_title, [ :admin, item] 
-                    end
-                    column "module code" do |item|
-                      item.course_module.module_code
-                    end
-                    column "course code" do |item|
-                      item.course_code
-                    end
-                    column "credit hour" do |item|
-                      item.credit_hour
-                    end
-                    column :lecture_hour do |item|
-                      item.lecture_hour
-                    end
-                    column :lab_hour do |item|
-                      item.lab_hour
-                    end
-                    column "ECTS" do |item|
-                      item.ects
-                    end
-                    column :created_by
-                    column :last_updated_by
-                    column "Starts at", sortable: true do |c|
-                      c.course_starting_date.strftime("%b %d, %Y") if c.course_starting_date.present?
-                    end
-                    column "ends At", sortable: true do |c|
-                      c.course_ending_date.strftime("%b %d, %Y") if c.course_ending_date.present?
+                  if program.curriculums.present?
+                    table_for program.curriculums.where(active_status: "active").courses.where(year: i, semester: s).order('year ASC','semester ASC') do
+                      ## TODO: wordwrap titles and long texts
+                      column "course title" do |item|
+                        link_to item.course_title, [ :admin, item] 
+                      end
+                      column "module code" do |item|
+                        item.course_module.module_code
+                      end
+                      column "course code" do |item|
+                        item.course_code
+                      end
+                      column "credit hour" do |item|
+                        item.credit_hour
+                      end
+                      column :lecture_hour do |item|
+                        item.lecture_hour
+                      end
+                      column :lab_hour do |item|
+                        item.lab_hour
+                      end
+                      column "ECTS" do |item|
+                        item.ects
+                      end
+                      column :created_by
+                      column :last_updated_by
+                      column "Starts at", sortable: true do |c|
+                        c.course_starting_date.strftime("%b %d, %Y") if c.course_starting_date.present?
+                      end
+                      column "ends At", sortable: true do |c|
+                        c.course_ending_date.strftime("%b %d, %Y") if c.course_ending_date.present?
+                      end
                     end
                   end
                 end
