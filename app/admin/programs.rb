@@ -181,7 +181,7 @@ ActiveAdmin.register Program do
             panel "ClassYear: Year #{i}" do
               (1..program.program_semester).map do |s|
                 panel "Semester: #{s}" do
-                  table_for program.curriculums.last.courses.where(year: i, semester: s).order('year ASC','semester ASC') do
+                  table_for program.curriculums.where(active_status: "active").courses.where(year: i, semester: s).order('year ASC','semester ASC') do
                     ## TODO: wordwrap titles and long texts
                     column "course title" do |item|
                       link_to item.course_title, [ :admin, item] 
