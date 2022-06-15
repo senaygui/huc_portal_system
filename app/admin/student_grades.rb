@@ -12,11 +12,11 @@ ActiveAdmin.register StudentGrade do
                         importer.batch_replace(:student_id, options)
                       }
                       
-  # scoped_collection_action :scoped_collection_update, title: 'Approve Grade', form: -> do
-  #                                        { 
-  #                                           department_approval: ["pending","approved", "denied"]
-  #                                         }
-  #                                       end
+  scoped_collection_action :scoped_collection_update, title: 'Approve Grade', form: -> do
+                                         { 
+                                            department_approval: ["pending","approved", "denied"]
+                                          }
+                                        end
   member_action :generate_grade, method: :put do
     @student_grade= StudentGrade.find(params[:id])
     @student_grade.generate_grade
