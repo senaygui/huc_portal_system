@@ -15,6 +15,12 @@ ActiveAdmin.register Student do
                             # ),
                             :timestamps=> true,
                             :batch_size => 1000
+      scoped_collection_action :scoped_collection_update, title: 'Batch Approve', form: -> do
+                                         { 
+                                          document_verification_status: ["pending","approved", "denied", "incomplete"]
+                                            
+                                          }
+                                        end
   controller do
     def update_resource(object, attributes)
       update_method = attributes.first[:password].present? ? :update_attributes : :update_without_password
