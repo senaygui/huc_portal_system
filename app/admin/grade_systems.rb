@@ -1,7 +1,7 @@
 ActiveAdmin.register GradeSystem do
 
   permit_params :program_id,:curriculum_id,:min_cgpa_value_to_pass,:min_cgpa_value_to_graduate,:remark,:created_by,:updated_by,grades_attributes: [:id,:letter_grade,:grade_point,:min_row_mark,:max_row_mark, :_destroy],academic_statuses_attributes: [:id,:status,:min_value,:max_value, :_destroy]
-
+  active_admin_import
   index do
     selectable_column
     column "Program", sortable: true do |c|

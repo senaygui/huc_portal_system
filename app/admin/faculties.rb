@@ -2,7 +2,7 @@ ActiveAdmin.register Faculty do
 
   menu priority: 2
   permit_params :faculty_name,:background,:overview,:location,:phone_number,:email,:facebook_handle,:telegram_handle,:twitter_handle,:instagram_handle,:created_by,:last_updated_by, :alternative_phone_number
-
+  active_admin_import
   index do
     selectable_column
     column :faculty_name

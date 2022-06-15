@@ -1,8 +1,8 @@
 ActiveAdmin.register Course do
   menu priority: 7
-  
+    
 permit_params(:course_outline,:course_module_id,:curriculum_id,:program_id,:course_title,:course_code,:course_description,:year,:semester,:course_starting_date,:course_ending_date,:credit_hour,:lecture_hour,:lab_hour,:ects,:created_by, assessment_plans_attributes: [:id,:course_id,:assessment_title,:assessment_weight, :created_by, :updated_by, :_destroy], course_instructors_attributes: [:id ,:section_id,:year,:admin_user_id,:course_id,:academic_calendar_id,:semester, :created_by, :updated_by, :_destroy], course_prerequisites_attributes: [:id, :course_id,:prerequisite_id,:created_by,:updated_by, :_destroy])
-
+  active_admin_import
   index do
     selectable_column
     column :course_title
