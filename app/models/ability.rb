@@ -22,10 +22,10 @@ class Ability
         can :manage, StudentAddress
         can :manage, EmergencyContact
         # can :manage, CourseSection
-        can :read, StudentGrade
-        can :update, StudentGrade
-        can :destroy, StudentGrade
-        cannot :create, StudentGrade
+        can :manage, StudentGrade
+        # can :update, StudentGrade
+        # can :destroy, StudentGrade
+        # cannot :create, StudentGrade
         can :manage, GradeReport
         # can :manage, GradeRule
         can :manage, Grade

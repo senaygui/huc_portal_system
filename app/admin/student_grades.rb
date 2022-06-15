@@ -2,7 +2,7 @@ ActiveAdmin.register StudentGrade do
 
   permit_params :department_approval,:department_head_name,:department_head_date_of_response, :course_registration_id,:student_id,:letter_grade,:grade_point,:assesment_total,:grade_point,:course_id,assessments_attributes: [:id,:student_grade_id,:assessment_plan_id,:student_id,:course_id,:result,:created_by,:updated_by, :_destroy]
 
-  active_admin_import validate: true,
+   active_admin_import validate: true,
                       headers_rewrites: { 'ID': :student_id },
                       before_batch_import: ->(importer) {
                         student_ids = importer.values_at(:student_id)
@@ -11,11 +11,12 @@ ActiveAdmin.register StudentGrade do
                         options = Hash[*students.flatten] # #{"Jane" => 2, "John" => 1}
                         importer.batch_replace(:student_id, options)
                       }
-  scoped_collection_action :scoped_collection_update, title: 'Approve Grade', form: -> do
-                                         { 
-                                            department_approval: ["pending","approved", "denied"]
-                                          }
-                                        end
+                      
+  # scoped_collection_action :scoped_collection_update, title: 'Approve Grade', form: -> do
+  #                                        { 
+  #                                           department_approval: ["pending","approved", "denied"]
+  #                                         }
+  #                                       end
   member_action :generate_grade, method: :put do
     @student_grade= StudentGrade.find(params[:id])
     @student_grade.generate_grade
