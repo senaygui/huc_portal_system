@@ -18,6 +18,9 @@ class Ability
         can :manage, CourseRegistration
         can :manage, Attendance
         can :manage, Session
+        can :manage, PaymentTransaction
+        can :manage, StudentAddress
+        can :manage, EmergencyContact
         # can :manage, CourseSection
         can :read, StudentGrade
         can :update, StudentGrade

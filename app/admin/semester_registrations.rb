@@ -18,6 +18,13 @@ ActiveAdmin.register SemesterRegistration do
                         options = Hash[*students.flatten] # #{"Jane" => 2, "John" => 1}
                         importer.batch_replace(:student_id, options)
                       }
+      scoped_collection_action :scoped_collection_update, title: 'Batch Action', form: -> do
+                                         { 
+                                          registrar_approval_status: ["pending","approved", "denied", "incomplete"],
+                                          mode_of_payment: [ "Monthly Payment", "Half Semester Payment","Full Semester Payment"]
+                                            
+                                          }
+                                        end
   csv do
     column "username" do |username|
       username.student.student_id
