@@ -6,7 +6,7 @@ class StudentGrade < ApplicationRecord
   ##validation
 
   ##assocations
-    belongs_to :course_registration
+    belongs_to :course_registration, optional: true
     belongs_to :student
     belongs_to :course
     belongs_to :department
