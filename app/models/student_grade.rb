@@ -17,7 +17,7 @@ class StudentGrade < ApplicationRecord
     has_many :makeup_exams
 
   def add_course_registration
-    cr = CourseRegistration.where(student_id: self.student.id, course_id: self.course.id).id
+    cr = CourseRegistration.where(student_id: self.student.id, course_id: self.course.id).last.id
     self.update_columns(course_registration_id: cr)
   end
 	# def assesment_total
