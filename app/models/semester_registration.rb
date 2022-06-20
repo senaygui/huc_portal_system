@@ -78,7 +78,7 @@ class SemesterRegistration < ApplicationRecord
 					if self.course_registrations.joins(:student_grade).pluck(:letter_grade).include?("I")
 						grade_report.academic_status = "Incomplete"
 					else
-						grade_report.academic_status = self.student.program.grade_systems.last.academic_statuses.where("min_value < ?", grade_report.cgpa).where("max_value > ?", grade_report.cgpa).last.status
+						grade_report.academic_status = self.student.program.grade_systems.last.academic_statuses.where("min_value <= ?", grade_report.cgpa).where("max_value >= ?", grade_report.cgpa).last.status
 						if grade_report.academic_status != "Dismissal"
 							if self.program.program_semester > self.student.semester
 								promoted_semester = self.student.semester + 1
