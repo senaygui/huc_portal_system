@@ -121,6 +121,8 @@ ActiveAdmin.register Student do
         f.input :email
         f.input :password
         f.input :password_confirmation
+        f.input :semester
+        f.input :year
         if f.object.new_record?
           f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
           f.input :year, as: :hidden, :input_html => { :value => 1}
