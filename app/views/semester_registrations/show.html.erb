@@ -79,13 +79,13 @@
 						  </thead>
 
 						  <tbody>
-						    <% @semester_registration.curriculums.each do |curriculum| %>
+						    <% @semester_registration.course_registrations.each do |curriculum| %>
 						      <tr>
 						        
 						        <td><%= curriculum.course.course_title %></td>
 						        <td><%= curriculum.course.course_module.module_code %></td>
 						        <td><%= curriculum.course.course_code %></td>
-						        <td><%= curriculum.credit_hour %></td>
+						        <td><%= curriculum.course.credit_hour %></td>
 						      </tr>
 						    <% end %>
 						  </tbody>
