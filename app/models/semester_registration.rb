@@ -47,11 +47,11 @@ class SemesterRegistration < ApplicationRecord
 					grade_report.total_course = self.course_registrations.count
 					grade_report.total_credit_hour = self.course_registrations.where(enrollment_status: "enrolled").collect { |oi| oi.student_grade.letter_grade != "I" ? (oi.course.credit_hour) : 0 }.sum 
 					grade_report.total_grade_point = self.course_registrations.where(enrollment_status: "enrolled").collect { |oi| oi.student_grade.letter_grade != "I" ? (oi.course.credit_hour * oi.student_grade.grade_point) : 0 }.sum 
-					grade_report.sgpa = (grade_report.total_grade_point / grade_report.total_credit_hour).round(2)
+					grade_report.sgpa = (grade_report.total_grade_point / grade_report.total_credit_hour).round(1)
 
 					grade_report.cumulative_total_credit_hour = grade_report.total_credit_hour
 					grade_report.cumulative_total_grade_point = grade_report.total_grade_point
-					grade_report.cgpa = (grade_report.cumulative_total_grade_point / grade_report.cumulative_total_credit_hour).round(2)
+					grade_report.cgpa = (grade_report.cumulative_total_grade_point / grade_report.cumulative_total_credit_hour).round(1)
 					if self.course_registrations.joins(:student_grade).pluck(:letter_grade).include?("I")
 						grade_report.academic_status = "Incomplete"
 					else
@@ -78,7 +78,7 @@ class SemesterRegistration < ApplicationRecord
 					if self.course_registrations.joins(:student_grade).pluck(:letter_grade).include?("I")
 						grade_report.academic_status = "Incomplete"
 					else
-						grade_report.academic_status = self.student.program.grade_systems.last.academic_statuses.where("min_value < ?", grade_report.cgpa.round(1))).where("max_value > ?", grade_report.cgpa.round(1)).last.status
+						grade_report.academic_status = self.student.program.grade_systems.last.academic_statuses.where("min_value < ?", grade_report.cgpa).where("max_value > ?", grade_report.cgpa).last.status
 						if grade_report.academic_status != "Dismissal"
 							if self.program.program_semester > self.student.semester
 								promoted_semester = self.student.semester + 1
