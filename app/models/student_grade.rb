@@ -1,7 +1,7 @@
 class StudentGrade < ApplicationRecord
   after_create :generate_assessment
-  # after_save :update_subtotal
-  # after_save :generate_grade
+  after_save :update_subtotal
+  after_save :generate_grade
   after_save :add_course_registration
   ##validation
 
@@ -20,27 +20,27 @@ class StudentGrade < ApplicationRecord
     cr = CourseRegistration.where(student_id: self.student.id, course_id: self.course.id).last.id
     self.update_columns(course_registration_id: cr)
   end
-	# def assesment_total
- #    # assessments.collect { |oi| oi.valid? ? (oi.result) : 0 }.sum
+	def assesment_total
+    # assessments.collect { |oi| oi.valid? ? (oi.result) : 0 }.sum
 
- #    assessments.sum(:result)
- #  end
+    assessments.sum(:result)
+  end
   def update_subtotal
     self.update_columns(assesment_total: self.assessments.sum(:result))
   end
-  # def generate_grade
-  #   if assessments.where(result: nil).empty?
-  #     grade_in_letter = self.student.program.grade_systems.last.grades.where("min_row_mark <= ?", self.assesment_total).where("max_row_mark >= ?", self.assesment_total).last.letter_grade
-  #     grade_letter_value = self.student.program.grade_systems.last.grades.where("min_row_mark <= ?", self.assesment_total).where("max_row_mark >= ?", self.assesment_total).last.grade_point
-  #   	self.update_columns(letter_grade: grade_in_letter)
-  #     self.update_columns(grade_point: grade_letter_value)
-  #   elsif assessments.where(result: nil)
-  #     self.update_columns(letter_grade: "I")
-  #     # needs to be empty and after a week changes to f
-  #     self.update_columns(grade_point: 0)
-  #   end
-  # 	# self[:grade_in_letter] = grade_in_letter
-  # end
+  def generate_grade
+    if assessments.where(result: nil).empty?
+      grade_in_letter = self.student.program.grade_systems.last.grades.where("min_row_mark <= ?", self.assesment_total).where("max_row_mark >= ?", self.assesment_total).last.letter_grade
+      grade_letter_value = self.student.program.grade_systems.last.grades.where("min_row_mark <= ?", self.assesment_total).where("max_row_mark >= ?", self.assesment_total).last.grade_point
+    	self.update_columns(letter_grade: grade_in_letter)
+      self.update_columns(grade_point: grade_letter_value)
+    elsif assessments.where(result: nil)
+      self.update_columns(letter_grade: "I")
+      # needs to be empty and after a week changes to f
+      self.update_columns(grade_point: 0)
+    end
+  	# self[:grade_in_letter] = grade_in_letter
+  end
 
 	private
 
