@@ -98,6 +98,11 @@ ActiveAdmin.register Invoice, as: "RegistrationPayment" do
     end
     f.inputs "invoice status" do
       f.input :invoice_status, as: :select, :collection => ["pending", "approved", "re-submit", "denied", "under submitted"], :include_blank => false
+      if f.object.new_record?
+        f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+      else
+        f.input :last_updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+      end
     end
     
     # f.actions
@@ -107,17 +112,13 @@ ActiveAdmin.register Invoice, as: "RegistrationPayment" do
         link_to 'Cancel', :back
       end
     end
-    if f.object.new_record?
-      f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-    else
-      f.input :last_updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-    end 
+     
   end
 
   action_item :edit, only: :show, priority: 1  do
     if ((current_admin_user.role == "admin") || (current_admin_user.role == "finance head")) && !(registration_payment.payment_transaction.present?)
       link_to 'Add Payment Information', edit_admin_registration_payment_path(registration_payment.id, page_name: "payment_transaction")
-    elsif ((current_admin_user.role == "admin") || (current_admin_user.role == "finance head")) && (registration_payment.payment_transaction.present?)
+    elsif ((current_admin_user.role == "admin") || (current_admin_user.role == "finance head")) && (registration_payment.payment_transaction.present?) && !(registration_payment.created_by == "self")
       link_to 'Edit Payment Information', edit_admin_registration_payment_path(registration_payment.id, page_name: "payment_transaction")  
     end 
   end

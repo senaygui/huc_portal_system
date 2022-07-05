@@ -22,13 +22,13 @@ permit_params :semester_registration_id,:student_id,:academic_calendar_id,:progr
     redirect_to collection_path, notice: "Grade Report Is Approved Successfully"
   end
 
-  batch_action "Update Incomplete Grade Report For", method: :put, if: proc{ current_admin_user.role == "registrar head" }, confirm: "Are you sure?" do |ids|
-    GradeReport.find(ids).each do |grade_report|
-      grade_report.update_grade_report
-      grade_report.update(updated_by: current_admin_user.name.full)
-    end
-    redirect_to collection_path, notice: "Grade Report Update Successfully"
-  end
+  # batch_action "Update Incomplete Grade Report For", method: :put, if: proc{ current_admin_user.role == "registrar head" }, confirm: "Are you sure?" do |ids|
+  #   GradeReport.find(ids).each do |grade_report|
+  #     grade_report.update_grade_report
+  #     grade_report.update(updated_by: current_admin_user.name.full)
+  #   end
+  #   redirect_to collection_path, notice: "Grade Report Update Successfully"
+  # end
   index do
     selectable_column
     column "Student Name", sortable: true do |n|

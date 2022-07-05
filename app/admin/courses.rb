@@ -1,7 +1,7 @@
 ActiveAdmin.register Course do
   menu priority: 7
     
-permit_params(:course_outline,:course_module_id,:curriculum_id,:program_id,:course_title,:course_code,:course_description,:year,:semester,:course_starting_date,:course_ending_date,:credit_hour,:lecture_hour,:lab_hour,:ects,:created_by, assessment_plans_attributes: [:id,:course_id,:assessment_title,:assessment_weight, :created_by, :updated_by, :_destroy], course_instructors_attributes: [:id ,:section_id,:year,:admin_user_id,:course_id,:academic_calendar_id,:semester, :created_by, :updated_by, :_destroy], course_prerequisites_attributes: [:id, :course_id,:prerequisite_id,:created_by,:updated_by, :_destroy])
+permit_params(:course_outline,:course_module_id,:curriculum_id,:program_id,:course_title,:course_code,:course_description,:year,:semester,:course_starting_date,:course_ending_date,:credit_hour,:lecture_hour,:lab_hour,:ects,:created_by, assessment_plans_attributes: [:id,:course_id,:assessment_title,:assessment_weight,:final_exam, :created_by, :updated_by, :_destroy], course_instructors_attributes: [:id ,:section_id,:year,:admin_user_id,:course_id,:academic_calendar_id,:semester, :created_by, :updated_by, :_destroy], course_prerequisites_attributes: [:id, :course_id,:prerequisite_id,:created_by,:updated_by, :_destroy])
   active_admin_import
   index do
     selectable_column
@@ -107,8 +107,9 @@ permit_params(:course_outline,:course_module_id,:curriculum_id,:program_id,:cour
       panel "Assessment Plans" do
         f.has_many :assessment_plans,heading: " ", remote: true, allow_destroy: true, new_record: true do |a|
           a.input :assessment_title
-          a.input :assessment_weight,:input_html => { :min => 1, :max => 100  } 
-
+          a.input :assessment_weight,:input_html => { :min => 1, :max => 100  }
+          a.input :final_exam 
+          a.label :_destroy
           if a.object.new_record?
             a.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
           else
@@ -279,7 +280,7 @@ permit_params(:course_outline,:course_module_id,:curriculum_id,:program_id,:cour
                 column  :created_by
                 column  :updated_by 
                 column "links", sortable: true do |c|
-                    "#{link_to("View", admin_assessment_plan_path(c))} #{link_to "Edit", edit_admin_course_path(course.id, page_name: "add_assessment")}".html_safe     
+                    "#{link_to("View", admin_assessment_plan_path(c))} #{link_to "Edit", edit_admin_assessment_plan_path(c)}".html_safe     
                 end
               end
             end

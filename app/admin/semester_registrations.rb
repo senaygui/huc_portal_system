@@ -185,7 +185,7 @@ ActiveAdmin.register SemesterRegistration do
               link_to pr.student.program.program_name, admin_program_path(pr.student.program.id)
             end
             row "Department" do |si|
-              si.student.department
+              link_to si.department.department_name, admin_department_path(si.department.id)
             end
             row :admission_type do |si|
               si.admission_type
@@ -273,18 +273,18 @@ ActiveAdmin.register SemesterRegistration do
     panel "Student registration information" do
       attributes_table_for semester_registration do
         row "full name", sortable: true do |n|
-          link_to n.student.name.full , admin_student_path(n.student.id) 
+          link_to n.student.name.full, admin_student_path(n.student.id) 
         end
         row "Student ID" do |si|
           si.student.student_id
         end
         row "Program" do |pr|
-          link_to pr.student.program.program_name, admin_program_path(pr.student.program.id)
+          link_to pr.program.program_name, admin_program_path(pr.program.id)
         end
         row :admission_type 
         row :study_level 
         row "Department" do |si|
-          si.student.department
+          link_to si.department.department_name, admin_department_path(si.department.id)
         end
         row "Section" do |si|
           si.section.section_short_name if si.section.present?

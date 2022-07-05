@@ -18,7 +18,7 @@ ActiveAdmin.register StudentGrade do
                                           }
                                         end
   member_action :generate_grade, method: :put do
-    @student_grade= StudentGrade.find(params[:id])
+    @student_grade = StudentGrade.find(params[:id])
     @student_grade.generate_grade
     redirect_back(fallback_location: admin_student_grade_path)
   end
@@ -26,12 +26,12 @@ ActiveAdmin.register StudentGrade do
   #   link_to 'Generate Grade', generate_grade_admin_student_grade_path(student_grade.id), method: :put, data: { confirm: 'Are you sure?' }        
   # end
 
-  # batch_action "Generate Grade for", method: :put, confirm: "Are you sure?" do |ids|
-  #   StudentGrade.find(ids).each do |student_grade|
-  #     student_grade.generate_grade
-  #   end
-  #   redirect_to collection_path, notice: "Grade Is Generated Successfully"
-  # end
+  batch_action "Generate Grade for", method: :put, confirm: "Are you sure?" do |ids|
+    StudentGrade.find(ids).each do |student_grade|
+      student_grade.generate_grade
+    end
+    redirect_to collection_path, notice: "Grade Is Generated Successfully"
+  end
   batch_action "Approve Grade for", method: :put, if: proc{ current_admin_user.role == "department head" }, confirm: "Are you sure?" do |ids|
     StudentGrade.find(ids).each do |student_grade|
       student_grade.update(department_approval: "approved", department_head_name: "#{current_admin_user.name.full}", department_head_date_of_response: Time.now)
