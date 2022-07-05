@@ -1,6 +1,6 @@
 ActiveAdmin.register AssessmentPlan do
 
-  permit_params :course_id,:assessment_title,:assessment_weight, :created_by, :updated_by
+  permit_params :course_id,:assessment_title,:assessment_weight, :created_by, :updated_by,:final_exam
 
   controller do
     def create
@@ -49,6 +49,7 @@ ActiveAdmin.register AssessmentPlan do
       end
       f.input :assessment_title
       f.input :assessment_weight,:input_html => { :min => 1, :max => 100  } 
+      f.input :final_exam
 
       if f.object.new_record?
         f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}

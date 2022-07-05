@@ -128,8 +128,7 @@ ActiveAdmin.register Student do
           f.input :year, as: :hidden, :input_html => { :value => 1}
           f.input :semester, as: :hidden, :input_html => { :value => 1}
         else
-          f.input :current_password
-          f.input :last_updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full} 
+          f.input :current_password 
         end   
         f.input :current_occupation   
       end
@@ -212,6 +211,7 @@ ActiveAdmin.register Student do
       f.inputs "Student Account Status" do
         f.input :account_status, as: :select, :collection => ["active","suspended"]
       end
+      f.input :last_updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
     end
     f.actions
   end
@@ -519,6 +519,25 @@ ActiveAdmin.register Student do
         end 
       end
       tab "Grade Report" do
+        panel "Grade Report",html:{loading: "lazy"} do
+          table_for student.grade_reports.order('year ASC, semester ASC') do
+            
+            column "Academic Year", sortable: true do |n|
+              link_to n.academic_calendar.calender_year_in_gc, admin_academic_calendar_path(n.academic_calendar)
+            end
+            column :year
+            column :semester
+            column "SGPA",:sgpa
+            column "CGPA",:cgpa
+            column :academic_status
+            column "Issue Date", sortable: true do |c|
+              c.created_at.strftime("%b %d, %Y")
+            end
+            column "Actions", sortable: true do |c|
+              link_to "view", admin_grade_report_path(c.id)
+            end
+          end      
+        end 
       end
       
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_14_112942) do
+ActiveRecord::Schema.define(version: 2022_07_04_090006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -185,6 +185,7 @@ ActiveRecord::Schema.define(version: 2022_06_14_112942) do
     t.string "updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "final_exam", default: false
     t.index ["course_id"], name: "index_assessment_plans_on_course_id"
   end
 
@@ -198,6 +199,7 @@ ActiveRecord::Schema.define(version: 2022_06_14_112942) do
     t.string "updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "final_exam", default: false
     t.index ["assessment_plan_id"], name: "index_assessments_on_assessment_plan_id"
     t.index ["course_id"], name: "index_assessments_on_course_id"
     t.index ["student_grade_id"], name: "index_assessments_on_student_grade_id"
