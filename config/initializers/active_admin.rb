@@ -151,7 +151,6 @@ ActiveAdmin.setup do |config|
   # Active Admin resources and pages from here.
   #
   # config.before_action :do_something_awesome
-
   # == Attribute Filters
   #
   # You can exclude possibly sensitive model attributes from being displayed,
@@ -318,11 +317,6 @@ ActiveAdmin.setup do |config|
   # override the content of the footer here.
   #
   config.footer = "© #{Time.now.strftime("%Y")} Copyright: yesuitsolution.com"
-
-  # config.before_action do
-  #   left_sidebar!(collapsed: true) if respond_to?(:left_sidebar!)
-  # end
-
   # == Sorting
   #
   # By default ActiveAdmin::OrderClause is used for sorting logic
