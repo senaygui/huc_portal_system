@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_04_090006) do
+ActiveRecord::Schema.define(version: 2022_07_06_164346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -290,6 +290,25 @@ ActiveRecord::Schema.define(version: 2022_07_04_090006) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["curriculums_id"], name: "index_course_assessments_on_curriculums_id"
+  end
+
+  create_table "course_exemptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "course_id"
+    t.string "letter_grade", null: false
+    t.integer "credit_hour", null: false
+    t.string "course_taken", null: false
+    t.string "exemption_approval", default: "pending"
+    t.string "exemption_type"
+    t.uuid "transfer_id"
+    t.string "exemptible_type"
+    t.uuid "exemptible_id"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_course_exemptions_on_course_id"
+    t.index ["exemptible_type", "exemptible_id"], name: "index_course_exemptions_on_exemptible_type_and_exemptible_id"
+    t.index ["transfer_id"], name: "index_course_exemptions_on_transfer_id"
   end
 
   create_table "course_instructors", force: :cascade do |t|
@@ -1023,6 +1042,44 @@ ActiveRecord::Schema.define(version: 2022_07_04_090006) do
     t.index ["email"], name: "index_students_on_email", unique: true
     t.index ["program_id"], name: "index_students_on_program_id"
     t.index ["reset_password_token"], name: "index_students_on_reset_password_token", unique: true
+  end
+
+  create_table "transfers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "student_id"
+    t.uuid "program_id"
+    t.uuid "section_id"
+    t.uuid "department_id"
+    t.uuid "academic_calendar_id"
+    t.string "student_full_name"
+    t.string "id_number"
+    t.integer "semester", null: false
+    t.integer "year", null: false
+    t.string "new_department"
+    t.string "modality_transfer"
+    t.text "reason"
+    t.datetime "date_of_transfer"
+    t.string "formal_department_head"
+    t.string "formal_department_head_approval", default: "pending"
+    t.datetime "formal_department_head_approval_date"
+    t.string "remark"
+    t.string "new_department_head"
+    t.string "new_department_head_approval", default: "pending"
+    t.datetime "new_department_head_approval_date"
+    t.string "dean_name"
+    t.string "dean_approval", default: "pending"
+    t.datetime "dean_approval_date"
+    t.string "registrar_name"
+    t.string "registrar_approval", default: "pending"
+    t.datetime "registrar_approval_date"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["academic_calendar_id"], name: "index_transfers_on_academic_calendar_id"
+    t.index ["department_id"], name: "index_transfers_on_department_id"
+    t.index ["program_id"], name: "index_transfers_on_program_id"
+    t.index ["section_id"], name: "index_transfers_on_section_id"
+    t.index ["student_id"], name: "index_transfers_on_student_id"
   end
 
   create_table "withdrawals", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
