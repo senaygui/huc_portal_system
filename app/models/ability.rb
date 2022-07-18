@@ -172,6 +172,20 @@ class Ability
         can [:read, :update], Withdrawal
         can :manage, Invoice
         cannot :destroy, Invoice
+        can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
+        can :read, Program
+        #TODO: after one college created disable new action   
+        # cannot :destroy, College, id: 1
+
+        can :read, Department
+        can :read, CourseModule
+        can :read, Course
+        can :read, Student
+        can :manage, PaymentMethod
+        can :read, AcademicCalendar
+        can :manage, CollegePayment
+        can :read, SemesterRegistration
+        can :manage, Invoice
     when "regular_finance"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, Program, admission_type: "regular"

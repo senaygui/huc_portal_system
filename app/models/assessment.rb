@@ -1,6 +1,6 @@
 class Assessment < ApplicationRecord
 	##vaildations
-		validate :limit_assessment_result
+		# validate :limit_assessment_result
 	##associations
 		belongs_to :student_grade
 		belongs_to :student, optional: true

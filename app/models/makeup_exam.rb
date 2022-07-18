@@ -8,7 +8,7 @@ class MakeupExam < ApplicationRecord
 		validates :previous_result_total, :presence => true 
 		validates :previous_letter_grade, :presence => true 
 		validates :reason, :presence => true 
-		validate :limit_assessment_result
+		# validate :limit_assessment_result
 
 	##associations
 	  belongs_to :course
@@ -54,7 +54,7 @@ class MakeupExam < ApplicationRecord
 			end
 		end
 		def makeup_exam_update_status
-			if (self.other_payment.payment_transaction.present?) && (self.other_payment.payment_transaction.finance_approval_status == "approved") && (self.other_payment.invoice_status == "approved") && (self.add_mark.present?)
+			if (self.other_payment.present?) &&(self.other_payment.payment_transaction.present?) && (self.other_payment.payment_transaction.finance_approval_status == "approved") && (self.other_payment.invoice_status == "approved") && (self.add_mark.present?)
 				self.assessment.update(result: self.add_mark)
 			  self.student_grade.update(assesment_total: self.student_grade.assessments.sum(:result))
 			  self.update_columns(current_result_total: self.student_grade.assesment_total)
