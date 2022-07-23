@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_06_164346) do
+ActiveRecord::Schema.define(version: 2022_07_18_104423) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -299,7 +299,6 @@ ActiveRecord::Schema.define(version: 2022_07_06_164346) do
     t.string "course_taken", null: false
     t.string "exemption_approval", default: "pending"
     t.string "exemption_type"
-    t.uuid "transfer_id"
     t.string "exemptible_type"
     t.uuid "exemptible_id"
     t.string "created_by"
@@ -308,7 +307,6 @@ ActiveRecord::Schema.define(version: 2022_07_06_164346) do
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_course_exemptions_on_course_id"
     t.index ["exemptible_type", "exemptible_id"], name: "index_course_exemptions_on_exemptible_type_and_exemptible_id"
-    t.index ["transfer_id"], name: "index_course_exemptions_on_transfer_id"
   end
 
   create_table "course_instructors", force: :cascade do |t|
@@ -1075,6 +1073,7 @@ ActiveRecord::Schema.define(version: 2022_07_06_164346) do
     t.string "updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "new_program"
     t.index ["academic_calendar_id"], name: "index_transfers_on_academic_calendar_id"
     t.index ["department_id"], name: "index_transfers_on_department_id"
     t.index ["program_id"], name: "index_transfers_on_program_id"

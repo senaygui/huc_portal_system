@@ -1,6 +1,6 @@
 ActiveAdmin.register Transfer do
-menu label: "Clearance/Withdrawal"
-  permit_params :student_id,:program_id,:section_id,:department_id,:academic_calendar_id,:student_full_name,:id_number,:semester,:year,:new_department,:modality_transfer,:reason,:date_of_transfer,:formal_department_head,:formal_department_head_approval,:formal_department_head_approval_date,:remark,:new_department_head,:new_department_head_approval,:new_department_head_approval_date,:dean_name,:dean_approval,:dean_approval_date,:registrar_name,:registrar_approval,:registrar_approval_date,:created_by,:updated_by
+menu label: "Program Transfer"
+  permit_params :student_id,:program_id,:new_program,:section_id,:department_id,:academic_calendar_id,:student_full_name,:id_number,:semester,:year,:new_department,:modality_transfer,:reason,:date_of_transfer,:formal_department_head,:formal_department_head_approval,:formal_department_head_approval_date,:remark,:new_department_head,:new_department_head_approval,:new_department_head_approval_date,:dean_name,:dean_approval,:dean_approval_date,:registrar_name,:registrar_approval,:registrar_approval_date,:created_by,:updated_by, course_exemptions_attributes: [:id,:course_id,:letter_grade,:credit_hour,:course_taken,:exemption_approval,:exemption_type,:transfer,:exemptible_type,:exemptible_id,:created_by,:updated_by, :_destroy]
 
   index do
     selectable_column
@@ -70,74 +70,111 @@ menu label: "Clearance/Withdrawal"
 
   form do |f|
     f.semantic_errors
-    f.inputs "Transfer Request" do
-      if f.object.new_record? && ((current_admin_user.role == "registrar head") || (current_admin_user.role == "admin"))
-        f.input :student_id, as: :search_select, url: admin_students_path,
-          fields: [:student_id, :id], display_name: 'student_id', minimum_input_length: 2,
-          order_by: 'id_asc'
-        f.input :department_id, as: :search_select, url: admin_departments_path,
-          fields: [:department_name, :id], display_name: 'department_name', minimum_input_length: 2,
-          order_by: 'id_asc'
-        f.input :program_id, as: :search_select, url: admin_programs_path,
-            fields: [:program_name, :id], display_name: 'program_name', minimum_input_length: 2,
-            order_by: 'id_asc'
-        f.input :academic_calendar_id, as: :search_select, url: admin_academic_calendars_path,
-          fields: [:calender_year, :id], display_name: 'calender_year', minimum_input_length: 2,
-          order_by: 'id_asc'
-        f.input :year
-        f.input :semester
-        f.input :last_class_attended, as: :date_time_picker 
-        f.input :fee_status , as: :select, :collection => ["Deferred", "100% fee payer", "50% fee payer"], :include_blank => false
-        f.input :reason_for_withdrawal , as: :select, :collection => ["Graduating Student","Academic Dismissal","Medical Case","Disciplinary Case","Transfer to other Institution","Personal Problem","Financial Problem"], :include_blank => false
-        f.input :other_reason
-      end
-      if !f.object.new_record?
-        if (current_admin_user.role == "department head") || (current_admin_user.role == "admin")
-          f.input :department_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
-          f.input :department_head_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-          f.input :department_head_date_of_response, as: :hidden, :input_html => { :value => Time.zone.now}
+    if ((current_admin_user.role == "registrar head") || (current_admin_user.role == "admin"))
+      columns do
+        column do
+          f.inputs "Student Information" do
+              f.input :student_id, as: :search_select, url: admin_students_path,
+              fields: [:student_id, :id], display_name: 'student_id', minimum_input_length: 2,
+              order_by: 'id_asc'
+              f.input :department_id, as: :search_select, url: admin_departments_path,
+                  fields: [:department_name, :id], display_name: 'department_name', minimum_input_length: 2, order_by: 'id_asc'
+              f.input :program_id, as: :search_select, url: admin_programs_path,
+                    fields: [:program_name, :id], display_name: 'program_name', minimum_input_length: 2, order_by: 'id_asc'
+              f.input :section_id, as: :search_select, url: admin_program_sections_path,
+                    fields: [:section_full_name, :id], display_name: 'section_full_name', minimum_input_length: 2, order_by: 'id_asc'
+              f.input :academic_calendar_id, as: :search_select, url: admin_academic_calendars_path,
+                  fields: [:calender_year, :id], display_name: 'calender_year', minimum_input_length: 2,order_by: 'id_asc'
+              f.input :year
+              f.input :semester
+          end
         end
-        if (current_admin_user.role == "registrar head") || (current_admin_user.role == "admin")
-          f.input :registrar_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
-          f.input :registrar_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-          f.input :registrar_date_of_response, as: :hidden, :input_html => { :value => Time.zone.now}
+        column do
+            f.inputs "Transfer Request" do
+              f.input :modality_transfer , as: :select, :collection => ["Regular to Extention Program", "Extention to Regular Program", "Distance division to Regular Program", "Distance division to Extention Program"]
+              f.input :new_department, as: :select, :collection => Department.all.pluck(:department_name)
+              f.input :new_program, as: :select, :collection => Program.all.pluck(:program_name)
+              f.input :reason, :input_html => { :class => 'autogrow', :rows => 12, :cols => 20, :maxlength => 250  }
+              if f.object.new_record?
+                f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+              else
+                f.input :updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full} 
+              end
+            end
+        end
+      end
+    end
+    if (params[:page_name] == "course_exemption") && ((current_admin_user.role == "registrar head") || (current_admin_user.role == "admin"))
+      if f.object.course_exemptions.empty?
+        f.object.course_exemptions << CourseExemption.new
+      end
+      panel "Course Exemptions" do
+              f.has_many :course_exemptions, heading: " ",remote: true , allow_destroy: true, new_record: true do |a|
+                a.input :course_taken
+                a.input :letter_grade
+                a.input :credit_hour
+                a.input :course_id, as: :search_select, url: admin_courses_path,
+                fields: [:course_title, :id], display_name: 'course_title', minimum_input_length: 2,order_by: 'id_asc'
+                a.input :exemption_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
+                a.input :exemptible_type, as: :hidden, :input_html => { :value => "Transfer"} 
+                a.input :exemption_type, as: :hidden, :input_html => { :value => "Transfer"} 
+                if a.object.new_record?
+                  a.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full} 
+                else
+                  a.input :updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}      
+                end  
+                a.label :_destroy
+              end
+      end
+    end
+    if !f.object.new_record? && (params[:page_name] == "approve")
+      f.inputs "Transfer Request Approval" do
+        if (current_admin_user.role == "department head") || (current_admin_user.role == "admin")
+            f.input :formal_department_head, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+            f.input :formal_department_head_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
+            f.input :formal_department_head_approval_date, as: :hidden, :input_html => { :value => Time.zone.now}
+            f.input :remark
+        end
+        if (current_admin_user.role == "department head") || (current_admin_user.role == "admin")
+            f.input :new_department_head, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+            f.input :new_department_head_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
+            f.input :new_department_head_approval_date, as: :hidden, :input_html => { :value => Time.zone.now}
         end
         if (current_admin_user.role == "dean") || (current_admin_user.role == "admin")
-          f.input :dean_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
-          f.input :dean_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-          f.input :dean_date_of_response, as: :hidden, :input_html => { :value => Time.zone.now}
+            f.input :dean_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
+            f.input :dean_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+            f.input :dean_approval_date, as: :hidden, :input_html => { :value => Time.zone.now}
         end
-        if (current_admin_user.role == "finance head") || (current_admin_user.role == "admin")
-          f.input :finance_head_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
-          f.input :finance_head_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-          f.input :finance_head_date_of_response, as: :hidden, :input_html => { :value => Time.zone.now}
-        end 
-        if (current_admin_user.role == "library head") || (current_admin_user.role == "admin")
-          f.input :library_head_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
-          f.input :library_head_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-          f.input :library_head_date_of_response, as: :hidden, :input_html => { :value => Time.zone.now}
-          # f.input :add_mark, lebel: "Mark Added"
-        end  
-        if (current_admin_user.role == "store head") || (current_admin_user.role == "admin")
-          f.input :store_head_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
-          f.input :store_head_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-          f.input :store_head_date_of_response, as: :hidden, :input_html => { :value => Time.zone.now}
-        end  
-      end 
-      if f.object.new_record?
-        f.input :created_by, as: :hidden, :input_html => { :value => current_admin_user.name.full}
-      else
+        if (current_admin_user.role == "registrar head") || (current_admin_user.role == "admin")
+            f.input :registrar_approval, as: :select, :collection => ["pending","approved", "denied"], :include_blank => false
+            f.input :registrar_name, as: :hidden, :input_html => { :value => current_admin_user.name.full}
+            f.input :registrar_approval_date, as: :hidden, :input_html => { :value => Time.zone.now}
+        end
+        if (transfer.registrar_approval == "approved") && (!f.date_of_transfer.present?)
+          f.input :date_of_transfer, as: :hidden, :input_html => { :value => Time.zone.now}
+        end
         f.input :updated_by, as: :hidden, :input_html => { :value => current_admin_user.name.full} 
-      end 
-    end
+      end  
+    end 
     f.actions
   end
 
-  show :title => proc{|withdrawal| truncate("#{withdrawal.student.first_name.upcase} #{withdrawal.student.middle_name.upcase} #{withdrawal.student.last_name.upcase}", length: 50) } do
+  action_item :edit, only: :show, priority: 1  do
+    if (current_admin_user.role == "registrar head") || (current_admin_user.role == "admin")
+      link_to 'Add Course Exemptions', edit_admin_transfer_path(transfer.id, page_name: "course_exemption")
+    end
+  end
+  action_item :edit, only: :show, priority: 1  do
+    if (current_admin_user.role == "dean") || (current_admin_user.role == "department head") || (current_admin_user.role == "registrar head") || (current_admin_user.role == "admin")
+      link_to 'Approve Transfer', edit_admin_transfer_path(transfer.id, page_name: "approve")
+    end
+  end
+
+  show :title => proc{|transfer| truncate("#{transfer.student.first_name.upcase} #{transfer.student.middle_name.upcase} #{transfer.student.last_name.upcase}", length: 50) } do
     columns do
       column do
         panel "Student information" do
-          attributes_table_for withdrawal do
+          attributes_table_for transfer do
             row :student_name, sortable: true do |n|
               "#{n.student.first_name.upcase} #{n.student.middle_name.upcase} #{n.student.last_name.upcase}"
             end
@@ -170,15 +207,15 @@ menu label: "Clearance/Withdrawal"
           end
         end
       end
-
       column do
-        panel "Withdrawal Request information" do
-          attributes_table_for withdrawal do
+        panel "Transfer Request information" do
+          attributes_table_for transfer do
             
-            row :last_class_attended
-            row :fee_status
-            row :reason_for_withdrawal
-            row :other_reason
+            row :new_department
+            row :new_program
+            row :modality_transfer
+            row :reason
+            row :date_of_transfer
             row :created_by
             row :updated_by
             row :created_at
@@ -187,40 +224,28 @@ menu label: "Clearance/Withdrawal"
         end
       end
       column do
-        panel "Withdrawal Request Approval Status" do
-          attributes_table_for withdrawal do
+        panel "Transfer Request Approval Status" do
+          attributes_table_for transfer do
+            row :formal_department_head
+            row :formal_department_head_approval_date
+            row :formal_department_head_approval do |c|
+              status_tag c.formal_department_head_approval
+            end
+
+            row :new_department_head
+            row :new_department_head_approval_date
+            row :new_department_head_approval do |c|
+              status_tag c.new_department_head_approval
+            end
+
             row :dean_name
-            row :dean_date_of_response
+            row :dean_approval_date
             row :dean_approval do |c|
               status_tag c.dean_approval
             end
-
-            row :library_head_name
-            row :library_head_date_of_response
-            row :library_head_approval do |c|
-              status_tag c.library_head_approval
-            end
-
-            row :finance_head_name
-            row :finance_head_approval
-            row :finance_head_approval do |c|
-              status_tag c.finance_head_approval
-            end
-
-            row :store_head_name
-            row :store_head_date_of_response
-            row :store_head_approval do |c|
-              status_tag c.store_head_approval
-            end
-            
-            row :department_head_name
-            row :department_head_date_of_response
-            row :department_approval do |c|
-              status_tag c.department_approval
-            end
             
             row :registrar_name
-            row :registrar_date_of_response
+            row :registrar_approval_date
             row :registrar_approval do |c|
               status_tag c.registrar_approval
             end
@@ -229,15 +254,5 @@ menu label: "Clearance/Withdrawal"
         end
       end
     end
-    
-    # panel "grade Information" do
-    #   table_for grade_rule.grades do
-    #     column :grade
-    #     column :min_value
-    #     column :max_value
-    #     column :grade_value
-    #   end
-    # end
   end
-  
 end

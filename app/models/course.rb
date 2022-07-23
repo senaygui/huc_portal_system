@@ -37,6 +37,8 @@ class Course < ApplicationRecord
 		has_many :course_prerequisites, class_name: "Prerequisite"
   	has_many :prerequisites, through: :course_prerequisites, source: :prerequisite
   	accepts_nested_attributes_for :course_prerequisites, reject_if: :all_blank, allow_destroy: true
+
+  	has_many :course_exemptions
   ##scope
   	scope :recently_added, lambda { where('created_at >= ?', 1.week.ago)}
   	scope :instructor_courses, -> (user_id) {CourseInstructor.where(admin_user_id: user_id).pluck(:course_id)}
