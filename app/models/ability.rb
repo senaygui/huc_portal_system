@@ -11,6 +11,7 @@ class Ability
     case user.role
     when "admin"
         # can :manage, ActiveAdmin::Page, name: "Calendar", namespace_name: "admin"
+        can :manage, Transfer
         can :manage, RecurringPayment
         can :manage, GradeSystem
         can :manage, GradeChange    

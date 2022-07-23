@@ -7,7 +7,7 @@ class CreateCourseExemptions < ActiveRecord::Migration[5.2]
       t.string :course_taken, null: false
       t.string :exemption_approval, default: "pending"
       t.string :exemption_type
-      t.belongs_to :transfer, index: true, type: :uuid
+      # t.belongs_to :transfer, index: true, type: :uuid
       t.references :exemptible, polymorphic: true, type: :uuid
       t.string :created_by
       t.string :updated_by
