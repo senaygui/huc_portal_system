@@ -62,6 +62,7 @@ gem "barby", "~> 0.6.8"
 gem 'active_admin_scoped_collection_actions'
 gem 'active_admin_sidebar'
 gem 'active_admin_flat_skin'
+gem 'active_material'
 # gem 'active_admin-subnav'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false

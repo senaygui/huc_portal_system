@@ -372,6 +372,7 @@ DEPENDENCIES
   active_admin_scoped_collection_actions
   active_admin_sidebar
   active_admin_theme (~> 1.1, >= 1.1.4)
+  active_material
   active_storage_drag_and_drop (~> 1.1)
   active_storage_validations (~> 0.9.5)
   activeadmin (~> 2.9)

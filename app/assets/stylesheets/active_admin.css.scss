@@ -21,14 +21,31 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
-@import "active_admin_flat_skin";
-// $skinMainFirstColor: #024d71!default;
-// $skinMainSecondColor: #118C3C!default;
-// $menu-arrow-dark-icon-url: 'active_admin/nested_menu_arrow_dark.gif' !default;
+// @import "active_admin_flat_skin";
+$skinMainFirstColor: #024d71!default;
+$skinMainSecondColor: #118C3C!default;
+$menu-arrow-dark-icon-url: 'active_admin/nested_menu_arrow_dark.gif' !default;
 // @import "wigu/active_admin_theme";
+@import "active_admin_flat_skin";
+
 @import "active_admin_scoped_collection_actions";
 @import "active_admin_sidebar";
 
+$panelBorder: #FFF !important;
+$skinActiveColor: #e73c3c !important;
+$bodyColor: #000 !important;
+$skinBlack: rgb(55, 71, 79) !important;
+$panelHeaderBck: $skinBlack;
+$skinBlackLight: rgb(69, 90, 100) !important;
+$textGray: rgb(174, 179, 181) !important;
+$skinTextColor: #1e2a33 !important;
+$skinTextActiveColor: white !important;
+$skinTextTable: #7f8c8d !important;
+$skinHeaderBck: #1e2a33 !important;
+.site_title{
+  padding-bottom: 25px !important;
+  background: #fff !important;
+}
 // #07743a
 // #fcf13d
 // #c43a2f

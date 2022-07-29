@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_18_104423) do
+ActiveRecord::Schema.define(version: 2022_07_29_021637) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -750,6 +750,39 @@ ActiveRecord::Schema.define(version: 2022_07_18_104423) do
     t.index ["payment_method_id"], name: "index_payment_transactions_on_payment_method_id"
   end
 
+  create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "program_id"
+    t.string "version"
+    t.string "student_nationality"
+    t.decimal "total_fee", default: "0.0"
+    t.decimal "registration_fee", default: "0.0"
+    t.decimal "late_registration_fee", default: "0.0"
+    t.decimal "starting_penalty_fee", default: "0.0"
+    t.decimal "daily_penalty_fee", default: "0.0"
+    t.decimal "makeup_exam_fee", default: "0.0"
+    t.decimal "add_drop", default: "0.0"
+    t.decimal "tution_per_credit_hr", default: "0.0"
+    t.decimal "readmission", default: "0.0"
+    t.decimal "reissuance_of_grade_report", default: "0.0"
+    t.decimal "student_copy", default: "0.0"
+    t.decimal "additional_student_copy", default: "0.0"
+    t.decimal "tempo", default: "0.0"
+    t.decimal "original_certificate", default: "0.0"
+    t.decimal "original_certificate_replacement", default: "0.0"
+    t.decimal "tempo_replacement", default: "0.0"
+    t.decimal "letter", default: "0.0"
+    t.decimal "student_id_card", default: "0.0"
+    t.decimal "student_id_card_replacement", default: "0.0"
+    t.decimal "name_change", default: "0.0"
+    t.decimal "transfer_fee", default: "0.0"
+    t.decimal "other", default: "0.0"
+    t.string "last_updated_by"
+    t.string "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["program_id"], name: "index_payments_on_program_id"
+  end
+
   create_table "prerequisites", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "course_id"
     t.uuid "prerequisite_id"
@@ -1035,6 +1068,7 @@ ActiveRecord::Schema.define(version: 2022_07_18_104423) do
     t.string "last_updated_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "payment_version"
     t.index ["academic_calendar_id"], name: "index_students_on_academic_calendar_id"
     t.index ["department_id"], name: "index_students_on_department_id"
     t.index ["email"], name: "index_students_on_email", unique: true

@@ -23,6 +23,7 @@ class Ability
         can :manage, PaymentTransaction
         can :manage, StudentAddress
         can :manage, EmergencyContact
+        can :manage, Payment
         # can :manage, CourseSection
         can :manage, StudentGrade
         # can :update, StudentGrade

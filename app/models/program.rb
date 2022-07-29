@@ -38,6 +38,7 @@ class Program < ApplicationRecord
     has_many :recurring_payments
     has_many :add_and_drops
     has_many :makeup_exams
+    has_many :payments
   
   # def total_tuition
   #   curriculums.collect { |oi| oi.valid? ? (oi.full_course_price) : 0 }.sum
