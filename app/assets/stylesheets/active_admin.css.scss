@@ -21,10 +21,11 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
-$skinMainFirstColor: #024d71!default;
-$skinMainSecondColor: #118C3C!default;
-$menu-arrow-dark-icon-url: 'active_admin/nested_menu_arrow_dark.gif' !default;
-@import "wigu/active_admin_theme";
+@import "active_admin_flat_skin";
+// $skinMainFirstColor: #024d71!default;
+// $skinMainSecondColor: #118C3C!default;
+// $menu-arrow-dark-icon-url: 'active_admin/nested_menu_arrow_dark.gif' !default;
+// @import "wigu/active_admin_theme";
 @import "active_admin_scoped_collection_actions";
 @import "active_admin_sidebar";
 

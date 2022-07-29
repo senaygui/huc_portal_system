@@ -22,24 +22,12 @@
 //= require bs-stepper.min.js
 //= require flatpickr
 //= require jquery.inputmask.min.js
-//= require active_storage_drag_and_drop
+//= require jquery.slideform.js
 
 
 
 $(document).on('turbolinks:load', function(){
-  $("#student_photo").change(function(data){
-
-    var imageFile = data.target.files[0];
-    var reader = new FileReader();
-    reader.readAsDataURL(imageFile);
-
-    reader.onload = function(evt){
-      $('#imagePreview').attr('src', evt.target.result);
-      $('#imagePreview').hide();
-      $('#imagePreview').fadeIn(650);
-    }
-    
-  });
+  
   //Datemask dd/mm/yyyy
   $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
     //Datemask2 mm/dd/yyyy
@@ -59,9 +47,5 @@ document.addEventListener('turbolinks:load', function () {
 })
 
 document.addEventListener('turbolinks:load', function() {
-  var a = new Date().getFullYear() - 19
-  var b = a + "-19"
-  flatpickr('.datepicker',{
-    maxDate: b
-  });
+  flatpickr('.datepicker');
 })
