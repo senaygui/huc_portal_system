@@ -56,7 +56,7 @@ class Student < ApplicationRecord
     validates :study_level, :presence => true
     validates :admission_type, :presence => true,:length => { :within => 2..10 }
     validates :nationality, :presence => true
-    # validates :photo, attached: true, content_type: ['image/gif', 'image/png', 'image/jpg', 'image/jpeg']
+    validates :photo, attached: true, content_type: ['image/gif', 'image/png', 'image/jpg', 'image/jpeg']
     # validates :highschool_transcript, attached: true
     # validates :grade_12_matric, attached: true
     # validates :diploma_certificate, attached: true, if: :grade_12_matric?
