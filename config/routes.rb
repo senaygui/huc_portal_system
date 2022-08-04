@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   authenticated :student do
     root 'pages#dashboard', as: 'authenticated_user_root'
   end
-  get 'admit' => 'pages#admission'
+  get 'admission' => 'pages#admission'
   get 'documents' => 'pages#documents'
   get 'profile' => 'pages#profile'
   get 'grade_report' => 'pages#grade_report'

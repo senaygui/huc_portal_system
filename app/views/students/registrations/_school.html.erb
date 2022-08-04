@@ -36,16 +36,16 @@
           <%= a.input :college_or_university, input_html: { class: 'form-control', autocomplete: "college_or_university" },placeholder: "College Or University"%>
         </div>
         <div class="col-12 col-md-6 form-group">
-          <%= a.input :phone_number, input_html: { class: 'form-control', 'data-inputmask'=>'"mask": "(+251) 999-999999"' },placeholder: "Phone Number", required: true %>
+          <%= a.input :phone_number, input_html: { class: 'form-control', 'data-inputmask'=>'"mask": "(+251) 999-999999"' },placeholder: "Phone Number"%>
         </div>
         <div class="col-12 col-md-6 form-group">
-          <%= a.input :address, input_html: { class: 'form-control', autocomplete: "address" },placeholder: "Address"%>
+          <%= a.input :address, input_html: { class: 'form-control', autocomplete: "address" },placeholder: "Address", required: true%>
         </div>
         <div class="col-12 col-md-6 form-group">
           <%= a.input :field_of_specialization, input_html: { class: 'form-control', autocomplete: "field_of_specialization" },placeholder: "Field Of Specialization"%>
         </div>
         <div class="col-12 col-md-6 form-group">
-          <%= a.input :cgpa, input_html: { class: 'form-control', autocomplete: "cgpa" },placeholder: "CGPA"%>
+          <%= a.input :cgpa, input_html: { class: 'form-control', autocomplete: "cgpa" },placeholder: "CGPA", required: true%>
         </div>
       </div>
     </div>

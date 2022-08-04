@@ -32,7 +32,7 @@ ActiveAdmin.register StudentGrade do
     end
     redirect_to collection_path, notice: "Grade Is Generated Successfully"
   end
-  batch_action "Approve Grade for", method: :put, if: proc{ current_admin_user.role == "department head" }, confirm: "Are you sure?" do |ids|
+  batch_action "Approve Grade for", method: :put, confirm: "Are you sure?" do |ids|
     StudentGrade.find(ids).each do |student_grade|
       student_grade.update(department_approval: "approved", department_head_name: "#{current_admin_user.name.full}", department_head_date_of_response: Time.now)
     end

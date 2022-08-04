@@ -55,6 +55,7 @@ class Ability
         can :manage, Withdrawal
         can :manage, AddAndDrop
         can :manage, OtherPayment
+        can :manage, StudentGrade
     when "instructor"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :read, AcademicCalendar

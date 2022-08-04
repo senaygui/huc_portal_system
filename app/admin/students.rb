@@ -542,10 +542,5 @@ ActiveAdmin.register Student do
       
     end
   end
-  sidebar "Account Status", :only => :index do
-    panel "scope" do
-      
-    end
 
-  end
 end
