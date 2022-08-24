@@ -294,7 +294,11 @@ class Ability
         can [:read, :update], GradeChange
         can :read, AcademicCalendar
         can :read, StudentGrade
-        can :read, Course
+        can :manage, Course
+        can :manage, Program
+        can :manage, Curriculum
+        can :manage, GradeSystem
+        can :manage, AssessmentPlan
     when "library head"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can [:read, :update], Withdrawal
