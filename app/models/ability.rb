@@ -273,6 +273,8 @@ class Ability
         can :manage, AssessmentPlan, course: {program: {department_id: user.department.id}}
         can :create, AssessmentPlan
 
+        can [:read, :update], Transfer, department_id: user.department.id
+
         can :read, AcademicCalendar
 
         can :read, Section, program: {department_id: user.department.id}

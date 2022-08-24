@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   
   resources :grade_reports
+  resources :academic_calendars, only: [:show, :index]
   # devise_for :students
   
   devise_for :students, controllers: {
