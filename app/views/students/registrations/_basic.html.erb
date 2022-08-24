@@ -59,9 +59,11 @@
     <div class="col-12 col-md-6 form-group">
       <%= f.input :marital_status, as: :select, :collection => ["Single", "Married", "Widowed","Separated","Divorced"], input_html: {class: "form-control custom-select rounded-0"}, :include_blank => false %>
     </div>
-    <div class="col-12 col-md-6 form-group">
-      <%= f.input :current_occupation, input_html: { class: 'form-control', autocomplete: "current_occupation" },placeholder: "Current occupation"%>
-    </div>
+    <%if params[:study_level] == "graduate"%>
+      <div class="col-12 col-md-6 form-group">
+        <%= f.input :current_occupation, input_html: { class: 'form-control', autocomplete: "current_occupation" },placeholder: "Current occupation"%>
+      </div>
+    <%end%>
     <div class="col-12 col-md-6 form-group">
       <%= f.input :email, input_html: { class: 'form-control', autocomplete: "email" },placeholder: "Email", required: true %>
     </div>

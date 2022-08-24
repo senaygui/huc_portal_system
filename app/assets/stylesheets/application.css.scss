@@ -20,7 +20,7 @@
 @import "adminlte";
 @import "OverlayScrollbars.min";
 @import "icheck-bootstrap.min";
-@import "bs-stepper.min";
+
 
 .profile-user-img {
   width: 150px;
@@ -119,4 +119,19 @@ label.asdndzone{
 
 .cap{
     text-transform:uppercase;
+}
+
+
+/* addmission radio button form */
+
+.student_program_id legend{
+  font-weight: 700;
+}
+
+.student_program_id .custom-control{
+  margin-bottom: 5px;
+  font-weight: 400 !important;
+}
+.student_program_id .custom-control-label{
+  font-weight: 400 !important;
 }

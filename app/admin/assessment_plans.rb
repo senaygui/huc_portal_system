@@ -1,5 +1,5 @@
 ActiveAdmin.register AssessmentPlan do
-
+menu parent: "Program"
   permit_params :course_id,:assessment_title,:assessment_weight, :created_by, :updated_by,:final_exam
 
   controller do

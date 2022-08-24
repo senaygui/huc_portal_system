@@ -23,31 +23,33 @@
       <%= a.hint "select year in Gregorian calendar"%>
     </div>
   </div>
-  <div class="card card-outline card-primary">
-    <div class="card-header">
-      <h3 class="card-title">
-        <i class="fas fa-info-circle mr-2"></i>
-        <strong>College Or University Information</strong>
-      </h3>
-    </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="col-12 col-md-6 form-group">
-          <%= a.input :college_or_university, input_html: { class: 'form-control', autocomplete: "college_or_university" },placeholder: "College Or University"%>
-        </div>
-        <div class="col-12 col-md-6 form-group">
-          <%= a.input :phone_number, input_html: { class: 'form-control', 'data-inputmask'=>'"mask": "(+251) 999-999999"' },placeholder: "Phone Number"%>
-        </div>
-        <div class="col-12 col-md-6 form-group">
-          <%= a.input :address, input_html: { class: 'form-control', autocomplete: "address" },placeholder: "Address", required: true%>
-        </div>
-        <div class="col-12 col-md-6 form-group">
-          <%= a.input :field_of_specialization, input_html: { class: 'form-control', autocomplete: "field_of_specialization" },placeholder: "Field Of Specialization"%>
-        </div>
-        <div class="col-12 col-md-6 form-group">
-          <%= a.input :cgpa, input_html: { class: 'form-control', autocomplete: "cgpa" },placeholder: "CGPA", required: true%>
+  <%if params[:study_level] == "graduate"%>
+    <div class="card card-outline card-primary">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-info-circle mr-2"></i>
+          <strong>College Or University Information</strong>
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12 col-md-6 form-group">
+            <%= a.input :college_or_university, input_html: { class: 'form-control', autocomplete: "college_or_university", required: true},placeholder: "College Or University", required: true%>
+          </div>
+          <div class="col-12 col-md-6 form-group">
+            <%= a.input :phone_number, input_html: { class: 'form-control', 'data-inputmask'=>'"mask": "(+251) 999-999999"' },placeholder: "Phone Number"%>
+          </div>
+          <div class="col-12 col-md-6 form-group">
+            <%= a.input :address, input_html: { class: 'form-control', autocomplete: "address" },placeholder: "Address"%>
+          </div>
+          <div class="col-12 col-md-6 form-group">
+            <%= a.input :field_of_specialization, input_html: { class: 'form-control', autocomplete: "field_of_specialization" },placeholder: "Field Of Specialization", required: true%>
+          </div>
+          <div class="col-12 col-md-6 form-group">
+            <%= a.input :cgpa, input_html: { class: 'form-control', autocomplete: "cgpa" },placeholder: "CGPA", required: true%>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  <%end%>
 <%end%>

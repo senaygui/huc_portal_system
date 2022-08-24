@@ -1,4 +1,5 @@
 ActiveAdmin.register GradeReport do
+  menu parent: "Grade"
 actions :all, :except => [:new]
 permit_params :semester_registration_id,:student_id,:academic_calendar_id,:program_id,:department_id,:section_id,:admission_type,:study_level,:total_course,:total_credit_hour,:total_grade_point,:cumulative_total_credit_hour,:cumulative_total_grade_point,:cgpa,:sgpa,:semester,:year,:academic_status,:registrar_approval,:registrar_name,:dean_approval,:dean_name,:department_approval,:department_head_name,:updated_by,:created_by
   

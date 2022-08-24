@@ -39,7 +39,7 @@
   }
 </style>
 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/icheck-bootstrap/3.0.1/icheck-bootstrap.min.css" integrity="sha512-8vq2g5nHE062j3xor4XxPeZiPjmRDh6wlufQlfC6pdQ/9urJkU07NM0tEREeymP++NczacJ/Q59ul+/K2eYvcg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <div class="content-wrapper mt-3" style="min-height: 1477.62px;">
   <div class="content">
@@ -50,7 +50,7 @@
             <div class="card-header">
               <h3 class="card-title">
                 <i class="fas fa-edit"></i>
-                New Student Admission Form
+                New Student Admission Forms
               </h3>
             </div>
             <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name),wrapper: :input_group, multiple: true) do |f| %>
@@ -161,7 +161,7 @@
                                   <strong>Admission Information</strong>
                                 </h3>
                               </div>
-                              <div class="card-body">
+                              <div class="card-body" style="min-height: 313px !important; ">
                                 <%= render 'admission', f: f%>
                               </div>
                               
@@ -437,6 +437,11 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
 <script type="text/javascript">
     $(document).on('turbolinks:load', function(){
+      var a = new Date().getFullYear() - 18
+      var b = a + "-15"
+      flatpickr('.birthdate',{
+        maxDate: b
+      });
       // $('#student_photo').change(function (e) {
       //   var files = [];
       //   for (var i = 0; i < $(this)[0].files.length; i++) {

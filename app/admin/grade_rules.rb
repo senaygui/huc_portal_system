@@ -1,5 +1,5 @@
 ActiveAdmin.register GradeRule do
-
+menu parent: "Grade"
   permit_params :admission_type,:study_level,:min_cgpa_value_to_pass,grades_attributes: [:id,:grade_rule_id,:grade,:min_value,:max_value,:grade_value, :_destroy]
 
   index do

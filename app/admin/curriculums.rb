@@ -1,5 +1,5 @@
 ActiveAdmin.register Curriculum do
-
+menu parent: "Program"
  menu priority: 6
  permit_params :program_id,:curriculum_title,:curriculum_version,:total_course,:total_ects,:total_credit_hour,:active_status,:curriculum_active_date,:depreciation_date,:created_by,:last_updated_by, courses_attributes: [:id,:course_module_id,:program_id,:curriculum_id,:semester,:course_starting_date,:course_ending_date,:year,:credit_hour,:lecture_hour,:lab_hour,:ects,:course_code,:course_title,:created_by,:last_updated_by, :_destroy]
  active_admin_import
