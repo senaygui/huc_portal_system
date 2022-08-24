@@ -1,4 +1,5 @@
 ActiveAdmin.register MakeupExam do
+  menu parent: "Add-ons"
   # actions :all, :except => [:new]
   permit_params :updated_by,:created_by,:section_id, :academic_calendar_id,:student_id,:course_id,:section_id,:semester,:previous_result_total,:previous_letter_grade,:current_result_total,:current_letter_grade,:reason,:instructor_approval,:instructor_name,:instructor_date_of_response,:registrar_approval,:registrar_name,:registrar_date_of_response,:dean_approval,:dean_name,:dean_date_of_response,:department_approval,:department_head_name,:department_head_date_of_response,:academic_affair_approval,:academic_affair_name,:academic_affair_date_of_response,:course_registration_id,:student_grade_id,:assessment_id, :add_mark, :course_section_id, :program_id, :department_id, :year
 

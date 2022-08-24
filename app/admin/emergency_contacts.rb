@@ -1,5 +1,5 @@
 ActiveAdmin.register EmergencyContact do
-
+menu parent: "Students managment"
 active_admin_import validate: true,
                       headers_rewrites: { 'Email': :student_id },
                       before_batch_import: ->(importer) {

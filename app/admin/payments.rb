@@ -1,6 +1,6 @@
 ActiveAdmin.register Payment do
 
-  menu label: "Program Payments", priority: 3
+  menu parent: "Finance Setting", label: "Program Payments"
   permit_params :version,:other,:program_id,:student_nationality,:registration_fee,:late_registration_fee,:makeup_exam_fee,:add_drop,:tution_per_credit_hr,:readmission,:reissuance_of_grade_report,:student_copy,:additional_student_copy,:tempo,:original_certificate,:original_certificate_replacement,:tempo_replacement,:letter,:student_id_card,:student_id_card_replacement,:name_change,:transfer_fee,:created_by, :last_updated_by, :total_fee,:starting_penalty_fee,:daily_penalty_fee
 
   index do

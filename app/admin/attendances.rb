@@ -1,5 +1,5 @@
 ActiveAdmin.register Attendance do
-
+menu parent: "Attendance"
   permit_params :program_id,:section_id,:academic_calendar_id,:course_title,:attendance_title,:year,:semester,:created_by,:updated_by,:course_id,sessions_attributes: [:id,:attendance_id,:starting_date,:ending_date,:academic_calendar_id,:semester,:year,:session_title,:created_by,:updated_by, :_destroy]
 
   index do

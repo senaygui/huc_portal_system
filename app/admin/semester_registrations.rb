@@ -1,6 +1,6 @@
 ActiveAdmin.register SemesterRegistration do
   menu parent: "Registration"
-  menu priority: 9
+
   permit_params :department_id, :section_id, :student_full_name,:student_id_number, :student_id,:total_price,:registration_fee,:late_registration_fee,:remaining_amount,:mode_of_payment,:semester,:year,:total_enrolled_course,:academic_calendar_id,:registrar_approval_status,:finance_approval_status,:created_by,:last_updated_by,course_registrations_attributes: [:id, :student_id,:semester_registration_id,:course_id,:academic_calendar_id,:student_full_name,:enrollment_status,:course_title,:department_id, :program_id, :section_id, :year, :semester, :created_by,:updated_by, :_destroy]
 
       active_admin_import validate: true,

@@ -1,5 +1,5 @@
 ActiveAdmin.register AddAndDrop do
-  menu label: "Add/Drops"
+  menu parent: "Add-ons",label: "Add/Drops"
 
   permit_params :student_id,:academic_calendar_id,:semester_registration_id,:department_id,:program_id,:section_id,:semester,:year,:registrar_approval,:registrar_name,:registrar_date_of_response,:advisor_approval,:advisor_name,:advisor_date_of_response,:created_by,:updated_by, add_and_drop_courses_attributes: [:id,:add_and_drop_id,:course_id,:add_or_drop,:advisor_approval,:advisor_name,:advisor_date_of_response,:created_by,:updated_by, :_destroy]
 

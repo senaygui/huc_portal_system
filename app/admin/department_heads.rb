@@ -1,6 +1,5 @@
 ActiveAdmin.register AdminUser, as: "DepartmentHead"  do
   menu parent: "Department"
-  menu priority: 2
   permit_params :photo, :email, :password, :password_confirmation,:first_name,:last_name,:middle_name,:role,:username, :department_id
   controller do
     def scoped_collection

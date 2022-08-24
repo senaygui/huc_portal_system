@@ -1,5 +1,5 @@
 ActiveAdmin.register Withdrawal do
-  menu label: "Clearance/Withdrawal"
+  menu parent: "Add-ons", label: "Clearance/Withdrawal"
   permit_params :program_id,:department_id,:student_id,:section_id,:academic_calendar_id,:student_id_number,:semester,:year,:fee_status,:reason_for_withdrawal,:last_class_attended,:finance_head_approval,:finance_head_name,:finance_head_date_of_response,:registrar_approval,:registrar_name,:registrar_date_of_response,:dean_approval,:dean_name,:dean_date_of_response,:department_approval,:department_head_name,:department_head_date_of_response,:library_head_approval,:library_head_name,:library_head_date_of_response,:store_head_approval,:store_head_name,:store_head_date_of_response,:created_by,:updated_by
 
   index do

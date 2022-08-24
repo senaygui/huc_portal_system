@@ -1,4 +1,5 @@
 ActiveAdmin.register Almuni do
+  menu parent: "Student managment"
   config.batch_actions = true
 
   permit_params :fullname,:sex,:phone_number,:modality,:study_level,:graduation_date,:program_name, :photo, documents: []

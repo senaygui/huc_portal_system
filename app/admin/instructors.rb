@@ -1,5 +1,5 @@
 ActiveAdmin.register AdminUser, as: "instructor"  do
-  menu priority: 2
+  menu parent: "Department"
   permit_params :photo, :email, :password, :password_confirmation,:first_name,:last_name,:middle_name,:role,:username
   controller do
     def scoped_collection

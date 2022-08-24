@@ -1,6 +1,6 @@
 ActiveAdmin.register Session do
   # before_action :left_sidebar!, collapsed: true
-
+menu parent: "Attendance"
    permit_params :academic_calendar_id,:semester,:year,:attendance_id,:starting_date,:ending_date,:session_title,:created_by,:updated_by,student_attendances_attributes: [:id,:student_id,:course_registration_id,:present,:absent,:remark,:created_by,:updated_by, :_destroy]
 
   index do

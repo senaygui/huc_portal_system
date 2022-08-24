@@ -1,6 +1,6 @@
 ActiveAdmin.register Section , as: "ProgramSection"do
 permit_params :program_id, :section_short_name ,:section_full_name, :total_capacity,:semester,:year,:created_by,:updated_by
-
+menu parent: "Program"
   index do
     selectable_column
     column :section_short_name

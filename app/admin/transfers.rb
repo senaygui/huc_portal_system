@@ -1,5 +1,5 @@
 ActiveAdmin.register Transfer do
-menu label: "Program Transfer"
+menu parent: "Add-ons",label: "Program Transfer"
   permit_params :student_id,:program_id,:new_program,:section_id,:department_id,:academic_calendar_id,:student_full_name,:id_number,:semester,:year,:new_department,:modality_transfer,:reason,:date_of_transfer,:formal_department_head,:formal_department_head_approval,:formal_department_head_approval_date,:remark,:new_department_head,:new_department_head_approval,:new_department_head_approval_date,:dean_name,:dean_approval,:dean_approval_date,:registrar_name,:registrar_approval,:registrar_approval_date,:created_by,:updated_by, course_exemptions_attributes: [:id,:course_id,:letter_grade,:credit_hour,:course_taken,:exemption_approval,:exemption_type,:transfer,:exemptible_type,:exemptible_id,:created_by,:updated_by, :_destroy]
 
   index do

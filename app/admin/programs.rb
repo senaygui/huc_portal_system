@@ -1,6 +1,5 @@
 ActiveAdmin.register Program do
   menu parent: "Program"
-  menu priority: 5
   permit_params :entrance_exam_requirement_status,:program_semester,:department_id,:total_semester,:program_name,:program_code,:overview,:program_description,:created_by,:last_updated_by,:total_tuition,:study_level,:admission_type,:program_duration, curriculums_attributes: [:id, :curriculum_title,:curriculum_version,:total_course,:total_ects,:total_credit_hour,:active_status,:curriculum_active_date,:depreciation_date,:created_by,:last_updated_by, :_destroy]
   active_admin_import
   index do
@@ -182,8 +181,8 @@ ActiveAdmin.register Program do
             panel "ClassYear: Year #{i}" do
               (1..program.program_semester).map do |s|
                 panel "Semester: #{s}" do
-                  if program.curriculums.present?
-                    table_for program.curriculums.where(active_status: "active").courses.where(year: i, semester: s).order('year ASC','semester ASC') do
+                  if program.curriculums.present? && program.courses.present?
+                    table_for program.curriculums.where(active_status: "active").first.courses.where(year: i, semester: s).order('year ASC','semester ASC') do
                       ## TODO: wordwrap titles and long texts
                       column "course title" do |item|
                         link_to item.course_title, [ :admin, item] 
