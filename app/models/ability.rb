@@ -251,7 +251,7 @@ class Ability
         can :manage, Invoice        
     when "department head"
         can :read, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
-        can :manage, Department, department_id: user.department.id
+        can [:read, :update], Department, department_name: user.department.department_name
 
         can [:read, :update, :destroy], CourseModule, department_id: user.department.id
         can :create, CourseModule
