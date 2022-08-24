@@ -260,6 +260,7 @@ class Ability
         can :create, Course
 
         can :manage, AdminUser, role: "instructor"
+        can :create, AdminUser
 
         can [:read, :update, :destroy], Program, department_id: user.department.id
         can :create, Program
