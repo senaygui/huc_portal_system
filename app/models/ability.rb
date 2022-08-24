@@ -274,9 +274,9 @@ class Ability
         can :create, AssessmentPlan
 
         can :read, AcademicCalendar
-        
+
         can :read, Section, program: {department_id: user.department.id}
-        can :read, Student, department: user.department.department_name
+        can :read, Student, department: "#{user.department.department_name}"
         can :read, CourseRegistration, department_id: user.department.id
         can :read, SemesterRegistration, department_id: user.department.id
         can :read, Attendance, program: {department_id: user.department.id}
@@ -292,6 +292,8 @@ class Ability
         can [:read, :update], Withdrawal
         can [:read, :update], GradeReport
         can [:read, :update], GradeChange
+        can :read, AcademicCalendar
+        can :read, StudentGrade
     when "library head"
         can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can [:read, :update], Withdrawal
