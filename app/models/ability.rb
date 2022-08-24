@@ -252,14 +252,29 @@ class Ability
     when "department head"
         can :read, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
         can :manage, Department, department_id: user.department.id
-        can :manage, CourseModule, department_id: user.department.id
-        can :manage, Course, course_module: {department_id: user.department.id}
+
+        can [:read, :update, :destroy], CourseModule, department_id: user.department.id
+        can :create, CourseModule
+
+        can [:read, :update, :destroy], Course, course_module: {department_id: user.department.id}
+        can :create, Course
+
         can :manage, AdminUser, role: "instructor"
-        can :manage, Program, department_id: user.department.id
-        can :manage, Curriculum, program: {department_id: user.department.id}
-        can :manage, GradeSystem, program: {department_id: user.department.id}
+
+        can [:read, :update, :destroy], Program, department_id: user.department.id
+        can :create, Program
+
+        can [:read, :update, :destroy], Curriculum, program: {department_id: user.department.id}
+        can :create, Curriculum
+
+        can [:read, :update, :destroy], GradeSystem, program: {department_id: user.department.id}
+        can :create, GradeSystem
+
         can :manage, AssessmentPlan, course: {program: {department_id: user.department.id}}
+        can :create, AssessmentPlan
+
         can :read, AcademicCalendar
+        
         can :read, Section, program: {department_id: user.department.id}
         can :read, Student, department: user.department.department_name
         can :read, CourseRegistration, department_id: user.department.id
