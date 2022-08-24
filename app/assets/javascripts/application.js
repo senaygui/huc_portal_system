@@ -23,6 +23,7 @@
 //= require flatpickr
 //= require jquery.inputmask.min.js
 //= require jquery.slideform.js
+//= require bs-stepper.min.js
 
 
 
@@ -41,10 +42,10 @@ $(document).on('turbolinks:load', function(){
 })
 
 
-// // BS-Stepper Init
-// document.addEventListener('turbolinks:load', function () {
-//   window.stepper = new Stepper(document.querySelector('.bs-stepper'))
-// })
+// BS-Stepper Init
+document.addEventListener('turbolinks:load', function () {
+  window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+})
 
 document.addEventListener('turbolinks:load', function() {
   flatpickr('.datepicker');
