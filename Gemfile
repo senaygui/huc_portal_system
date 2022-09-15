@@ -40,7 +40,7 @@ gem 'devise', '~> 4.8'
 gem 'activeadmin', '~> 2.9'
 gem 'inherited_resources', github: 'activeadmin/inherited_resources'
 gem 'activeadmin_addons', '~> 1.7', '>= 1.7.1'
-# gem 'active_admin_theme', '~> 1.1', '>= 1.1.4'
+gem 'active_admin_theme', '~> 1.1', '>= 1.1.4'
 gem 'name_of_person', '~> 1.1', '>= 1.1.1'
 gem 'cancancan', '~> 3.2', '>= 3.2.2'
 gem 'country_select', '~> 3.1', '>= 3.1.1'
@@ -85,9 +85,9 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
-  gem 'guard'
-  gem 'guard-livereload', '~> 2.4', require: false
-  gem 'rack-livereload'
+  # gem 'guard'
+  # gem 'guard-livereload', '~> 2.4', require: false
+  # gem 'rack-livereload'
 end
 
 group :test do

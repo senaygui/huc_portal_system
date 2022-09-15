@@ -1,5 +1,5 @@
 ActiveAdmin.register CourseRegistration do
-  menu parent: "Registration"
+  menu parent: "Student managment"
   config.batch_actions = true
   permit_params :course_section,:enrollment_status,:course_section_id
 

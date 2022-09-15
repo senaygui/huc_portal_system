@@ -1,6 +1,6 @@
 ActiveAdmin.register College do
   permit_params :college_name,:background,:mission,:vision,:overview,:headquarter,:city,:country,:phone_number,:email,:facebook_handle,:twitter_handle,:instagram_handle,:map_embed,:created_by,:last_updated_by,:state,:region,:zone,:worda, :sub_city, :alternative_phone_number
-  menu priority: 2
+  menu parent: "College",priority: 2
   index do
     selectable_column
     column :college_name

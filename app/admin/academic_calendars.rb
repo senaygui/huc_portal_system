@@ -1,6 +1,6 @@
 ActiveAdmin.register AcademicCalendar do
 permit_params :created_at,:calender_year_in_gc ,:calender_year_in_ec,:calender_year,:starting_date,:ending_date,:admission_type,:study_level,:remark,:from_year,:to_year,:last_updated_by,:created_by, activities_attributes: [:id,:activity,:semester,:description,:category,:starting_date,:ending_date,:last_updated_by,:created_by, :_destroy], semesters_attributes: [:id,:semester,:starting_date,:ending_date, :_destroy]
-
+  menu parent: "College",priority: 2
   index do
     selectable_column
     column :calender_year

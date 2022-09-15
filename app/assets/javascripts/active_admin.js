@@ -5,7 +5,7 @@
 //= require active_storage_drag_and_drop
 //= require active_admin_scoped_collection_actions
 //= require active_admin_sidebar
-//= require active_admin_flat_skin
+
 $(document).ready(function(){
 
   $("#student_photo").change(function(data){
@@ -61,6 +61,7 @@ $(document).ready(function(){
     }
   });
 
+  $('#header').before("<div class='headline'><div class='banner-logo'></div> <h1 class='banner-title'>Hope Enterprise University College Registrar Portal</h1></div>");
 
 
 
