@@ -580,8 +580,9 @@ body.index.active_admin {
     background-color: #68bb2f;
 }
 // site title
-.site_title img{
-  width: 155px;
+.site_title a{
+  display: none;
+
 }
 
 #active_admin_content span.blank_slate {
