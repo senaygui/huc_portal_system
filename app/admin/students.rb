@@ -36,7 +36,7 @@ menu parent: "Student managment"
       link_to d.program.department.department_name, [:admin, d.program.department] if d.program.present?
     end
     column "Program", sortable: true do |d|
-      link_to d.program.program_name, [:admin, d.program]
+      link_to d.program.program_name, [:admin, d.program] if d.program.present?
     end
     column :study_level
     column :admission_type
