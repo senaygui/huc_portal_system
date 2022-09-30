@@ -14,11 +14,22 @@
   <div class="col-12 col-md-6 form-group">
     <%= f.input :diploma_certificate, as: :file, label: "TVET/Diploma certificate",class: 'form-control'%>
   </div>
-  <div class="col-12 col-md-6 form-group">
-    <%= f.input :degree_certificate, as: :file, label: "Undergraduate degree certificate",class: 'form-control'%>
-  </div>
+  <%if params[:study_level] == "graduate"%>
+    <div class="col-12 col-md-6 form-group">
+      <%= f.input :degree_certificate, as: :file, label: "Undergraduate degree certificate",class: 'form-control'%>
+    </div>
+  <%end%>
   <div class="col-12 col-md-12 form-group">
-	  <strong> <%= f.input :tempo_status, as: :boolean, label: "Please check this box if you are applying with a temporary degree certificate. Its my responsiblity to bring my original degree within four months since the day of my registration. I accept the terms and condition of hope College and understand that i will not recive any grade report or offical documentation from hope College." %></strong>
+	  <strong>Declaration by the Applicant</strong>
+    <p>
+      <div class="mb-3 form-check">
+              
+              <input id="checkbox1" type="checkbox" class="form-check-input " id="exampleCheck1">
+              <label class="form-check-label text-bold declaration" for="exampleCheck1">
+              I hereby declare that the information in this form is accurate. The college may take any action against me and refrain from reimbursing me for any payment that I might have made if the information in this form is false or misleading I also realize that submission of this application form does not guarantee admission to the college. I shall also take full responsibility for reading and abiding by all the rules and regulations of the University College stipulated in the University College's Charter.
+              </label>
+      </div>
+    </p>
 	</div>
 	<!-- <div class="col-12 col-md-12 form-group">
 	  <input id="checkbox1" type="checkbox" class="form-check-input" id="exampleCheck1">

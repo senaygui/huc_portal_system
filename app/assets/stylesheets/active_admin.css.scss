@@ -553,7 +553,9 @@ body.index.active_admin {
 
 }
 .banner-logo{
-  background-image: url(asset_path('logo.png'));
+  background-image: url(asset_path('logo.jpg'));
+  background-position: center;
+  background-size: cover;
   width: 128px;
   height: 70px;
   margin-top: 10px; 

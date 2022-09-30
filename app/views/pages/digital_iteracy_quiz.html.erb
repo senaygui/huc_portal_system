@@ -1,152 +1,155 @@
 <%provide(:title, "Digital Literacy Assesement")%>
 <style type="text/css">
-	.title-header{
-		font-size: 3em;
-		font-weight: bold;
-		/*text-transform: uppercase;*/
-		margin-bottom: 20px;
-		padding-bottom: 20px;
-		position: relative;
-		text-align: center;
-	}
-	.header-text{
-		font-size: 20px;
-		font-weight: 400;
-		/*font-size: 1rem!important;*/
-		letter-spacing: .03125em!important;
-		line-height: 1.5rem;
-	}
+  .title-header{
+    font-size: 3em;
+    font-weight: bold;
+    /*text-transform: uppercase;*/
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    position: relative;
+    text-align: center;
+  }
+  .header-text{
+    font-size: 20px;
+    font-weight: 400;
+    /*font-size: 1rem!important;*/
+    letter-spacing: .03125em!important;
+    line-height: 1.5rem;
+  }
 
-	/*@import url(https://fonts.googleapis.com/css?family=Work+Sans:300,600);*/
+  /*@import url(https://fonts.googleapis.com/css?family=Work+Sans:300,600);*/
 
-	body{
-		/*font-size: 20px;*/
-		/*font-family: 'Work Sans', sans-serif;*/
-		/*color: #333;
-		font-weight: 300;
-		text-align: center;*/
-		background-color: #f8f6f0;
-	}
-	h1{
-		font-weight: 300;
-		margin: 0px;
-		padding: 10px;
-		font-size: 20px;
-		/*background-color: #444;*/
-		/*color: #fff;*/
-	}
-	.question{
-		/*font-weight: bold;*/
-		font-size: 25px;
-		margin-bottom: 20px;
-	}
-	.answers {
-		font-size: 20px;
-		margin-bottom: 20px;
-		text-align: left;
-		display: inline-block;
-	}
-	.answers label{
-		display: block;
-		margin-bottom: 10px;
-	}
-	/*button{
-		font-family: 'Work Sans', sans-serif;
-		font-size: 22px;
-		background-color: #279;
-		color: #fff;
-		border: 0px;
-		border-radius: 3px;
-		padding: 20px;
-		cursor: pointer;
-		margin-bottom: 20px;
-	}
-	button:hover{
-		background-color: #38a;
-	}*/
+  body{
+    /*font-size: 20px;*/
+    /*font-family: 'Work Sans', sans-serif;*/
+    /*color: #333;
+    font-weight: 300;
+    text-align: center;*/
+    background-color: #f8f6f0;
+  }
+  h1{
+    font-weight: 300;
+    margin: 0px;
+    padding: 10px;
+    font-size: 20px;
+    /*background-color: #444;*/
+    /*color: #fff;*/
+  }
+  .question{
+    /*font-weight: bold;*/
+    font-size: 25px;
+    margin-bottom: 20px;
+  }
+  .answers {
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+    display: inline-block;
+  }
+  .answers label{
+    display: block;
+    margin-bottom: 10px;
+  }
+  /*button{
+    font-family: 'Work Sans', sans-serif;
+    font-size: 22px;
+    background-color: #279;
+    color: #fff;
+    border: 0px;
+    border-radius: 3px;
+    padding: 20px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  button:hover{
+    background-color: #38a;
+  }*/
 
-	.slide{
-		position: absolute;
-		left: 0px;
-		top: 0px;
-		width: 100%;
-		z-index: 1;
-		opacity: 0;
-		transition: opacity 0.5s;
-	}
-	.active-slide{
-		opacity: 1;
-		z-index: 2;
-	}
-	.quiz-container{
-		position: relative;
-		height: 300px;
-		margin-top: 10px;
-	}
+  .slide{
+    /*position: absolute;
+    left: 0px;
+    top: 0px;*/
+    width: 100%;
+    /*z-index: 1;*/
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .active-slide{
+    opacity: 1;
+    display: block;
+    overflow: hidden;
+    /*z-index: 2;*/
+  }
+  .quiz-container{
+    /*position: relative;*/
+    /*height: 300px;*/
+    margin-top: 10px;
+  }
 
 </style>
 <div class="container">
-	
-	
-	<div class="row">
-		<div class="col-12">
-			<h1 class="title-header mt-5 mb-2">Digital Literacy Assesement</h1>
-			<p class="text-center header-text mb-5 text-muted">
-				There are certain requirements you have to fulfill in order to be addmitted to Hope University College and start Learning. Make sure that you meet the minimum requirements before starting your application process.
-			</p>
-		</div>
-		<div class="col-12 col-md-4">
-			<div class="card card-primary">
-				<div class="card-header">
-					<h3 class="card-title">
-						<i class="fas fa-info-circle mr-2"></i>
-						<strong>Instruction</strong>
+  
+  
+  <div class="row">
+    <div class="col-12">
+      <h1 class="title-header mt-5 mb-2">Digital Literacy Assesement</h1>
+      <p class="text-center header-text mb-5 text-muted">
+        There are certain requirements you have to fulfill in order to be addmitted to Hope University College Enterprise and start Learning. Make sure that you meet the minimum requirements before starting your application process.
+      </p>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">
+            <i class="fas fa-info-circle mr-2"></i>
+            <strong>Instruction</strong>
 
-					</h3>
-				</div>
-				<!-- /.card-header -->
-				<div class="card-body">
-					<p  class="text-center" style="font-size: 20px;"><strong>Select the appropriate answer for multiple choose questions</strong></p>  
-					<p class="text-muted text-center">
-						There are certain requirements you have to fulfill in order to be addmitted to Hope University College and start Learning. Make sure that you meet the minimum requirements before starting your application process.
-					</p>
+          </h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <p  class="text-center" style="font-size: 20px;"><strong>Select the appropriate answer for multiple choose questions</strong></p>  
           <p class="text-muted text-center">
-           <strong> To pass this exam you need to score 7 and more than 7, so take your time and answer the question carefully.</strong>
+            There are certain requirements you have to fulfill in order to be addmitted to Hope University College Enterprise and start Learning. Make sure that you meet the minimum requirements before starting your application process.
           </p>
-					<hr>
-				</div>
-				<!-- /.card-body -->
-			</div>
-		</div>
-		<div class="col-12 col-md-8">
-			<div class="card card-outline card-primary">
-				<div class="card-header">
-					<h3 class="card-title">
-						<i class="fas fa-info-circle mr-2"></i>
-						<strong>Digital Literacy Assesement</strong>
-					</h3>
-				</div>
-				<div class="card-body mt-2">
-					<div class="quiz-container">
-						<div id="quiz"></div>
-					</div>
-					
-					<div id="results" class="mt-4"></div>
-				</div>
-				<div class="card-footer float-right mt-3">
-					<div class="float-right">
-						<button id="previous"class="btn btn-secondary">Previous Question</button>
-						<button id="next" class="btn btn-primary">Next Question</button>
-						<button id="submit" class="btn btn-primary">Submit Quiz</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+          <hr>
+          <p class="text-muted text-center">
+           <strong> To pass this exam you need to score 6 and more than 6, so take your time and answer the question carefully.</strong>
+          </p>
+        </div>
+        <!-- /.card-body -->
+      </div>
+    </div>
+    <div class="col-12 col-md-8">
+      <div class="card card-outline card-primary">
+        <div class="card-header">
+          <h3 class="card-title">
+            <i class="fas fa-info-circle mr-2"></i>
+            <strong>Digital Literacy Assesement</strong>
+          </h3>
+        </div>
+        <div class="card-body mt-2">
+          <div class="quiz-container">
+            <div id="quiz"></div>
+          </div>
+          
+          <div id="results" class="mt-4"></div>
+        </div>
+        <div class="card-footer float-right mt-3">
+          <div class="float-right">
+            <button id="previous"class="btn btn-secondary">Previous Question</button>
+            <button id="next" class="btn btn-primary">Next Question</button>
+            <button id="submit" class="btn btn-primary">Submit Quiz</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script type="text/javascript">
-	(function(){
+  (function(){
   // Functions
   function buildQuiz(){
     // variable to store the HTML output
@@ -221,13 +224,13 @@
     resultsContainer.innerHTML = ``;
 
     if(numCorrect >= 6){
-    	resultsContainer.innerHTML = `<p class="mb-2" style="color:green;">${numCorrect} out of ${myQuestions.length}</p>
-    	<p style="color:green;">Congratulations you have passed the technical knowledge requirement to enroll to Hope University College online. Please continue to the registration process.</p>
-    	<%= link_to "Apply Now", new_student_registration_path(modality: "online", study_level: "graduate"), class: "btn btn-primary btn-lg"%>`;
+      resultsContainer.innerHTML = `<p class="mb-2" style="color:green;">${numCorrect} out of ${myQuestions.length}</p>
+      <p style="color:green;">Congratulations you have passed the technical knowledge requirement to enroll to Hope University College Enterprise online. Please continue to the registration process.</p>
+      <%= link_to "Apply Now", new_student_registration_path(modality: "online", study_level: "graduate"), class: "btn btn-primary btn-lg"%>`;
     }
     else{
-    	resultsContainer.innerHTML = `${numCorrect} out of ${myQuestions.length} <br>
-    	<p style="color:red;">Sorry you don't fulfill our minimum requirement for enrolling in Hope University College online program. Please upgrade your technical abilities and try again later.</p>`;
+      resultsContainer.innerHTML = `${numCorrect} out of ${myQuestions.length} <br>
+      <p style="color:red;">Sorry you don't fulfill our minimum requirement for enrolling in Hope University College Enterprise online program. Please upgrade your technical abilities and try again later.</p>`;
     }
     
 

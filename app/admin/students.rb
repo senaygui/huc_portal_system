@@ -33,7 +33,7 @@ menu parent: "Student managment"
       "#{n.first_name.upcase} #{n.middle_name.upcase} #{n.last_name.upcase}"
     end
     column "Department", sortable: true do |d|
-      link_to d.program.department.department_name, [:admin, d.program.department]
+      link_to d.program.department.department_name, [:admin, d.program.department] if d.program.present?
     end
     column "Program", sortable: true do |d|
       link_to d.program.program_name, [:admin, d.program]
