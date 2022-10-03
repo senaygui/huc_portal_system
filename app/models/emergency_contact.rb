@@ -1,7 +1,7 @@
 class EmergencyContact < ApplicationRecord
 	##validations
-	  validates :full_name, :presence => true
-		validates :cell_phone, :presence => true
+	  # validates :full_name, :presence => true
+		# validates :cell_phone, :presence => true
 		validate :email_format
   ##associations
   belongs_to :student
