@@ -54,6 +54,7 @@ menu parent: "Student managment"
   filter :first_name
   filter :last_name
   filter :middle_name
+  filter :gender
   filter :program_id, as: :search_select_filter, url: proc { admin_programs_path },
          fields: [:program_name, :id], display_name: 'program_name', minimum_input_length: 2,
          order_by: 'id_asc'
