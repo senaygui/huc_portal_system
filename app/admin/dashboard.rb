@@ -6,7 +6,7 @@ ActiveAdmin.register_page "Dashboard" do
       span class: "blank_slate" do
         div image_tag("banner.jpg", size: "250x150")
         span "Welcome To Hope Enterprise University College"
-        small "This is Hope Enterprise University College registrar, and school management portal system."
+        small "This is Hope Enterprise University College registrar and school management portal system."
       end
     end
 
