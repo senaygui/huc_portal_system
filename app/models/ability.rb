@@ -96,6 +96,37 @@ class Ability
         can :manage, AcademicCalendar
         can :manage, AdminUser, role: "instructor"
         can :manage, Faculty
+        # can :manage, Department
+        can :read, CourseModule
+        can :read, Program
+        can :read, Curriculum
+        can :read, Course
+        can [:update, :read], GradeSystem
+        can :read, AssessmentPlan
+        can :manage, Section
+        can :manage, Student
+        can :manage, SemesterRegistration
+        can :manage, CourseRegistration
+        can :read, CollegePayment
+        can :read, PaymentMethod
+        can :read, Invoice
+        can :manage, Attendance
+        can :manage, Session
+
+        can [:update, :read], GradeReport
+        cannot :destroy, GradeReport
+        can :read, StudentGrade
+        can :manage, GradeChange
+        can :manage, Withdrawal
+        can :destroy, Withdrawal, created_by: user.name.full
+
+        can :manage, AddAndDrop
+        cannot :destroy, AddAndDrop, created_by: "self"
+    when "data encoder"
+        can :manage, ActiveAdmin::Page, name: "Dashboard", namespace_name: "admin"
+        can :manage, AcademicCalendar
+        can :manage, AdminUser, role: "instructor"
+        can :manage, Faculty
         can :manage, Department
         can :read, CourseModule
         can :read, Program

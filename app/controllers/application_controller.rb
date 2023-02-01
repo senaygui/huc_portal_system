@@ -18,8 +18,17 @@ class ApplicationController < ActionController::Base
     if current_admin_user.kind_of?(AdminUser)
       @current_ability ||= Ability.new(current_admin_user)
     else
-      @current_ability ||= UserAbility.new(current_user)
+      @current_ability ||= UserAbility.new(current_student)
     end
+  end
+  def after_sign_in_path_for(resource)
+   if current_admin_user.present?
+    admin_root_path
+   elsif current_student.sign_in_count == 1
+    edit_student_registration_path
+   else
+    root_path
+   end
   end
 
   before_action :configure_permitted_parameters, if: :devise_controller?

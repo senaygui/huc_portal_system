@@ -193,10 +193,10 @@ menu parent: "Student managment"
         f.input :tempo_status
       end
     end
-    f.inputs "Student account and document verification" do
-      f.input :account_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"], :include_blank => false
-      f.input :document_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"], :include_blank => false         
-    end
+    # f.inputs "Student account and document verification" do
+    #   f.input :account_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"], :include_blank => false
+    #   f.input :document_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"], :include_blank => false         
+    # end
     if !f.object.new_record? && !(params[:page_name] == "approval")
       f.inputs "Entrance Exam Result" do
         f.input :entrance_exam_result_status, as: :select, :collection => ["Pass", "Failed"]

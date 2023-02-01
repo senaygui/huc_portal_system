@@ -72,7 +72,7 @@ permit_params(:course_outline,:course_module_id,:curriculum_id,:program_id,:cour
         f.input :credit_hour, :required => true, min: 1, as: :select, :collection => [1, 2,3,4,5,6,7], :include_blank => false
         f.input :lecture_hour
         f.input :lab_hour
-        f.input :ects
+        f.input :ects, label: "Contact Hour"
         f.input :year, as: :select, :collection => [1, 2,3,4,5,6,7], :include_blank => false
         f.input :semester, as: :select, :collection => [1, 2,3,4], :include_blank => false
         f.input :course_starting_date, as: :date_time_picker 
@@ -192,7 +192,10 @@ permit_params(:course_outline,:course_module_id,:curriculum_id,:program_id,:cour
                 row :credit_hour
                 row :lecture_hour
                 row :lab_hour
-                row :ects
+                row "Contact Hour" do |c|
+                  c.ects
+                end
+                # row :ects
                 row :year
                 row :semester
                 row :course_starting_date
