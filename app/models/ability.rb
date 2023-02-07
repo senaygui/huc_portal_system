@@ -144,8 +144,8 @@ class Ability
         can :manage, Attendance
         can :manage, Session
 
-        can [:update, :read], GradeReport
-        cannot :destroy, GradeReport
+        # can [:update, :read], GradeReport
+        # cannot :destroy, GradeReport
         can :read, StudentGrade
         can :manage, GradeChange
         can :manage, Withdrawal
