@@ -194,6 +194,7 @@ menu parent: "Student managment"
       end
     end
     f.inputs "Student account and document verification" do
+      f.input :curriculum_version
       f.input :account_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"], :include_blank => false
       f.input :document_verification_status, as: :select, :collection => ["pending","approved", "denied", "incomplete"], :include_blank => false         
     end
