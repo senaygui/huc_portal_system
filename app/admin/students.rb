@@ -60,7 +60,9 @@ menu parent: "Student managment"
          order_by: 'id_asc'
   filter :study_level, as: :select, :collection => ["undergraduate", "graduate"]
   filter :admission_type, as: :select, :collection => ["online", "regular", "extention", "distance"]
-  filter :department   
+  filter :department_id, as: :search_select_filter, url: proc { admin_departments_path },
+         fields: [:department_name, :id], display_name: 'department_name', minimum_input_length: 2,
+         order_by: 'id_asc'   
   filter :year
   filter :semester
   filter :batch

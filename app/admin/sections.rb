@@ -110,6 +110,7 @@ menu parent: "Program"
             AcademicCalendar.where(study_level: program_section.program.study_level, admission_type: program_section.program.admission_type).map do |item|
               (1..program_section.program.program_semester).map do |ps|
                 tr class: "form-table__row" do
+                  
                   th class: 'form-table__col' do 
                     link_to item.calender_year, admin_semester_registrations_path(:q => { :program_id_eq => "#{program_section.program.id}", academic_calendar_id_eq: item.id })
                   end
