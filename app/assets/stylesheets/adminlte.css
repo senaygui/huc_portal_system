@@ -35410,7 +35410,8 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 .register-page {
   -webkit-align-items: center;
   -ms-flex-align: center;
-  align-items: center;
+  align-items: left;
+  padding-left: 20%;
   background-color: #e9ecef;
   display: -webkit-flex;
   display: -ms-flexbox;
