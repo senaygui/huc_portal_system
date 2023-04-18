@@ -10,8 +10,8 @@ class StudentGrade < ApplicationRecord
     belongs_to :course_registration, optional: true
     belongs_to :student
     belongs_to :course
-    belongs_to :department
-    belongs_to :program
+    belongs_to :department, optional: true
+    belongs_to :program, optional: true
     has_many :assessments, dependent: :destroy
   	accepts_nested_attributes_for :assessments, reject_if: :all_blank, allow_destroy: true
     has_many :grade_changes

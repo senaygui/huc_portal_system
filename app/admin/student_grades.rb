@@ -2,7 +2,7 @@ ActiveAdmin.register StudentGrade do
 menu parent: "Grade"
   permit_params :department_approval,:department_head_name,:department_head_date_of_response, :course_registration_id,:student_id,:letter_grade,:grade_point,:assesment_total,:grade_point,:course_id,assessments_attributes: [:id,:student_grade_id,:assessment_plan_id,:student_id,:course_id,:result,:created_by,:updated_by, :_destroy]
 
-   active_admin_import validate: true,
+      active_admin_import validate: true,
                       headers_rewrites: { 'ID': :student_id },
                       before_batch_import: ->(importer) {
                         student_ids = importer.values_at(:student_id)
@@ -53,10 +53,12 @@ menu parent: "Grade"
       si.student.student_id
     end
     column "Program" do |si|
-      si.student.program.program_name
+      si.student.program.program_name if si.student.program.present?
     end
     column "Course title" do |si|
-      si.course.course_title
+      if si.course.present?
+        si.course.course_title
+      end
     end
     column :letter_grade
     column :grade_point
