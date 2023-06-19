@@ -81,8 +81,11 @@ ActiveAdmin.register Student do
       type.admission_type.capitalize
     end
     # column :year
-    column 'Verification' do |s|
+    column 'Document Verification' do |s|
       status_tag s.document_verification_status
+    end
+    column 'Account Verification' do |s|
+      status_tag s.account_verification_status
     end
     column 'Admission', sortable: true do |c|
       c.created_at.strftime('%b %d, %Y')
