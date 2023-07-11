@@ -1,7 +1,7 @@
 role :app, %w{deploy@192.168.0.200}
 role :web, %w{deploy@192.168.0.200}
 role :db, %w{deploy@192.168.0.200}, :primary => true
-set :branch, "master"
+set :branch, "main"
 set :rails_env, "production"
 set :deploy_to, '/home/deploy/portal_system'
 
